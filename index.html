@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>IQ Aptitude Test</title>
+<style>
+  :root{
+    --bg:#1a1c20; --card:#262a31; --muted:#b6bcc7; --text:#f1f3f6;
+    --line:rgba(255,255,255,.14); --accent:#cfd4dc; --danger:#ff8787; --ok:#9be5b1;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px;}
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(26,28,32,.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);}
+  .topbar-inner{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 16px;max-width:1100px;margin:0 auto;}
+  .brand{display:flex;flex-direction:column;gap:4px}
+  .brand-logo-box{display:inline-flex;align-items:center;padding:6px 10px;background:#fff;border:1px solid rgba(0,0,0,.14);border-radius:10px;width:max-content}
+  .brand img{display:block;height:46px;width:auto;max-width:min(45vw,260px);object-fit:contain}
+  .brand-sub{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.2px}
+  .pill{display:inline-flex;gap:10px;align-items:center;padding:8px 10px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(255,255,255,.04);color:var(--muted);font-size:13px;}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:14px;margin-top:14px;}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:16px;background:rgba(38,42,49,.72);backdrop-filter:blur(10px);overflow:hidden;}
+  .card h2{margin:0;font-size:16px;padding:14px 16px;border-bottom:1px solid var(--line);}
+  .card .body{padding:14px 16px;}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;}
+  input,select{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);outline:none;}
+  input::placeholder{color:rgba(147,164,199,.7)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media (max-width:520px){.row{grid-template-columns:1fr}}
+  button{appearance:none;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:rgba(255,255,255,.06);
+    color:var(--text);cursor:pointer;font-weight:650;}
+  .actions button{min-height:44px}
+  button.primary{border-color:rgba(106,228,255,.35);background:rgba(106,228,255,.14);}
+  button.danger{border-color:rgba(255,106,138,.40);background:rgba(255,106,138,.14);}
+  button:disabled{opacity:.55;cursor:not-allowed}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+  .small{font-size:12px;color:var(--muted)}
+  .hr{height:1px;background:var(--line);margin:12px 0;}
+  .qnav{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;}
+  @media (max-width:520px){.qnav{grid-template-columns:repeat(6,1fr)}}
+  .qbtn{padding:10px 0;text-align:center;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-weight:800;font-size:12px;}
+  .qbtn.active{outline:2px solid rgba(106,228,255,.45);}
+  .qbtn.answered{border-color:rgba(124,255,178,.45);}
+  .qbtn.flagged{border-color:rgba(255,106,138,.55);}
+  .qtitle{font-size:15px;font-weight:900;margin:0 0 8px;}
+  .qtext{white-space:pre-wrap;line-height:1.45;color:var(--text)}
+  .choices{display:grid;gap:8px;margin-top:12px;}
+  .choice{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);background:rgba(255,255,255,.03);
+    padding:10px 12px;border-radius:12px;}
+  .choice input{width:auto;margin-top:3px;}
+  .imgbox{margin-top:12px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.18)}
+  .imgbox img,.imgbox canvas{width:100%;display:block}
+  a{color:var(--accent)}
+  .badge{display:inline-flex;align-items:center;gap:10px;padding:8px 10px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(255,255,255,.03);}
+  .ok{color:var(--ok);font-weight:900}
+  .bad{color:var(--danger);font-weight:900}
+  .warning-box{
+    margin-top:12px;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid rgba(255,135,135,.45);
+    background:rgba(255,135,135,.12);
+    color:#ffd5d5;
+    font-size:13px;
+    line-height:1.45;
+  }
+  .warning-title{
+    font-weight:900;
+    letter-spacing:.2px;
+    margin-bottom:4px;
+  }
+  @media (max-width:900px){
+    .wrap{padding:12px;}
+    .topbar-inner{padding:10px 12px;}
+  }
+  @media (max-width:700px){
+    .topbar-inner{flex-direction:column;align-items:stretch;gap:8px;}
+    .brand img{height:48px;max-width:min(70vw,250px);}
+    .pill{width:100%;justify-content:space-between;font-size:12px;}
+    .grid{gap:10px;margin-top:10px;}
+    .card h2{padding:12px 14px;}
+    .card .body{padding:12px 14px;}
+    input,select,button{font-size:16px;}
+    .qnav{grid-template-columns:repeat(5,1fr);gap:6px;}
+    .qbtn{padding:11px 0;font-size:14px;border-radius:9px;}
+    .choice{padding:12px;}
+    .actions{gap:8px;}
+    .actions button{flex:1 1 calc(50% - 8px);}
+    .question-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .question-actions button{width:100%;}
+    .question-actions .spacer{display:none;}
+    .question-actions #submitBtn{grid-column:1 / -1;}
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-logo-box">
+          <img src="logo-berani.png.png" alt="Berani Export Import"/>
+        </div>
+        <div class="brand-sub">Aptitude Test (IQ)</div>
+      </div>
+      <div class="pill">
+        <span id="timerLabel">⏱️ 30:00</span>
+        <span id="progressLabel">0/60 terjawab</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="grid">
+      <div class="card">
+        <h2>Identitas Kandidat</h2>
+        <div class="body">
+          <div class="row">
+            <div>
+              <label>Nama</label>
+              <input id="name" placeholder="Nama lengkap" />
+            </div>
+            <div>
+              <label>No. WhatsApp</label>
+              <input id="phone" placeholder="083xxxxxxxxxx" />
+              <div class="small">Format divalidasi: mulai 08, angka saja.</div>
+            </div>
+          </div>
+          <div style="margin-top:10px">
+            <label>Posisi</label>
+            <input id="position" placeholder="Contoh: Digital Marketing" />
+          </div>
+          <div style="margin-top:10px">
+            <label>Token Kandidat</label>
+            <input id="token" placeholder="Masukkan token dari HR" />
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="row">
+            <div>
+              <label>Durasi tes (menit)</label>
+              <select id="duration">
+                <option value="30" selected>30</option>
+                <option value="45">45</option>
+                <option value="60">60</option>
+                <option value="0">Tanpa timer</option>
+              </select>
+            </div>
+            <div>
+              <label>Mode soal</label>
+              <select id="mode">
+                <option value="normal" selected>Normal</option>
+                <option value="shuffle">Acak urutan soal</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="primary" id="startBtn">Mulai Tes</button>
+            <button id="resumeBtn">Lanjutkan (Auto-save)</button>
+            <button class="danger" id="resetBtn">Reset</button>
+          </div>
+          <div class="warning-box" id="prestartWarning">
+            <div class="warning-title">PERINGATAN PENGAWASAN TES</div>
+            Aktivitas peserta selama tes berada dalam pengawasan sistem, termasuk verifikasi berbasis kamera. Segala bentuk kecurangan, bantuan pihak lain, perpindahan layar mencurigakan, atau upaya manipulasi jawaban akan tercatat dan menjadi dasar diskualifikasi permanen dari proses rekrutmen.
+          </div>
+
+          <div class="small" style="margin-top:10px">
+            Tips: Soal bergambar akan menampilkan <b>gambar halaman</b> (render dari PDF). Anda tetap menjawab per nomor.
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="testCard" style="display:none">
+        <h2>Soal</h2>
+        <div class="body">
+          <div class="qnav" id="nav"></div>
+          <div class="hr"></div>
+
+          <div id="questionArea">
+            <p class="qtitle" id="qTitle"></p>
+            <div class="qtext" id="qText"></div>
+            <div id="media"></div>
+            <div class="choices" id="choices"></div>
+
+            <div class="actions question-actions">
+              <button id="prevBtn">← Sebelumnya</button>
+              <button id="flagBtn">Tandai</button>
+              <button class="primary" id="nextBtn">Berikutnya →</button>
+              <span class="spacer"></span>
+              <button class="primary" id="submitBtn">Submit & Nilai</button>
+            </div>
+
+            <div class="small" id="hintArea" style="margin-top:10px"></div>
+          </div>
+
+          <div id="resultArea" style="display:none">
+            <h2 style="margin:0 0 10px">Hasil</h2>
+            <div class="badge">
+              <strong id="scoreText">0/60</strong>
+              <span class="small">|</span>
+              <span id="percentText">0%</span>
+            </div>
+            <div class="small" style="margin-top:10px">Download hasil untuk arsip / integrasi.</div>
+            <div class="actions" style="margin-top:12px">
+              <button id="reviewBtn">Review Soal</button>
+            </div>
+            <div class="hr"></div>
+            <div class="small" id="metaText"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzz_fAlunjdxQiouQl3DlR1l0La8AJSWuzoftKpIVZAKpUEcnvEycDX1wBAuPky0n9a/exec";
+const LS_KEY = "iq_test_state_v2";
+let QUESTIONS = [];
+let ANSWER_KEY = {};
+
+let state = {
+  started:false,
+  startedAt:null,
+  durationMin:30,
+  remainingSec:30*60,
+  order:[],
+  currentIdx:0,
+  answers:{},
+  flagged:{},
+  identity:{name:"", phone:"", position:""},
+  finished:false,
+  result:null
+};
+
+let timerHandle=null;
+
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); updateProgress(); }
+function load(){
+  const raw = localStorage.getItem(LS_KEY);
+  if(!raw) return false;
+  try{ state = Object.assign(state, JSON.parse(raw)); return true; } catch(e){ return false; }
+}
+function validPhone(p){ return /^08\d{8,13}$/.test((p||"").trim()); }
+function fmtTime(sec){
+  if(state.durationMin<=0) return "Tanpa timer";
+  const m=Math.floor(sec/60), s=sec%60;
+  return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+}
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function currentQId(){ return state.order[state.currentIdx]; }
+function getQById(id){ return QUESTIONS.find(q=>q.id===id); }
+function answeredCount(){ return Object.keys(state.answers||{}).length; }
+
+async function validateTokenBeforeStart(){
+  const token = (document.getElementById("token")?.value || "").trim();
+  const name = (document.getElementById("name")?.value || "").trim();
+  const phone = (document.getElementById("phone")?.value || "").trim();
+
+  const json = await postToSheetWebApp({ action:"validate", token, name, phone });
+  if(json.status !== "ok") throw new Error(json.message || "Token invalid");
+}
+
+async function postToSheetWebApp(bodyObj){
+  try{
+    // Keep request "simple" to avoid CORS preflight issues with Apps Script.
+    const res = await fetch(SHEET_WEBAPP_URL, {
+      method: "POST",
+      body: JSON.stringify(bodyObj)
+    });
+    const text = await res.text();
+    try{
+      return JSON.parse(text);
+    }catch(_){
+      throw new Error("Respons web app bukan JSON valid.");
+    }
+  }catch(err){
+    if(err instanceof TypeError){
+      throw new Error("Gagal terhubung ke Web App. Cek deploy Apps Script: Execute as Me, Who has access: Anyone.");
+    }
+    throw err;
+  }
+}
+
+function updateProgress(){
+  const ans=answeredCount();
+  document.getElementById("progressLabel").textContent = `${ans}/60 terjawab`;
+  const nav=document.getElementById("nav");
+  if(!nav) return;
+  [...nav.children].forEach(btn=>{
+    const q=Number(btn.dataset.q);
+    btn.classList.toggle("answered", !!state.answers[q]);
+    btn.classList.toggle("flagged", !!state.flagged[q]);
+    btn.classList.toggle("active", q===currentQId());
+  });
+}
+
+function buildNav(){
+  const nav=document.getElementById("nav");
+  nav.innerHTML="";
+  state.order.forEach((qid, idx)=>{
+    const b=document.createElement("button");
+    b.className="qbtn";
+    b.textContent=qid;
+    b.dataset.q=qid;
+    b.onclick=()=>{ state.currentIdx=idx; renderQuestion(); save(); };
+    nav.appendChild(b);
+  });
+}
+
+async function drawCroppedToCanvas(imgUrl, bbox){
+  // bbox: {x,y,w,h} in pixels of original rendered page image
+  return new Promise((resolve)=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement("canvas");
+      canvas.width=bbox.w; canvas.height=bbox.h;
+      const ctx=canvas.getContext("2d");
+      ctx.drawImage(img, bbox.x, bbox.y, bbox.w, bbox.h, 0, 0, bbox.w, bbox.h);
+      resolve(canvas);
+    };
+    img.src=imgUrl;
+  });
+}
+
+async function renderQuestion(){
+  const qid=currentQId();
+  const q=getQById(qid);
+  document.getElementById("qTitle").textContent = `Soal #${qid}`;
+  document.getElementById("qText").textContent = q.prompt || "";
+  const media=document.getElementById("media");
+  media.innerHTML="";
+  const hint=document.getElementById("hintArea");
+  hint.innerHTML="";
+
+  if(q.type==="image"){
+    const pageImg = `pages/page-${q.page}.png`;
+    const box=document.createElement("div");
+    box.className="imgbox";
+
+    if(q.bbox){
+      const canvas = await drawCroppedToCanvas(pageImg, q.bbox);
+      box.appendChild(canvas);
+      media.appendChild(box);
+      hint.innerHTML = `📄 <a href="soal.pdf#page=${q.page}" target="_blank" rel="noopener">Buka PDF (halaman ${q.page})</a> • Tampilan ini auto-zoom (bbox).`;
+    }else{
+      const img=document.createElement("img");
+      img.alt=`Halaman ${q.page}`;
+      img.src=pageImg;
+      box.appendChild(img);
+      media.appendChild(box);
+      hint.innerHTML = `📄 <a href="soal.pdf#page=${q.page}" target="_blank" rel="noopener">Buka PDF (halaman ${q.page})</a> • (Optional) nanti bisa ditambah bbox untuk auto-zoom.`;
+    }
+  }
+
+  // Choices
+  const choices=document.getElementById("choices");
+  choices.innerHTML="";
+  const optKeys=Object.keys(q.options||{});
+  optKeys.forEach(L=>{
+    const wrap=document.createElement("label");
+    wrap.className="choice";
+    const radio=document.createElement("input");
+    radio.type="radio"; radio.name="choice"; radio.value=L;
+    radio.checked = state.answers[qid]===L;
+    radio.onchange=()=>{ state.answers[qid]=L; save(); };
+    const txt=document.createElement("div");
+    txt.innerHTML = `<strong>${L}</strong> <span class="small">— ${q.options[L] || ""}</span>`;
+    wrap.appendChild(radio); wrap.appendChild(txt);
+    choices.appendChild(wrap);
+  });
+
+  document.getElementById("prevBtn").disabled = state.currentIdx===0;
+  document.getElementById("nextBtn").disabled = state.currentIdx===state.order.length-1;
+
+  updateProgress();
+}
+
+function startTimer(){
+  if(timerHandle) clearInterval(timerHandle);
+  if(state.durationMin<=0){
+    document.getElementById("timerLabel").textContent = "⏱️ Tanpa timer";
+    return;
+  }
+  timerHandle=setInterval(()=>{
+    if(!state.started || state.finished) return;
+    state.remainingSec=Math.max(0, state.remainingSec-1);
+    document.getElementById("timerLabel").textContent = "⏱️ "+fmtTime(state.remainingSec);
+    if(state.remainingSec===0){
+      clearInterval(timerHandle);
+      submit();
+    }
+    save();
+  },1000);
+}
+
+function showTest(){
+  document.getElementById("testCard").style.display="block";
+  const prestartWarning = document.getElementById("prestartWarning");
+  if(prestartWarning) prestartWarning.style.display = "none";
+  document.getElementById("questionArea").style.display = state.finished ? "none":"block";
+  document.getElementById("resultArea").style.display = state.finished ? "block":"none";
+  buildNav();
+  renderQuestion();
+  document.getElementById("timerLabel").textContent = "⏱️ "+fmtTime(state.remainingSec);
+  startTimer();
+  updateProgress();
+}
+
+function submit(){
+  let correct=0;
+  const detail=[];
+  for(const qid of state.order){
+    const user=(state.answers[qid]||"").toUpperCase();
+    const key=(ANSWER_KEY[qid]||"").toUpperCase();
+    const ok = user && key && user===key;
+    if(ok) correct++;
+    detail.push({qid, user, key, ok});
+  }
+  const pct = Math.round((correct/60)*1000)/10;
+
+  state.finished=true;
+  state.result={
+    correct,total:60,percent:pct,answered:answeredCount(),
+    startedAt:state.startedAt, endedAt:new Date().toISOString(),
+    identity:state.identity, detail
+  };
+  save();
+
+  document.getElementById("scoreText").textContent = `${correct}/60`;
+  document.getElementById("percentText").textContent = `${pct}%`;
+  document.getElementById("metaText").textContent = `Nama: ${state.identity.name} | WA: ${state.identity.phone} | Posisi: ${state.identity.position}`;
+  document.getElementById("questionArea").style.display="none";
+  document.getElementById("resultArea").style.display="block";
+  postToSheet(state.result).catch(err=>alert("⚠️ Gagal: " + (err?.message || "unknown")));
+}
+
+function downloadJSON(){
+  const blob=new Blob([JSON.stringify(state.result,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  const safe=(state.identity.name||"kandidat").replace(/[^a-z0-9]+/gi,"_").slice(0,40);
+  a.href=URL.createObjectURL(blob);
+  a.download=`hasil_iq_${safe}.json`;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function toCsvCell(s){
+  s = String(s ?? "");
+  if(/[",\n]/.test(s)) return '"' + s.replaceAll('"','""') + '"';
+  return s;
+}
+function downloadCSV(){
+  const cols=["nama","wa","posisi","startedAt","endedAt","correct","total","percent"];
+  for(let i=1;i<=60;i++) cols.push("q"+i);
+  const row=[];
+  row.push(state.identity.name, state.identity.phone, state.identity.position,
+           state.result?.startedAt||"", state.result?.endedAt||"",
+           state.result?.correct||0, 60, state.result?.percent||0);
+  for(let i=1;i<=60;i++) row.push(state.answers[i]||"");
+  const csv = cols.map(toCsvCell).join(",") + "\n" + row.map(toCsvCell).join(",");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");
+  const safe=(state.identity.name||"kandidat").replace(/[^a-z0-9]+/gi,"_").slice(0,40);
+  a.href=URL.createObjectURL(blob);
+  a.download=`hasil_iq_${safe}.csv`;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+
+async function postToSheet(result){
+  const token = (document.getElementById("token")?.value || "").trim();
+
+  const payload = {
+    submittedAt: new Date().toISOString(),
+    name: result.identity?.name || "",
+    phone: result.identity?.phone || "",
+    position: result.identity?.position || "",
+    correct: result.correct,
+    total: result.total,
+    percent: result.percent,
+    durationSec: result.durationSec ?? null,
+    raw: result
+  };
+
+  const json = await postToSheetWebApp({ action:"submit", token, payload });
+  if(json.status === "ok") alert("✅ Hasil tersimpan.");
+  else alert("⚠️ Gagal: " + (json.message || "unknown"));
+}
+
+/** Events **/
+document.getElementById("startBtn").onclick=async ()=>{
+  const name=document.getElementById("name").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const position=document.getElementById("position").value.trim();
+  const durationMin=Number(document.getElementById("duration").value);
+  const mode=document.getElementById("mode").value;
+
+  if(!name) return alert("Nama wajib diisi.");
+  if(!validPhone(phone)) return alert("No. WhatsApp tidak valid. Contoh: 083xxxxxxxxxx");
+  if(!position) return alert("Posisi wajib diisi.");
+  try {
+    await validateTokenBeforeStart();
+  } catch(e) {
+    alert("❌ " + e.message);
+    return;
+  }
+
+  state.identity={name,phone,position};
+  state.durationMin=durationMin;
+  state.remainingSec=durationMin<=0 ? 0 : durationMin*60;
+  state.started=true;
+  state.startedAt=new Date().toISOString();
+  state.finished=false;
+  state.result=null;
+  state.answers = state.answers || {};
+  state.flagged = state.flagged || {};
+
+  const base = Array.from({length:60}, (_,i)=>i+1);
+  state.order = (mode==="shuffle") ? shuffle(base) : base;
+  state.currentIdx=0;
+
+  save();
+  showTest();
+};
+
+document.getElementById("resumeBtn").onclick=()=>{
+  const ok=load();
+  if(!ok || !state.started) return alert("Belum ada sesi tersimpan.");
+  document.getElementById("name").value = state.identity?.name || "";
+  document.getElementById("phone").value = state.identity?.phone || "";
+  document.getElementById("position").value = state.identity?.position || "";
+  document.getElementById("duration").value = String(state.durationMin ?? 30);
+  showTest();
+};
+
+document.getElementById("resetBtn").onclick=()=>{
+  if(confirm("Yakin reset semua jawaban & sesi?")){
+    localStorage.removeItem(LS_KEY);
+    location.reload();
+  }
+};
+
+document.getElementById("prevBtn").onclick=()=>{ if(state.currentIdx>0){ state.currentIdx--; renderQuestion(); save(); } };
+document.getElementById("nextBtn").onclick=()=>{ if(state.currentIdx<state.order.length-1){ state.currentIdx++; renderQuestion(); save(); } };
+document.getElementById("flagBtn").onclick=()=>{ const qid=currentQId(); state.flagged[qid]=!state.flagged[qid]; save(); };
+document.getElementById("submitBtn").onclick=()=>{ if(confirm("Submit sekarang? Jawaban akan dinilai.")) submit(); };
+document.getElementById("reviewBtn").onclick=()=>{ state.finished=false; save(); showTest(); };
+
+async function init(){
+  const [qRes, aRes] = await Promise.all([fetch("questions.json"), fetch("answer_key.json")]);
+  QUESTIONS = await qRes.json();
+  ANSWER_KEY = await aRes.json();
+
+  // auto load if exists
+  if(load() && state.started){
+    document.getElementById("name").value = state.identity?.name || "";
+    document.getElementById("phone").value = state.identity?.phone || "";
+    document.getElementById("position").value = state.identity?.position || "";
+    document.getElementById("duration").value = String(state.durationMin ?? 30);
+    showTest();
+  }else{
+    document.getElementById("timerLabel").textContent = "⏱️ 30:00";
+    document.getElementById("progressLabel").textContent = "0/60 terjawab";
+  }
+}
+init();
+</script>
+</body>
+</html>

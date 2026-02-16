@@ -1,0 +1,788 @@
+[
+  {
+    "id": 1,
+    "page": 1,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "Beruang",
+      "B": "Ular",
+      "C": "Sapi",
+      "D": "Anjing",
+      "E": "Harimau"
+    },
+    "type": "text"
+  },
+  {
+    "id": 2,
+    "page": 1,
+    "prompt": "Jika Anda mengatur ulang kata-kata “LINKECI”, maka Anda akan mendapat nama sebuah:",
+    "options": {
+      "A": "Lautan",
+      "B": "Negara",
+      "C": "Provinsi",
+      "D": "Kota",
+      "E": "Hewan"
+    },
+    "type": "text"
+  },
+  {
+    "id": 3,
+    "page": 1,
+    "prompt": "Mana dari ke-5 gambar ini yang paling melengkapi kalimat gambar tersebut? Jika adalah maka adalah",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 4,
+    "page": 1,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "Kentang",
+      "B": "Jagung",
+      "C": "Apel",
+      "D": "Wortel",
+      "E": "Kacang"
+    },
+    "type": "text"
+  },
+  {
+    "id": 5,
+    "page": 1,
+    "prompt": "Mana dari ke-5 gambar ini yang paling melengkapi kalimat gambar tersebut? Jika adalah maka adalah",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 6,
+    "page": 1,
+    "prompt": "Saat ini John berumur 12 tahun, yaitu 3 kali lebih tua dari adiknya. Berapa umur John saat umurnya 2 kali lebih tua dari umur adiknya?",
+    "options": {
+      "A": "15",
+      "B": "16",
+      "C": "18",
+      "D": "20",
+      "E": "21"
+    },
+    "type": "text"
+  },
+  {
+    "id": 7,
+    "page": 1,
+    "prompt": "Mana dari ke-5 kata ini yang paling melengkapi kalimat tersebut? Jika “Kakak Laki-Laki” itu “Kakak Perempuan”, maka “ Keponakan Perempuan” adalah:",
+    "options": {
+      "A": "Ibu",
+      "B": "Anak Perempuan",
+      "C": "Bibi",
+      "D": "Paman",
+      "E": "Keponakan Laki-laki"
+    },
+    "type": "text"
+  },
+  {
+    "id": 8,
+    "page": 1,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain? A Z F N E",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 9,
+    "page": 1,
+    "prompt": "Mana dari ke-5 kata ini yang paling melengkapi kalimat tersebut. Jika “Susu” itu “Gelas”, maka “Surat” itu:",
+    "options": {
+      "A": "Stempel",
+      "B": "Ballpoin",
+      "C": "Amplop",
+      "D": "Buku",
+      "E": "Kiriman"
+    },
+    "type": "text"
+  },
+  {
+    "id": 10,
+    "page": 2,
+    "prompt": "Mana dari ke-5 yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 11,
+    "page": 2,
+    "prompt": "Mana dari ke-5 kata ini yang paling melengkapi kalimat tersebut? Jika “HIDUP” itu “PUDIH” maka 5232 adalah:",
+    "options": {
+      "A": "2523",
+      "B": "3252",
+      "C": "2325",
+      "D": "3225",
+      "E": "5223"
+    },
+    "type": "text"
+  },
+  {
+    "id": 12,
+    "page": 2,
+    "prompt": "“JIka beberapa Smaugs adalah Thors dan beberapa Thors adalah Thrains, maka beberapa Smaugs pasti adalah Thrains.” Pernyataan ini adalah:",
+    "options": {
+      "A": "Benar",
+      "B": "Salah",
+      "C": "Tidak keduanya",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "text"
+  },
+  {
+    "id": 13,
+    "page": 2,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 14,
+    "page": 2,
+    "prompt": "Mana dari ke-5 kata yang paling melengkapi kalimat tersebut? Jika “Pohon” itu “Tanah” maka “Cerobong Asap” itu:",
+    "options": {
+      "A": "Asap",
+      "B": "Batu bata",
+      "C": "Langit",
+      "D": "Garasi",
+      "E": "Rumah"
+    },
+    "type": "text"
+  },
+  {
+    "id": 15,
+    "page": 2,
+    "prompt": "Mana dari angka-angka ini yang TIDAK masuk ke dalam urutan di bawah ini? 9 – 7 – 8 – 6 – 7 – 5 – 6 – 3",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)",
+      "F": "(f)",
+      "G": "(g)",
+      "H": "(h)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 16,
+    "page": 2,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "Sentuh",
+      "B": "Rasa",
+      "C": "Dengar",
+      "D": "Senyum",
+      "E": "Lihat"
+    },
+    "type": "text"
+  },
+  {
+    "id": 17,
+    "page": 2,
+    "prompt": "Mana dari ke-5 gambar ini yang paling melengkapi kalimat gambar tersebut? Jika >> adalah m aka adalah",
+    "options": {
+      "A": "<<",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 18,
+    "page": 2,
+    "prompt": "Jack lebih tinggi dari Peter, dan Bill lebih pendek dari Jack. Mana kalimat yang paling akurat?",
+    "options": {
+      "A": "Bill lebih tinggi dari Peter",
+      "B": "Bill lebih pendek dari Peter",
+      "C": "Bill sama tingginya dengan Peter",
+      "D": "Mustahil untuk mengetahui apakah Bill or Peter yang lebih tinggi",
+      "E": "(e)"
+    },
+    "type": "text"
+  },
+  {
+    "id": 19,
+    "page": 2,
+    "prompt": "Mana dari ke -5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "Kaus kaki",
+      "B": "Baju",
+      "C": "Sepatu",
+      "D": "Dompet",
+      "E": "Topi"
+    },
+    "type": "text"
+  },
+  {
+    "id": 20,
+    "page": 2,
+    "prompt": "Mana dari ke-5 ini yang paling melengkapi kalimat tersebut? Jika “CAACCAC” adalah “3113313” maka “CACAACAC” adalah:",
+    "options": {
+      "A": "13133131",
+      "B": "13133313",
+      "C": "31311131",
+      "D": "31311313",
+      "E": "31313113"
+    },
+    "type": "text"
+  },
+  {
+    "id": 21,
+    "page": 3,
+    "prompt": "Jika Anda mengatur ulang kata “RAPIS”, maka Anda akan mendapat nama sebuah:",
+    "options": {
+      "A": "Lautan",
+      "B": "Negara",
+      "C": "Provinsi",
+      "D": "Kota",
+      "E": "Hewan"
+    },
+    "type": "text"
+  },
+  {
+    "id": 22,
+    "page": 3,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 23,
+    "page": 3,
+    "prompt": "Mana dari ke-5 kata ini yang paling melengkapi kalimat tersebut? Jika “Peluru” adalah “Senjata” maka “Bola Api” adalah:",
+    "options": {
+      "A": "Pentungan",
+      "B": "Ketapel",
+      "C": "Meriam",
+      "D": "Pelempar",
+      "E": "Jepretan"
+    },
+    "type": "text"
+  },
+  {
+    "id": 24,
+    "page": 3,
+    "prompt": "“Jika beberapa Bifurs adalah Bofurs dan semua Gloins adalah Bofurs, maka beberapa Bifurs pasti adalah Gloins.” Pernyataan ini adalah:",
+    "options": {
+      "A": "Benar",
+      "B": "Salah",
+      "C": "Tidak keduanya",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "text"
+  },
+  {
+    "id": 25,
+    "page": 3,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "A1",
+      "B": "E6",
+      "C": "D4",
+      "D": "B2",
+      "E": "C3"
+    },
+    "type": "text"
+  },
+  {
+    "id": 26,
+    "page": 3,
+    "prompt": "Mana dari angka-angka ini yang TIDAK masuk ke dalam urutan di bawah ini? A – D – G – I –J – M – P – S Pilih jawaban Anda :",
+    "options": {
+      "A": "D –",
+      "B": "I –",
+      "C": "J –",
+      "D": "M –",
+      "E": "S"
+    },
+    "type": "text"
+  },
+  {
+    "id": 27,
+    "page": 3,
+    "prompt": "Mana dari ke-5 gambar ini yang paling melengkapi kalimat gambar tersebut? Jika adalah maka adalah",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 28,
+    "page": 3,
+    "prompt": "Harga dari sebuah baju di-discount 20% untuk sebuah acara tahunan. Berapa % baju tersebut harus di-naik-kan dari harga discount tersebut, sehingga harga baju tersebut menjadi sama dengan awalnya?",
+    "options": {
+      "A": "15% b.20%",
+      "B": "(b)",
+      "C": "25%",
+      "D": "30%",
+      "E": "40%"
+    },
+    "type": "text"
+  },
+  {
+    "id": 29,
+    "page": 3,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "Tembaga",
+      "B": "Besi",
+      "C": "Kuningan",
+      "D": "Emas",
+      "E": "Timah"
+    },
+    "type": "text"
+  },
+  {
+    "id": 30,
+    "page": 4,
+    "prompt": "Mana dari ke-5 gambar ini yang paling melengkapi kalimat gambar tersebut? Jika adalah maka adalah",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 31,
+    "page": 4,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "Botol",
+      "B": "Cangkir",
+      "C": "Bak",
+      "D": "Terowongan",
+      "E": "Mangkuk"
+    },
+    "type": "text"
+  },
+  {
+    "id": 32,
+    "page": 4,
+    "prompt": "Mari memiliki beberapa kue. Setelah makan 1 kue, Mary memberikan ½ dari sisanya untuk adiknya. Setelah makan 1 kue lagi, Mary memberikan ½ dari sisanya untuk adiknya. Mary sekarang hanya memiliki 5 kue. Berapakah jumlah awal kue yang dimiliki Mary?",
+    "options": {
+      "A": "(a)",
+      "B": "22 c.23 d.45",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "46"
+    },
+    "type": "text"
+  },
+  {
+    "id": 33,
+    "page": 4,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "Terigu",
+      "B": "Jerami",
+      "C": "Gandum",
+      "D": "Bubur",
+      "E": "Beras"
+    },
+    "type": "text"
+  },
+  {
+    "id": 34,
+    "page": 4,
+    "prompt": "Mana dari angka-angka ini yang TIDAK masuk ke dalam urutan di bawah ini? 2 – 3 – 6 – 7 – 8 – 14 – 15 – 30",
+    "options": {
+      "A": "Tiga",
+      "B": "Tujuh",
+      "C": "Delapan",
+      "D": "Lima belas",
+      "E": "Tiga puluh"
+    },
+    "type": "text"
+  },
+  {
+    "id": 35,
+    "page": 4,
+    "prompt": "Mana dari ke -5 gambar ini yang paling melengkapi kalimat gambar tersebut? Jika adalah maka adalah",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 36,
+    "page": 4,
+    "prompt": "“Sebuah pesawat ruang angkasa menerima 3 pesan dalam bahasa yang aneh dari sebuah planet di kejauhan. Para astronot mempelajari pesan-pesan tersebut dan menemukan bahwa : “Elros Aldarion Elendil” berarti “Bahaya Ledakan Roket” dan “Edain Mnyatur Elros” berarti “Bahaya Kebakaran Pesawat Ruang Angkasa” dan “Aldarion Gimilizor Gondor” berarti “Ledakan Gas Yang Buruk”. Apakah arti dari “Elendil”?",
+    "options": {
+      "A": "Bahaya",
+      "B": "Ledakan",
+      "C": "Bukan apa-apa",
+      "D": "Roket",
+      "E": "Gas"
+    },
+    "type": "text"
+  },
+  {
+    "id": 37,
+    "page": 4,
+    "prompt": "Mana dari ke-5 gambar ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 38,
+    "page": 5,
+    "prompt": "Mana dari ke-5 ini yang paling melengkapi kalimat tersebut? “Jika “GESPER” adalah “Kepala Gesper”, maka “SEPATU” adalah:",
+    "options": {
+      "A": "Kaos Kaki",
+      "B": "Tumit",
+      "C": "Kaki",
+      "D": "Tali Sepatu",
+      "E": "Sol Sepatu"
+    },
+    "type": "text"
+  },
+  {
+    "id": 39,
+    "page": 5,
+    "prompt": "Mana dari ke-5 gambar ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 40,
+    "page": 5,
+    "prompt": "John menerima USD 0.41 sebagai kembalian dari pembeliannya di apotik. Jika Jhon menerima 6 koin, maka ketiga dari koin-koin tersebut harusnya:",
+    "options": {
+      "A": "Satu Sen",
+      "B": "Lima sen",
+      "C": "Sepuluh sen",
+      "D": "Seperempat dollar",
+      "E": "Setengah dollar"
+    },
+    "type": "text"
+  },
+  {
+    "id": 41,
+    "page": 5,
+    "prompt": "Mana dari ke-5 gambar ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 42,
+    "page": 5,
+    "prompt": "Jika Anda mengatur ulang kata-kata “RMANJE”, maka anda akan mendapat nama sebuah:",
+    "options": {
+      "A": "Lautan",
+      "B": "Negara",
+      "C": "Provinsi",
+      "D": "Kota",
+      "E": "Hewan"
+    },
+    "type": "text"
+  },
+  {
+    "id": 43,
+    "page": 5,
+    "prompt": "Mana dari ke-5 pilihan yang paling tepat untuk melengkapi kalimat berikut: jika adalah maka adalah :",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 44,
+    "page": 5,
+    "prompt": "”Jika semua Wargs adalah Twerps dan tidak ada Twerps yang merupakan Gollums maka tidak ada Gollums yang pasti adalah Wargs.” Pernyataan ini adalah:",
+    "options": {
+      "A": "Benar",
+      "B": "Salah",
+      "C": "Tidak Keduanya",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "text"
+  },
+  {
+    "id": 45,
+    "page": 5,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "Kuda",
+      "B": "Kanguru",
+      "C": "Kuda Zebra",
+      "D": "Rusa",
+      "E": "Keledai"
+    },
+    "type": "text"
+  },
+  {
+    "id": 46,
+    "page": 6,
+    "prompt": "Mana dari gambar ini yang TIDAK sesuai dengan urutan gambar –gambar ini?",
+    "options": {
+      "A": "A B",
+      "B": "E F",
+      "C": "I J",
+      "D": "M N",
+      "E": "Q R D C H G L K O P T S"
+    },
+    "type": "image"
+  },
+  {
+    "id": 47,
+    "page": 6,
+    "prompt": "Mana dari ke-5 ini yang paling melengkapi kalimat tersebut? Jika “Jari” adalah “Tangan” maka “Daun” adalah:",
+    "options": {
+      "A": "Pohon",
+      "B": "Cabang",
+      "C": "Bunga",
+      "D": "Ranting",
+      "E": "Kulit Kayu"
+    },
+    "type": "text"
+  },
+  {
+    "id": 48,
+    "page": 6,
+    "prompt": "“Ibunya John mengirimkannya ke toko untuk membeli 9 kotak besar jeruk. John hanya dapat membawa 2 kotak dalam sekali jalan. Berapa kali ia harus bolak-balik ke toko?",
+    "options": {
+      "A": "4",
+      "B": "4½",
+      "C": "5",
+      "D": "½",
+      "E": "6"
+    },
+    "type": "text"
+  },
+  {
+    "id": 49,
+    "page": 6,
+    "prompt": "Mana dari gambar ini yang TIDAK sesuai dengan urutan gambar-gambar ini?",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 50,
+    "page": 6,
+    "prompt": "Mana dari ke-5 ini yang paling melengkapi kalimat tersebut? Jika “Kaki” adalah “Lutut”, maka “Tangan” adalah:",
+    "options": {
+      "A": "Jari",
+      "B": "Sikut",
+      "C": "Tumit",
+      "D": "Kaki",
+      "E": "Lengan"
+    },
+    "type": "text"
+  },
+  {
+    "id": 51,
+    "page": 6,
+    "prompt": "Mana gambar yang paling mengikuti logika dari diagram di bawah ini?",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 52,
+    "page": 6,
+    "prompt": "Mary ada di peringkat ke-13 dari yang terbaik dan juga peringkat ke-13 dari yang terburuk dalam lomba mengeja kata. Ada berapa peserta dalam lomba mengeja kata tersebut?",
+    "options": {
+      "A": "13",
+      "B": "25",
+      "C": "26",
+      "D": "27",
+      "E": "28"
+    },
+    "type": "text"
+  },
+  {
+    "id": 53,
+    "page": 6,
+    "prompt": "Mana dari ke-5 ini yang paling melengkapi kalimat tersebut? Jika “Air “ adalah “Es Batu”, maka “Susu” adalah:",
+    "options": {
+      "A": "Madu",
+      "B": "Keju",
+      "C": "Sereal",
+      "D": "Kopi",
+      "E": "Kue"
+    },
+    "type": "text"
+  },
+  {
+    "id": 54,
+    "page": 6,
+    "prompt": "Mana dari angka ini yang TIDAK sesuai dengan urutan angka-angka ini? 1 - 2 - 5 - 10 - 13 - 26 - 29 - 48",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)",
+      "F": "(f)",
+      "G": "(g)",
+      "H": "(h)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 55,
+    "page": 6,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "Sayap",
+      "B": "Iga",
+      "C": "Salmon",
+      "D": "Ayam",
+      "E": "Sapi"
+    },
+    "type": "text"
+  },
+  {
+    "id": 56,
+    "page": 6,
+    "prompt": "“Jika semua Fleeps adalah Sloops dan semua Sloops adalah Loopies, maka semua Fleeps adalah pasti Loopies.” Pernyataan ini adalah:",
+    "options": {
+      "A": "Benar",
+      "B": "Salah",
+      "C": "Tidak Keduanya",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "text"
+  },
+  {
+    "id": 57,
+    "page": 7,
+    "prompt": "Mana dari ke-5 gambar ini yang paling melengkapi kalimat gambar tersebut? Jika adalah maka adalah",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 58,
+    "page": 7,
+    "prompt": "Mana dari ke-5 ini yang paling TIDAK mirip dengan 4 yang lain?",
+    "options": {
+      "A": "Sentimeter",
+      "B": "Kilometer",
+      "C": "Hektar",
+      "D": "Meter",
+      "E": "Kaki"
+    },
+    "type": "text"
+  },
+  {
+    "id": 59,
+    "page": 7,
+    "prompt": "Mana dari ke-5 gambar ini yang paling melengkapi kalimat gambar tersebut? Jika adalah maka adalah",
+    "options": {
+      "A": "(a)",
+      "B": "(b)",
+      "C": "(c)",
+      "D": "(d)",
+      "E": "(e)"
+    },
+    "type": "image"
+  },
+  {
+    "id": 60,
+    "page": 7,
+    "prompt": "“Seekor ikan mempunyai kepala sepanjang 9mm. Buntutnya sama panjangnya dengan ukuran kepalanya ditambah setengah kali ukuran badannya. Ukuran badannya adalah sama dengan ukuran kepala ditambah ukuran buntutnya.” Berapa panjang ikan tersebut?",
+    "options": {
+      "A": "27mm",
+      "B": "54mm",
+      "C": "63mm",
+      "D": "72mm",
+      "E": "81mm"
+    },
+    "type": "text"
+  }
+]
