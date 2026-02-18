@@ -1,0 +1,1283 @@
+﻿<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>DISC Forced-Choice 40 - Candidate Mode</title>
+  <style>
+    :root{
+      --bg:#0b1220; --card:#111b2e; --muted:#93a4c7; --text:#e9f0ff;
+      --line:#1f2b45; --accent:#7aa2ff; --ok:#3ddc97; --warn:#ffd166; --bad:#ff5c7a;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:linear-gradient(180deg,#070b14,#0b1220);
+      color:var(--text);
+    }
+    header{
+      padding:14px 14px 12px;
+      border-bottom:1px solid var(--line);
+      position:sticky; top:0; z-index:10;
+      background:rgba(7,11,20,.92);
+      backdrop-filter: blur(8px);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:0 14px;}
+    h1{margin:0 0 6px;font-size:16px;line-height:1.2}
+    p{margin:0;color:var(--muted);font-size:12px;line-height:1.35}
+    main{padding:12px 0 24px;}
+
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .tabbtn{
+      border:1px solid var(--line); background:#0b1426; color:var(--text);
+      padding:9px 12px; border-radius:999px; cursor:pointer; font-weight:900; font-size:13px;
+    }
+    .tabbtn.active{background:rgba(122,162,255,.18); border-color:rgba(122,162,255,.35);}
+    .hrd-only{display:none !important;}
+
+    .grid{display:grid;gap:12px;grid-template-columns:1fr;}
+    @media(min-width:980px){.grid{grid-template-columns:1fr;}}
+
+    .card{
+      background:rgba(17,27,46,.92);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+    }
+
+    label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px;}
+    input,select,textarea{
+      width:100%;
+      padding:11px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#0b1426;
+      color:var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    input:focus,select:focus,textarea:focus{
+      border-color:rgba(122,162,255,.8);
+      box-shadow:0 0 0 3px rgba(122,162,255,.15);
+    }
+
+    .row{display:grid;gap:10px;grid-template-columns:1fr;}
+    @media(min-width:620px){.row.two{grid-template-columns:1fr 1fr;}}
+    @media(min-width:920px){.row.three{grid-template-columns:1fr 1fr 1fr;}}
+
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid var(--line);background:#0b1426;
+      font-size:12px;color:var(--muted)
+    }
+    .pill b{color:var(--text)}
+
+    .muted{color:var(--muted);font-size:12px}
+    .sec{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(147,164,199,.25)}
+    .bar{height:10px;background:#0b1426;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+    .bar > div{height:100%;background:rgba(122,162,255,.65);width:0%}
+
+    .qtitle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+    .qtitle h2{margin:0;font-size:15px}
+
+    .qbox{
+      margin-top:10px;
+      background:#0b1426;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+    }
+
+    .opt{
+      display:grid;
+      grid-template-columns:24px minmax(0,1fr) 24px;
+      gap:10px;
+      align-items:center;
+      padding:12px 10px;
+      border-radius:14px;
+      border:1px solid rgba(31,43,69,.8);
+      margin:10px 0;
+      background:rgba(17,27,46,.35);
+    }
+    .opt .rightCol{display:none !important}
+    .opt input[type="radio"]{width:18px;height:18px}
+    .opt input[name="least"]{justify-self:start;align-self:center;margin:0;}
+    .opt input[name="most"]{justify-self:end;align-self:center;margin:0;}
+    .opt strong{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+    .opt span{font-size:14px;line-height:1.35}
+
+    /* Mobile: show choice labels clearly */
+    .choiceRow{
+      display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:10px;
+      padding-top:10px;border-top:1px dashed rgba(147,164,199,.25)
+    }
+    @media(min-width:620px){
+      .choiceRow{display:flex}
+    }
+    .choiceRow .chip{
+      display:inline-flex;gap:6px;align-items:center;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid var(--line);background:#0b1426;color:var(--muted);font-size:12px
+    }
+
+    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    button{
+      border:1px solid var(--line); background:#0b1426; color:var(--text);
+      padding:12px 12px; border-radius:14px; cursor:pointer;
+      font-weight:900; font-size:14px;
+      min-height:44px;
+    }
+    button.primary{background:rgba(122,162,255,.18); border-color:rgba(122,162,255,.35);}
+    button.good{background:rgba(61,220,151,.14); border-color:rgba(61,220,151,.35);}
+    button.warn{background:rgba(255,209,102,.12); border-color:rgba(255,209,102,.35);}
+    button.danger{background:rgba(255,92,122,.12); border-color:rgba(255,92,122,.35);}
+    button:disabled{opacity:.45; cursor:not-allowed}
+
+    .warnbox{
+      margin-top:10px;padding:10px;border-radius:12px;
+      border:1px solid rgba(255,209,102,.35); background:rgba(255,209,102,.10);
+      font-size:12px
+    }
+    .okbox{
+      margin-top:10px;padding:10px;border-radius:12px;
+      border:1px solid rgba(61,220,151,.35); background:rgba(61,220,151,.10);
+      font-size:12px
+    }
+    .badbox{
+      margin-top:10px;padding:10px;border-radius:12px;
+      border:1px solid rgba(255,92,122,.35); background:rgba(255,92,122,.10);
+      font-size:12px
+    }
+
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{
+      border-bottom:1px solid rgba(31,43,69,.6);
+      padding:10px 8px;font-size:12px;text-align:left;vertical-align:top
+    }
+    th{color:var(--muted);font-weight:1000}
+    .right{text-align:right}
+    .tag{font-weight:1000}
+
+    .kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+    .kpi .item{background:#0b1426;border:1px solid var(--line);border-radius:12px;padding:10px}
+    .kpi .item .t{font-size:12px;color:var(--muted)}
+    .kpi .item .v{font-size:16px;font-weight:1000;margin-top:2px}
+
+    /* Sticky footer actions on mobile */
+    .stickyActions{
+      position:sticky;
+      bottom:0;
+      z-index:8;
+      padding:10px;
+      margin:-10px -14px 0;
+      background:rgba(7,11,20,.92);
+      border-top:1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+    .stickyActions, .stickyActions *{pointer-events:auto}
+    #finishBtn{position:relative;z-index:10}
+    @media(min-width:980px){
+      .stickyActions{position:static;background:none;border-top:none;margin:0;padding:0}
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap">
+    <h1>DISC Forced-Choice 40 - Paling Menggambarkan/Paling Tidak Menggambarkan</h1>
+    <p>No HP wajib format <b>08xxxxxxxxxx</b> (tanpa spasi/tanda).</p>
+    <div class="tabs">
+      <button class="tabbtn active" id="tabCandidate">Kandidat (Tes)</button>
+      <button class="tabbtn hrd-only" id="tabAdmin">Admin Dashboard</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- CANDIDATE VIEW -->
+  <section id="viewCandidate">
+    <div class="grid">
+
+      <section class="card">
+        <div class="row three">
+          <div>
+            <label>Nama Kandidat</label>
+            <input id="name" placeholder="Contoh: Siti Aisyah" />
+          </div>
+          <div>
+            <label>No HP (wajib 08xxxxxxxxxx)</label>
+            <input id="phone" placeholder="083xxxxxxxxxx" inputmode="numeric" maxlength="13" />
+            <div class="muted" style="margin-top:6px">Wajib: <b>08</b> + 8â€“11 digit (total 10â€“13 digit).</div>
+          </div>
+          <div>
+            <label>Posisi</label>
+            <input id="role" placeholder="Contoh: HR Recruitment Supervisor" />
+          </div>
+        </div>
+
+        <div class="row three hrd-only" style="margin-top:10px">
+          <div>
+            <label>Tanggal Assessment</label>
+            <input id="date" type="date" />
+          </div>
+          <div>
+            <label>Mode</label>
+            <select id="mode">
+              <option value="work">Konteks Kerja</option>
+              <option value="general">Umum</option>
+            </select>
+          </div>
+          <div>
+            <label>Candidate ID (auto)</label>
+            <input id="candidateId" placeholder="Auto setelah mulai" disabled />
+          </div>
+        </div>
+
+        <div class="sec">
+          <div class="pill"><b>Progress</b><span id="progText" class="muted">0/40</span></div>
+          <div class="bar" style="margin-top:8px"><div id="progBar"></div></div>
+
+          <div class="qtitle">
+            <h2 id="qHeader">Blok 1</h2>
+            <div class="pill"><b>Waktu</b><span id="timer" class="muted">00:00</span></div>
+          </div>
+
+          <div class="qbox">
+            <div class="muted" style="margin-bottom:8px">Pilih 1 <b>Paling Menggambarkan</b> dan 1 <b>Paling Tidak Menggambarkan</b> pada setiap blok.</div>
+
+            <div class="choiceRow" aria-hidden="true">
+              <span class="chip">Kiri: <b>Paling Tidak Menggambarkan</b></span>
+              <span class="chip">Kanan: <b>Paling Menggambarkan</b></span>
+            </div>
+
+            <div id="options"></div>
+
+            <div id="hint" class="warnbox" style="display:none">
+              Lengkapi pilihan Paling Menggambarkan dan Paling Tidak Menggambarkan (tidak boleh sama) untuk melanjutkan.
+            </div>
+
+            <div class="stickyActions">
+              <div class="btns">
+                <button id="prevBtn" class="warn">Sebelumnya</button>
+                <button id="nextBtn" class="primary">Berikutnya</button>
+                <button id="finishBtn" class="good" style="display:none">Selesaikan</button>
+              </div>
+              <div class="muted" style="margin-top:8px">Tips HP: geser sedikit ke bawah untuk lihat tombol kalau keyboard terbuka.</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <aside class="card hrd-only">
+        <div class="pill"><b>Hasil</b><span id="status" class="muted">Belum selesai</span></div>
+
+        <div id="resultArea" class="sec">
+          <div class="muted">Selesaikan 40 blok untuk melihat hasil.</div>
+        </div>
+
+        <div class="sec">
+          <div class="pill"><b>Google Sheet Sync</b><span class="muted">Apps Script</span></div>
+          <label style="margin-top:10px">Apps Script Endpoint (Web App URL)</label>
+          <input
+            id="endpoint"
+            value="https://script.google.com/macros/s/AKfycbxW0ikEwUwnRJhc89EkFRsUlMLR7lM_SGQbtduixCEoO6U8o-GMVlyQRNWY7-J4CcTV/exec"
+          />
+          <div class="btns">
+            <button id="sendBtn" class="warn" disabled>Kirim ke Google Sheet</button>
+          </div>
+          <div class="muted" style="margin-top:8px">
+            Jika tombol gagal dari <b>file://</b>, jalankan HTML via server lokal (mis. VSCode Live Server).
+          </div>
+        </div>
+
+        <div class="sec">
+          <div class="pill"><b>Local Storage</b><span class="muted">Perangkat ini</span></div>
+          <div class="btns">
+            <button id="saveBtn" class="good" disabled>Simpan Lokal</button>
+            <button id="resetBtn" class="danger">Reset Tes</button>
+          </div>
+          <div class="muted" style="margin-top:8px">Simpan lokal untuk dashboard admin tanpa internet.</div>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- ADMIN VIEW -->
+  <section id="viewAdmin" class="hrd-only" style="display:none">
+    <div class="card">
+      <div class="pill"><b>Admin Dashboard</b><span class="muted">Lookup HP â€¢ Filter Posisi â€¢ Ranking</span></div>
+
+      <div class="sec row two">
+        <div>
+          <label>Cari (Nama / No HP)</label>
+          <input id="qSearch" placeholder="mis. 0838... atau 'Siti'" />
+        </div>
+        <div class="row two">
+          <div>
+            <label>Filter Posisi</label>
+            <select id="roleFilter"></select>
+          </div>
+          <div>
+            <label>Urutkan</label>
+            <select id="sortMode">
+              <option value="recent">Terbaru</option>
+              <option value="fit">Fit Score (per posisi)</option>
+              <option value="elapsed">Waktu (cepat â†’ lambat)</option>
+              <option value="flags">Quality Flags (sedikit â†’ banyak)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="pill"><b>Target Role (untuk ranking internal)</b><span class="muted">heuristik</span></div>
+        <div class="muted" style="margin-top:8px">
+          Fit Score = kedekatan skor kandidat ke target D/I/S/C per posisi (0â€“100).
+          Ini alat bantu internal (catatan ipsative), bukan â€œprediksi ilmiahâ€.
+        </div>
+
+        <div class="row three" style="margin-top:10px">
+          <div>
+            <label>Pilih Posisi untuk edit target</label>
+            <select id="roleProfilePick"></select>
+          </div>
+          <div>
+            <label>Target D/I/S/C (0â€“100)</label>
+            <div class="row two">
+              <input id="tD" type="number" min="0" max="100" placeholder="D" />
+              <input id="tI" type="number" min="0" max="100" placeholder="I" />
+            </div>
+            <div class="row two" style="margin-top:8px">
+              <input id="tS" type="number" min="0" max="100" placeholder="S" />
+              <input id="tC" type="number" min="0" max="100" placeholder="C" />
+            </div>
+          </div>
+          <div>
+            <label>Aksi</label>
+            <div class="btns" style="margin-top:0">
+              <button id="saveRoleProfile" class="good">Simpan Target</button>
+              <button id="resetRoleProfiles" class="danger">Reset Default</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="pill"><b>Daftar Kandidat</b><span id="countText" class="muted">0</span></div>
+        <div id="tableHost" class="sec"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  function cleanMojibakeText(s){
+    let t = String(s ?? "");
+    const map = {
+      "â€œ":"\"", "â€":"\"",
+      "â€˜":"'", "â€™":"'",
+      "â€”":"-", "â€“":"-",
+      "â€¢":"•",
+      "â†":"<-", "â†’":"->",
+      "â‰ ":"!="
+    };
+    Object.keys(map).forEach(k=>{ t = t.split(k).join(map[k]); });
+    return t;
+  }
+  function sanitizeDomText(root){
+    const host = root || document.body;
+    const walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
+    let node = walker.nextNode();
+    while(node){
+      const fixed = cleanMojibakeText(node.nodeValue);
+      if(fixed !== node.nodeValue) node.nodeValue = fixed;
+      node = walker.nextNode();
+    }
+  }
+  sanitizeDomText(document.body);
+
+  const KEY = "disc_fc40_mobile_records_v1";
+  const ROLEKEY = "disc_fc40_mobile_role_profiles_v1";
+  const ENDPOINTKEY = "disc_fc40_mobile_endpoint_v1";
+  const SHARED_ENDPOINT_KEY = "berani_sheet_endpoint_v1";
+  const DEFAULT_ENDPOINT = "https://script.google.com/macros/s/AKfycbxW0ikEwUwnRJhc89EkFRsUlMLR7lM_SGQbtduixCEoO6U8o-GMVlyQRNWY7-J4CcTV/exec";
+
+  function todayISO(){
+    const d=new Date();
+    const yyyy=d.getFullYear();
+    const mm=String(d.getMonth()+1).padStart(2,'0');
+    const dd=String(d.getDate()).padStart(2,'0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+  $("date").value = todayISO();
+
+  // ---------- Phone (wajib 08xxxxxxxxxx) ----------
+  function cleanPhone(raw){
+    return String(raw || "").trim().replace(/[^\d]/g, "");
+  }
+  function isValidPhone08(raw){
+    const p = cleanPhone(raw);
+    return /^08\d{8,11}$/.test(p); // total 10-13 digit
+  }
+  function normalizePhone08(raw){
+    return cleanPhone(raw);
+  }
+  function resolveEndpoint(){
+    const q = new URLSearchParams(window.location.search);
+    const fromQuery = (q.get("sheet") || "").trim();
+    const fromLocalShared = (localStorage.getItem(SHARED_ENDPOINT_KEY) || "").trim();
+    const fromDisc = (localStorage.getItem(ENDPOINTKEY) || "").trim();
+    const url = fromQuery || fromLocalShared || fromDisc || DEFAULT_ENDPOINT;
+    if(url){
+      localStorage.setItem(SHARED_ENDPOINT_KEY, url);
+      localStorage.setItem(ENDPOINTKEY, url);
+    }
+    return url;
+  }
+  function buildNextTestUrl(){
+    const q = new URLSearchParams(window.location.search);
+    const keep = new URLSearchParams();
+    ["name","phone","position","token","sheet"].forEach(k=>{
+      const v = q.get(k);
+      if(v) keep.set(k, v);
+    });
+    const qs = keep.toString();
+    return `../working-style/index.html${qs ? "?" + qs : ""}`;
+  }
+  function goNextTestWithDelay(){
+    if(nextRedirectScheduled) return;
+    nextRedirectScheduled = true;
+    $("status").textContent = "Tes DISC selesai. Lanjut ke tes berikutnya...";
+    setTimeout(()=>{ window.location.href = buildNextTestUrl(); }, 1200);
+  }
+
+  // ---------- Candidate ID ----------
+  function ensureCandidateId(){
+    const name = ($("name").value||"").trim();
+    const phone = normalizePhone08($("phone").value);
+    const date = $("date").value || todayISO();
+    const base = (phone || name || "CAND") + "|" + date;
+    let h = 0;
+    for (let i=0;i<base.length;i++){ h = (h*31 + base.charCodeAt(i)) >>> 0; }
+    const id = "CAND-" + String(h).padStart(10,"0");
+    $("candidateId").value = id;
+    return id;
+  }
+
+  // ---------- Escape ----------
+  function escapeHTML(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+  }
+
+  // ---------- 40 Blocks (orisinal) ----------
+  const BANK = [
+    {D:"Mengambil alih saat situasi buntu dan butuh keputusan cepat.", I:"Membangun semangat tim lewat komunikasi hangat.", S:"Menjaga ritme kerja stabil agar tim nyaman.", C:"Memastikan langkah kerja sesuai data dan standar."},
+    {D:"Berani menetapkan target tinggi dan menekan eksekusi.", I:"Mudah mengajak orang ikut ide dan rencana.", S:"Sabar mendampingi orang lain sampai paham.", C:"Teliti mencari risiko kesalahan sebelum melangkah."},
+    {D:"Langsung ke inti masalah tanpa banyak basa-basi.", I:"Senang berdiskusi dan membuat suasana hidup.", S:"Lebih suka kerja teratur dan tidak tergesa-gesa.", C:"Kritis pada detail dan kualitas hasil akhir."},
+    {D:"Cepat mengambil keputusan walau info belum sempurna.", I:"Nyaman menjalin relasi baru dan memperluas jaringan.", S:"Konsisten menyelesaikan tugas rutin dengan rapi.", C:"Membuat struktur/aturan agar minim error."},
+    {D:"Menjadi penentu arah ketika tim ragu.", I:"Menyampaikan ide dengan cara yang meyakinkan.", S:"Mengutamakan kerja sama dan harmoni.", C:"Mengukur keberhasilan lewat akurasi dan bukti."},
+    {D:"Lebih suka bertindak daripada menunggu instruksi.", I:"Sering jadi penghubung antar orang/tim.", S:"Setia pada rencana, tidak suka perubahan mendadak.", C:"Mengecek ulang sebelum menyatakan selesai."},
+    {D:"Menantang cara lama bila tidak efektif.", I:"Mudah membangun kedekatan dan kepercayaan.", S:"Mengutamakan stabilitas dan kepastian langkah.", C:"Suka menganalisis pola dan akar masalah."},
+    {D:"Bertindak tegas saat perlu arah jelas.", I:"Memberi energi positif pada lingkungan kerja.", S:"Nyaman dengan tempo kerja yang terukur.", C:"Menjaga mutu lewat prosedur yang konsisten."},
+    {D:"Fokus pada hasil yang bisa diukur.", I:"Fokus pada pengaruh dan komunikasi.", S:"Fokus pada dukungan dan keberlanjutan.", C:"Fokus pada ketelitian dan kepatuhan standar."},
+    {D:"Suka kompetisi dan ingin jadi terdepan.", I:"Suka tampil dan menyampaikan ide di depan orang.", S:"Suka menjadi penopang yang dapat diandalkan.", C:"Suka menjadi penjaga kualitas dan ketepatan."},
+    {D:"Saat konflik, cenderung menuntaskan cepat.", I:"Saat konflik, cenderung mencairkan suasana.", S:"Saat konflik, cenderung menenangkan pihak-pihak.", C:"Saat konflik, cenderung kembali ke fakta & aturan."},
+    {D:"Jika target meleset, dorong tindakan korektif segera.", I:"Jika target meleset, jaga moral tim tetap naik.", S:"Jika target meleset, bantu tim kembali konsisten.", C:"Jika target meleset, audit proses dan detail."},
+    {D:"Nyaman memberi instruksi jelas dan langsung.", I:"Nyaman mengajak orang lewat pendekatan personal.", S:"Nyaman membantu orang pelan-pelan sampai bisa.", C:"Nyaman memberi arahan berbasis SOP dan data."},
+    {D:"Memilih prioritas dengan tegas walau ada penolakan.", I:"Memilih prioritas lewat diskusi & buy-in.", S:"Memilih prioritas yang stabil dan realistis.", C:"Memilih prioritas berdasarkan analisis dampak."},
+    {D:"Tidak masalah mengambil risiko yang terukur.", I:"Tidak masalah mencoba hal baru yang menarik.", S:"Lebih suka memastikan tim siap sebelum berubah.", C:"Lebih suka memastikan standar siap sebelum berubah."},
+    {D:"Kurang sabar bila proses terlalu lama.", I:"Kurang sabar bila komunikasi terasa kaku.", S:"Kurang nyaman bila suasana kerja tegang.", C:"Kurang nyaman bila serba improvisasi."},
+    {D:"Menghargai kecepatan dan ketegasan.", I:"Menghargai keterbukaan dan koneksi sosial.", S:"Menghargai kesetiaan dan konsistensi.", C:"Menghargai ketepatan dan struktur."},
+    {D:"Lebih suka memimpin daripada mengikuti.", I:"Lebih suka kolaborasi lewat komunikasi intens.", S:"Lebih suka jadi penopang stabil di belakang layar.", C:"Lebih suka jaga standar agar rapi."},
+    {D:"Cepat mengambil alih bila melihat peluang.", I:"Cepat mengajak orang bila melihat peluang.", S:"Pastikan kesiapan tim sebelum mengejar peluang.", C:"Pastikan analisis risiko sebelum mengejar peluang."},
+    {D:"Dalam deadline mepet, dorong eksekusi cepat.", I:"Dalam deadline mepet, dorong koordinasi & semangat.", S:"Dalam deadline mepet, dorong kerja rapi & stabil.", C:"Dalam deadline mepet, dorong pengecekan & akurasi."},
+    {D:"Berani menetapkan batas: ini harus selesai sekarang.", I:"Mengajak orang sepakat lewat komunikasi yang menyenangkan.", S:"Memastikan semua orang mendapat dukungan cukup.", C:"Memastikan keputusan mengikuti kriteria yang disepakati."},
+    {D:"Saya mudah berkata 'kita eksekusi dulu'.", I:"Saya mudah berkata 'kita komunikasikan dulu'.", S:"Saya mudah berkata 'kita stabilkan dulu'.", C:"Saya mudah berkata 'kita validasi dulu'."},
+    {D:"Saat meeting, saya dorong keputusan dan next step.", I:"Saat meeting, saya dorong partisipasi dan ide.", S:"Saat meeting, saya dorong kesepakatan yang nyaman.", C:"Saat meeting, saya dorong kejelasan definisi & data."},
+    {D:"Saya suka tantangan yang menuntut keberanian.", I:"Saya suka tantangan yang menuntut presentasi/relasi.", S:"Saya suka tantangan yang menuntut ketekunan.", C:"Saya suka tantangan yang menuntut analisis."},
+    {D:"Jika ada hambatan, saya menekan penyelesaian.", I:"Jika ada hambatan, saya menggerakkan orang.", S:"Jika ada hambatan, saya menjaga ritme tim.", C:"Jika ada hambatan, saya memperbaiki sistem."},
+    {D:"Saya nyaman mengambil keputusan akhir.", I:"Saya nyaman menjadi juru bicara.", S:"Saya nyaman menjadi pendukung utama tim.", C:"Saya nyaman menjadi penjaga kualitas."},
+    {D:"Saya cepat menutup diskusi yang berputar-putar.", I:"Saya suka membuka ruang ngobrol agar semua terlibat.", S:"Saya menjaga agar tidak ada yang tertinggal.", C:"Saya menjaga agar semua poin terdokumentasi."},
+    {D:"Saya terdorong oleh target dan hasil.", I:"Saya terdorong oleh relasi dan pengaruh.", S:"Saya terdorong oleh kestabilan dan kerja sama.", C:"Saya terdorong oleh akurasi dan standar."},
+    {D:"Saya menyukai keputusan cepat.", I:"Saya menyukai interaksi yang intens.", S:"Saya menyukai rutinitas yang konsisten.", C:"Saya menyukai struktur yang jelas."},
+    {D:"Saya menuntut agar masalah segera selesai.", I:"Saya menyatukan orang untuk menyelesaikan masalah.", S:"Saya menenangkan tim agar tetap berjalan.", C:"Saya meneliti penyebab agar tidak terulang."},
+    {D:"Saya lebih suka memulai daripada menunggu sempurna.", I:"Saya lebih suka membangun antusias dulu.", S:"Saya lebih suka memastikan kesiapan orang.", C:"Saya lebih suka memastikan ketepatan langkah."},
+    {D:"Saya tegas soal prioritas utama.", I:"Saya tegas soal komunikasi ke stakeholder.", S:"Saya tegas soal kestabilan operasional.", C:"Saya tegas soal standar kualitas."},
+    {D:"Saya nyaman memberi feedback yang langsung.", I:"Saya nyaman memberi feedback yang memotivasi.", S:"Saya nyaman memberi feedback yang suportif.", C:"Saya nyaman memberi feedback yang spesifik & data."},
+    {D:"Saya mudah memutuskan saat ada ketidakpastian.", I:"Saya menjaga optimisme saat ada ketidakpastian.", S:"Saya menjaga ketenangan saat ada ketidakpastian.", C:"Saya kembali ke data saat ada ketidakpastian."},
+    {D:"Saya menilai orang dari hasil.", I:"Saya menilai orang dari cara komunikasi.", S:"Saya menilai orang dari konsistensi & loyalitas.", C:"Saya menilai orang dari ketelitian & kualitas."},
+    {D:"Saya memilih solusi yang cepat berdampak.", I:"Saya memilih solusi yang mudah diterima banyak orang.", S:"Saya memilih solusi yang minim gejolak.", C:"Saya memilih solusi yang paling benar prosesnya."},
+    {D:"Jika harus memilih, saya pilih aksi.", I:"Jika harus memilih, saya pilih komunikasi.", S:"Jika harus memilih, saya pilih stabilitas.", C:"Jika harus memilih, saya pilih ketepatan."},
+    {D:"Saya bisa keras jika melihat performa turun.", I:"Saya ekspresif jika melihat peluang.", S:"Saya sangat sabar saat mendampingi orang.", C:"Saya sangat kritis saat melihat kesalahan."},
+    {D:"Saya cepat meminta komitmen & deadline.", I:"Saya cepat menghubungi pihak terkait untuk dukungan.", S:"Saya cepat memastikan pembagian tugas merata.", C:"Saya cepat menyusun checklist kontrol kualitas."},
+    {D:"Saya senang jadi pengambil keputusan.", I:"Saya senang jadi penggerak komunikasi.", S:"Saya senang jadi penstabil tim.", C:"Saya senang jadi penjaga standar."},
+  ];
+
+  const ATTENTION = [
+    { id:"ac1", prompt:"Pengecekan 1: pilih <b>Paling Menggambarkan = Pernyataan 1</b> dan <b>Paling Tidak Menggambarkan = Pernyataan 2</b>.", expect:{most:"D", least:"I"} },
+    { id:"ac2", prompt:"Pengecekan 2: pilih <b>Paling Menggambarkan = Pernyataan 3</b> dan <b>Paling Tidak Menggambarkan = Pernyataan 4</b>.", expect:{most:"S", least:"C"} },
+  ];
+
+  // ---------- State ----------
+  let idx = 0;
+  let answers = Array(BANK.length).fill(null);       // {most, least}
+  let blockTimes = Array(BANK.length).fill(null);    // ms per blok
+  let enteredAt = null;
+
+  let startedAt = null;
+  let timerInt = null;
+
+  let attentionAnswers = { ac1:null, ac2:null };
+  let finished = false;
+  let nextRedirectScheduled = false;
+  let finishingNow = false;
+
+  function startTimer(){
+    if(startedAt) return;
+    startedAt = Date.now();
+    timerInt = setInterval(()=>{
+      const s = Math.floor((Date.now()-startedAt)/1000);
+      const mm = String(Math.floor(s/60)).padStart(2,'0');
+      const ss = String(s%60).padStart(2,'0');
+      $("timer").textContent = `${mm}:${ss}`;
+    }, 500);
+  }
+  function stopTimer(){ if(timerInt) clearInterval(timerInt); timerInt=null; }
+
+  // ---------- Render ----------
+  function render(){
+    const total = BANK.length; // 40
+    $("progText").textContent = `${idx+1}/${total}`;
+    $("progBar").style.width = `${(idx/total)*100}%`;
+    $("qHeader").textContent = `Blok ${idx+1}`;
+
+    const block = BANK[idx];
+    const saved = answers[idx] || {most:null, least:null};
+
+    const opts = [
+      {dim:"D", text:block.D},
+      {dim:"I", text:block.I},
+      {dim:"S", text:block.S},
+      {dim:"C", text:block.C},
+    ];
+
+    // Render with stable 3-column layout: left choice (paling tidak menggambarkan), text, right choice (paling menggambarkan).
+    $("options").innerHTML = opts.map(o=>`
+      <div class="opt">
+        <input type="radio" name="least" value="${o.dim}" ${saved.least===o.dim?"checked":""} aria-label="Paling tidak menggambarkan">
+        <div>
+          <span>${escapeHTML(o.text)}</span>
+        </div>
+        <input type="radio" name="most" value="${o.dim}" ${saved.most===o.dim?"checked":""} aria-label="Paling menggambarkan">
+      </div>
+    `).join("");
+
+    $("hint").style.display = "none";
+    $("prevBtn").disabled = idx === 0;
+
+    const isLast = idx === total-1;
+    $("nextBtn").style.display = isLast ? "none" : "inline-block";
+    $("finishBtn").style.display = isLast ? "inline-block" : "none";
+
+    document.querySelectorAll('input[name="most"], input[name="least"]').forEach(el=>{
+      el.addEventListener("change", ()=>{
+        startTimer();
+        ensureCandidateId();
+        persistCurrent();
+        // vibrate ringan di HP (kalau support)
+        if (navigator.vibrate) navigator.vibrate(10);
+      });
+    });
+
+    enteredAt = Date.now();
+  }
+
+  function getSelected(){
+    const host = $("options") || document;
+    const most = host.querySelector('input[name="most"]:checked')?.value || null;
+    const least = host.querySelector('input[name="least"]:checked')?.value || null;
+    return {most, least};
+  }
+
+  function persistCurrent(){
+    const {most, least} = getSelected();
+    answers[idx] = {most, least};
+  }
+
+  function recordTimeOnLeave(){
+    if(enteredAt){
+      const dt = Date.now() - enteredAt;
+      blockTimes[idx] = (blockTimes[idx] ?? 0) + dt;
+    }
+  }
+
+  function canAdvanceAt(i){
+    const a = answers[i];
+    return a && a.most && a.least && a.most !== a.least;
+  }
+  function firstInvalidBlockIndex(){
+    for(let i=0;i<answers.length;i++){
+      if(!canAdvanceAt(i)) return i;
+    }
+    return -1;
+  }
+
+  function next(){
+    startTimer(); ensureCandidateId();
+    persistCurrent();
+    if(!canAdvanceAt(idx)){
+      $("hint").style.display = "block";
+      return;
+    }
+    recordTimeOnLeave();
+    idx++;
+    render();
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  function prev(){
+    persistCurrent();
+    recordTimeOnLeave();
+    idx--;
+    render();
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  // ---------- Scoring + Quality ----------
+  const LIB = {
+    D:{label:"Dominance"},
+    I:{label:"Influence"},
+    S:{label:"Steadiness"},
+    C:{label:"Conscientiousness"},
+  };
+
+  function scoreDISC(){
+    const raw = {D:0,I:0,S:0,C:0};
+    for(const a of answers){
+      raw[a.most] += 1;
+      raw[a.least] -= 1;
+    }
+    const N = BANK.length;  // 40
+    const min = -N, max = N;
+    const norm = {};
+    for(const k of Object.keys(raw)){
+      norm[k] = Math.round(((raw[k]-min)/(max-min))*100);
+    }
+    const ranked = Object.entries(norm).sort((a,b)=>b[1]-a[1]);
+    return {raw, norm, ranked, primary: ranked[0][0], secondary: ranked[1][0]};
+  }
+
+  function counts(){
+    const most = {D:0,I:0,S:0,C:0};
+    const least = {D:0,I:0,S:0,C:0};
+    const pairCount = {};
+    for(const a of answers){
+      most[a.most]++; least[a.least]++;
+      const key = a.most + "-" + a.least;
+      pairCount[key] = (pairCount[key]||0) + 1;
+    }
+    return {most, least, pairCount};
+  }
+
+  function median(arr){
+    const a = arr.filter(x=>Number.isFinite(x)).slice().sort((x,y)=>x-y);
+    if(!a.length) return 0;
+    const m = Math.floor(a.length/2);
+    return a.length%2 ? a[m] : Math.round((a[m-1]+a[m])/2);
+  }
+
+  function runQuality(){
+    const flags = [];
+    const elapsedSec = startedAt ? Math.floor((Date.now()-startedAt)/1000) : 0;
+    const bt = blockTimes.map(x=>Number.isFinite(x)?x:0);
+    const med = median(bt);
+    const avg = Math.round(bt.reduce((s,x)=>s+x,0)/bt.length);
+
+    // time flags for 40 blocks
+    if(elapsedSec && elapsedSec < 240) flags.push("Terlalu cepat: total < 4 menit (40 blok).");
+    if(med && med < 2500) flags.push("Terlalu cepat: median waktu per blok < 2.5 detik.");
+    if(avg && avg < 3000) flags.push("Terlalu cepat: rata-rata per blok < 3 detik.");
+
+    const {most, least, pairCount} = counts();
+    const maxMost = Math.max(...Object.values(most));
+    const maxLeast = Math.max(...Object.values(least));
+    if(maxMost/answers.length > 0.70) flags.push("Pola Most sangat dominan pada satu dimensi (>70%).");
+    if(maxLeast/answers.length > 0.70) flags.push("Pola Least sangat dominan pada satu dimensi (>70%).");
+
+    const maxPair = Math.max(...Object.values(pairCount));
+    if(maxPair/answers.length > 0.50) flags.push("Pola pasangan Most/Least berulang sangat tinggi (>50%).");
+
+    // attention pass
+    const ac1 = attentionAnswers.ac1;
+    const ac2 = attentionAnswers.ac2;
+    const pass = !!(ac1 && ac2 &&
+      ac1.most===ATTENTION[0].expect.most && ac1.least===ATTENTION[0].expect.least &&
+      ac2.most===ATTENTION[1].expect.most && ac2.least===ATTENTION[1].expect.least
+    );
+    if(!pass) flags.push("Attention check gagal (1 atau 2 pertanyaan).");
+
+    // phone format
+    if(!isValidPhone08($("phone").value)) flags.push("No HP tidak sesuai format wajib 08xxxxxxxxxx.");
+
+    return {flags, attentionPass: pass, elapsedSec, medianMs: med, avgMs: avg};
+  }
+
+  // ---------- Role target + Fit score (heuristik) ----------
+  function defaultRoleTarget(){ return {D:50,I:50,S:50,C:50}; }
+
+  function loadRoleProfiles(){
+    try{
+      const x = JSON.parse(localStorage.getItem(ROLEKEY) || "null");
+      if(x && typeof x === "object") return x;
+    }catch(e){}
+    return {};
+  }
+  function saveRoleProfiles(obj){ localStorage.setItem(ROLEKEY, JSON.stringify(obj)); }
+
+  function getRoleTarget(role){
+    const profiles = loadRoleProfiles();
+    return profiles[role] || defaultRoleTarget();
+  }
+
+  function fitScoreForRole(norm, role){
+    const t = getRoleTarget(role);
+    const dist = Math.abs(norm.D - t.D) + Math.abs(norm.I - t.I) + Math.abs(norm.S - t.S) + Math.abs(norm.C - t.C);
+    return Math.max(0, Math.round(100 - (dist/4)));
+  }
+
+  // ---------- Attention gate ----------
+  function renderMiniMostLeast(acId){
+    const dims = ["D","I","S","C"];
+    return dims.map((d, i)=>`
+      <div class="opt">
+        <input type="radio" data-ac="${acId}" data-type="least" name="${acId}-least" value="${d}">
+        <div><strong>Pernyataan ${i+1}</strong><span class="muted">Pilih Paling Tidak Menggambarkan</span></div>
+        <input type="radio" data-ac="${acId}" data-type="most" name="${acId}-most" value="${d}">
+      </div>
+    `).join("");
+  }
+
+  function showAttentionGate(){
+    $("resultArea").innerHTML = `
+      <div class="pill"><b>Pengecekan Perhatian</b><span class="muted">Wajib</span></div>
+
+      <div class="sec">
+        <div class="warnbox">${ATTENTION[0].prompt}</div>
+        <div class="qbox" style="margin-top:10px">${renderMiniMostLeast("ac1")}</div>
+      </div>
+
+      <div class="sec">
+        <div class="warnbox">${ATTENTION[1].prompt}</div>
+        <div class="qbox" style="margin-top:10px">${renderMiniMostLeast("ac2")}</div>
+      </div>
+
+      <div class="btns">
+        <button class="good" id="finalizeBtn">Finalize Hasil</button>
+      </div>
+
+      <div class="muted" style="margin-top:10px">Pengecekan perhatian tidak memengaruhi skor DISC, hanya quality flag.</div>
+    `;
+
+    document.querySelectorAll('input[data-ac]').forEach(el=>{
+      el.addEventListener("change", ()=>{
+        const ac = el.getAttribute("data-ac");
+        const type = el.getAttribute("data-type");
+        attentionAnswers[ac] = attentionAnswers[ac] || {most:null, least:null};
+        attentionAnswers[ac][type] = el.value;
+        if (navigator.vibrate) navigator.vibrate(10);
+      });
+    });
+
+    $("finalizeBtn").addEventListener("click", ()=>{
+      for(const a of ["ac1","ac2"]){
+        const v = attentionAnswers[a];
+        if(!v || !v.most || !v.least || v.most===v.least){
+          alert("Lengkapi pengecekan perhatian (Paling Menggambarkan dan Paling Tidak Menggambarkan, tidak boleh sama).");
+          return;
+        }
+      }
+      finalize();
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+  }
+
+  // ---------- Finish / Finalize ----------
+  function finish(){
+    if(finishingNow) return;
+    finishingNow = true;
+    setTimeout(()=>{ finishingNow = false; }, 800);
+    startTimer(); ensureCandidateId();
+    persistCurrent();
+    if(!canAdvanceAt(idx)){
+      $("hint").style.display = "block";
+      $("hint").textContent = "Blok ini belum lengkap. Pilih 1 Paling Menggambarkan dan 1 Paling Tidak Menggambarkan (tidak boleh sama).";
+      return;
+    }
+    const firstInvalid = firstInvalidBlockIndex();
+    if(firstInvalid >= 0){
+      idx = firstInvalid;
+      render();
+      $("hint").style.display = "block";
+      $("hint").textContent = `Blok ${firstInvalid+1} belum lengkap. Lengkapi pilihan kiri/kanan lalu klik Berikutnya atau Selesaikan.`;
+      window.scrollTo({top:0, behavior:"smooth"});
+      alert(`Masih ada jawaban yang belum lengkap di Blok ${firstInvalid+1}.`);
+      return;
+    }
+    recordTimeOnLeave();
+    stopTimer();
+
+    $("status").textContent = `40 blok selesai • ${$("timer").textContent}`;
+    $("progBar").style.width = `100%`;
+    finalize();
+  }
+
+  function finalize(){
+    const name = ($("name").value||"").trim();
+    const role = ($("role").value||"").trim();
+    const phoneOk = isValidPhone08($("phone").value);
+    const phone = normalizePhone08($("phone").value);
+
+    const sc = scoreDISC();
+    const q = runQuality();
+    const fit = role ? fitScoreForRole(sc.norm, role) : null;
+
+    finished = true;
+
+    $("status").textContent = `Selesai • ${$("timer").textContent}`;
+    $("resultArea").innerHTML = `
+      <div class="pill"><b>Profil</b><span class="muted">Primary + Secondary</span></div>
+
+      <div class="kpi">
+        <div class="item"><div class="t">Tipe</div><div class="v">${sc.primary}${sc.secondary}</div></div>
+        <div class="item"><div class="t">Fit Score (Posisi)</div><div class="v">${fit===null?"â€”":fit}</div></div>
+      </div>
+
+      ${q.flags.length
+        ? `<div class="warnbox"><b>Quality Flags</b><ul style="margin:6px 0 0 18px">${q.flags.map(f=>`<li>${escapeHTML(f)}</li>`).join("")}</ul></div>`
+        : `<div class="okbox"><b>Quality</b> Tidak ada flag utama.</div>`
+      }
+
+      ${phoneOk ? "" : `<div class="badbox"><b>No HP wajib</b> format <b>08xxxxxxxxxx</b>. Saat ini tersimpan: <b>${escapeHTML(phone)}</b></div>`}
+
+      <table>
+        <thead><tr><th>Dimensi</th><th>Skor (0â€“100)</th><th>Raw</th></tr></thead>
+        <tbody>
+          ${["D","I","S","C"].map(k=>`
+            <tr>
+              <td><b>${k}</b> <span class="muted">(${LIB[k].label})</span></td>
+              <td>${sc.norm[k]}</td>
+              <td>${sc.raw[k]}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+
+      <div class="sec">
+        <div class="muted">
+          Catatan: ranking/fit bersifat heuristik internal (ipsative). Gunakan sebagai bantuan, bukan satu-satunya dasar keputusan.
+        </div>
+      </div>
+    `;
+
+    // enable buttons only if required fields OK
+    $("saveBtn").disabled = !(name && role && phoneOk);
+    $("sendBtn").disabled = !(name && role && phoneOk);
+    sendToSheetSilent(payload());
+
+    // Kandidat langsung lanjut ke tes berikutnya.
+    goNextTestWithDelay();
+  }
+
+  // ---------- Payload + Storage + GSheet ----------
+  function loadRecords(){
+    try{ return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch(e){ return []; }
+  }
+  function saveRecords(list){ localStorage.setItem(KEY, JSON.stringify(list)); }
+
+  function payload(){
+    const sc = scoreDISC();
+    const q = runQuality();
+    const {most, least, pairCount} = counts();
+
+    return {
+      module: "disc",
+      timestamp_iso: new Date().toISOString(),
+      candidate_id: $("candidateId").value || ensureCandidateId(),
+      name: ($("name").value||"").trim(),
+      phone: normalizePhone08($("phone").value),
+      role: ($("role").value||"").trim(),
+      token: (new URLSearchParams(window.location.search).get("token") || "").trim(),
+      assessment_date: $("date").value || todayISO(),
+      mode: $("mode").value,
+      elapsed_sec: q.elapsedSec,
+      primary: sc.primary,
+      secondary: sc.secondary,
+      norm_D: sc.norm.D, norm_I: sc.norm.I, norm_S: sc.norm.S, norm_C: sc.norm.C,
+      raw_D: sc.raw.D, raw_I: sc.raw.I, raw_S: sc.raw.S, raw_C: sc.raw.C,
+      quality_flags: q.flags,
+      attention_pass: q.attentionPass,
+      most_counts: most,
+      least_counts: least,
+      pair_counts: pairCount,
+      block_times_ms: blockTimes,
+      answers: answers
+    };
+  }
+
+  function saveLocal(){
+    const p = payload();
+    if(!p.name || !p.role || !isValidPhone08($("phone").value)){
+      alert("Wajib isi: Nama, Posisi, dan No HP format 08xxxxxxxxxx.");
+      return;
+    }
+    const list = loadRecords();
+    list.unshift(p);
+    saveRecords(list);
+    alert("Tersimpan lokal âœ… (lihat Admin Dashboard)");
+    refreshAdmin();
+  }
+
+  async function sendToSheet(){
+    if(!isValidPhone08($("phone").value)){
+      alert("No HP wajib format 08xxxxxxxxxx (tanpa spasi/tanda).");
+      return;
+    }
+    const url = ($("endpoint").value||"").trim();
+    if(!url){ alert("Endpoint Apps Script kosong."); return; }
+    localStorage.setItem(ENDPOINTKEY, url);
+    localStorage.setItem(SHARED_ENDPOINT_KEY, url);
+
+    const p = payload();
+    try{
+      await fetch(url, {
+        method:"POST",
+        mode:"no-cors",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ action:"submit", module:"disc", payload:p })
+      });
+      alert("Request terkirim ke Google Sheet âœ…");
+    }catch(err){
+      alert("Gagal kirim. Coba jalankan HTML via server lokal (bukan file://).");
+    }
+  }
+  async function sendToSheetSilent(p){
+    const url = resolveEndpoint();
+    if(!url) return;
+    try{
+      await fetch(url, {
+        method:"POST",
+        mode:"no-cors",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ action:"submit", module:"disc", payload:p })
+      });
+    }catch(_){}
+  }
+
+  function resetAll(){
+    if(!confirm("Reset tes? Semua jawaban & timer dihapus.")) return;
+    idx=0;
+    answers=Array(BANK.length).fill(null);
+    blockTimes=Array(BANK.length).fill(null);
+    attentionAnswers={ac1:null, ac2:null};
+    enteredAt=null; startedAt=null; finished=false;
+    nextRedirectScheduled=false;
+    stopTimer();
+    $("timer").textContent="00:00";
+    $("status").textContent="Belum selesai";
+    $("resultArea").innerHTML=`<div class="muted">Selesaikan 40 blok untuk melihat hasil.</div>`;
+    $("candidateId").value="";
+    $("saveBtn").disabled=true;
+    $("sendBtn").disabled=true;
+    render();
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  // ---------- Admin Dashboard ----------
+  function roleListFromRecords(){
+    const roles = new Set(["(Semua)"]);
+    for(const r of loadRecords()){
+      if(r.role) roles.add(r.role);
+    }
+    return Array.from(roles);
+  }
+
+  function setRoleDropdowns(){
+    const roles = roleListFromRecords();
+    $("roleFilter").innerHTML = roles.map(r=>`<option value="${escapeHTML(r)}">${escapeHTML(r)}</option>`).join("");
+    const roles2 = roles.filter(r=>r!=="(Semua)");
+    $("roleProfilePick").innerHTML = (roles2.length?roles2:["(Buat role dulu)"]).map(r=>`<option value="${escapeHTML(r)}">${escapeHTML(r)}</option>`).join("");
+  }
+
+  function refreshRoleEditor(){
+    const role = $("roleProfilePick").value;
+    if(!role || role==="(Buat role dulu)") return;
+    const t = getRoleTarget(role);
+    $("tD").value = t.D; $("tI").value = t.I; $("tS").value = t.S; $("tC").value = t.C;
+  }
+
+  function clamp01(v){
+    const n = Number(v);
+    if(!Number.isFinite(n)) return 50;
+    return Math.max(0, Math.min(100, Math.round(n)));
+  }
+
+  function refreshAdmin(){
+    setRoleDropdowns();
+    refreshRoleEditor();
+
+    const query = ($("qSearch").value||"").trim().toLowerCase();
+    const roleFilter = $("roleFilter").value;
+    const sortMode = $("sortMode").value;
+
+    let rows = loadRecords();
+
+    if(roleFilter && roleFilter !== "(Semua)"){
+      rows = rows.filter(r=>r.role === roleFilter);
+    }
+    if(query){
+      rows = rows.filter(r =>
+        (r.name||"").toLowerCase().includes(query) ||
+        (r.phone||"").toLowerCase().includes(query) ||
+        (r.candidate_id||"").toLowerCase().includes(query)
+      );
+    }
+
+    rows = rows.map(r=>{
+      const norm = {D:r.norm_D, I:r.norm_I, S:r.norm_S, C:r.norm_C};
+      const fit = r.role ? fitScoreForRole(norm, r.role) : null;
+      const flagsCount = (r.quality_flags||[]).length;
+      return {...r, __fit:fit, __flags:flagsCount};
+    });
+
+    if(sortMode==="fit"){
+      rows.sort((a,b)=>(b.__fit??-1)-(a.__fit??-1));
+    } else if(sortMode==="elapsed"){
+      rows.sort((a,b)=>(a.elapsed_sec??999999)-(b.elapsed_sec??999999));
+    } else if(sortMode==="flags"){
+      rows.sort((a,b)=>(a.__flags)-(b.__flags));
+    } // recent default: newest first
+
+    $("countText").textContent = `${rows.length} kandidat`;
+
+    if(!rows.length){
+      $("tableHost").innerHTML = `<div class="muted">Belum ada data. Selesaikan tes lalu klik â€œSimpan Lokalâ€.</div>`;
+      return;
+    }
+
+    $("tableHost").innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th><th>Nama</th><th>HP</th><th>Posisi</th>
+            <th>DISC</th><th>Fit</th><th>Quality</th><th class="right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(r=>`
+            <tr>
+              <td>${escapeHTML(r.assessment_date||"")}</td>
+              <td><b>${escapeHTML(r.name||"")}</b><div class="muted">${escapeHTML(r.candidate_id||"")}</div></td>
+              <td><b>${escapeHTML(r.phone||"")}</b></td>
+              <td>${escapeHTML(r.role||"")}</td>
+              <td>
+                <span class="tag">${escapeHTML((r.primary||"") + (r.secondary||""))}</span>
+                <div class="muted">D${r.norm_D} I${r.norm_I} S${r.norm_S} C${r.norm_C}</div>
+              </td>
+              <td>${r.__fit===null?"â€”":r.__fit}</td>
+              <td>
+                ${r.attention_pass ? `<span class="okbox" style="display:inline-block;padding:4px 8px;margin:0">AC OK</span>`
+                                   : `<span class="badbox" style="display:inline-block;padding:4px 8px;margin:0">AC FAIL</span>`}
+                <div class="muted">${r.__flags} flag â€¢ ${r.elapsed_sec ?? "â€”"}s</div>
+              </td>
+              <td class="right">
+                <button class="warn" onclick="window.__exportOne('${escapeHTML(r.candidate_id)}')">Export JSON</button>
+                <button class="danger" onclick="window.__deleteOne('${escapeHTML(r.candidate_id)}')">Hapus</button>
+              </td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+      <div class="muted" style="margin-top:8px">Ranking/fit adalah heuristik internal (ipsative). Gunakan sebagai bantuan, bukan satu-satunya dasar.</div>
+    `;
+  }
+
+  window.__deleteOne = function(candidateId){
+    if(!confirm("Hapus record ini?")) return;
+    const list = loadRecords().filter(r=>r.candidate_id !== candidateId);
+    saveRecords(list);
+    refreshAdmin();
+  }
+
+  window.__exportOne = function(candidateId){
+    const r = loadRecords().find(x=>x.candidate_id===candidateId);
+    if(!r){ alert("Record tidak ditemukan."); return; }
+    const blob = new Blob([JSON.stringify(r,null,2)], {type:"application/json;charset=utf-8;"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `disc-${(r.name||"candidate").replaceAll(" ","_")}-${r.assessment_date||todayISO()}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  $("saveRoleProfile").addEventListener("click", ()=>{
+    const role = $("roleProfilePick").value;
+    if(!role || role==="(Buat role dulu)") return;
+    const t = {D:clamp01($("tD").value), I:clamp01($("tI").value), S:clamp01($("tS").value), C:clamp01($("tC").value)};
+    const profiles = loadRoleProfiles();
+    profiles[role] = t;
+    saveRoleProfiles(profiles);
+    alert("Target role tersimpan âœ…");
+    refreshAdmin();
+  });
+
+  $("resetRoleProfiles").addEventListener("click", ()=>{
+    if(!confirm("Reset semua target role ke default?")) return;
+    localStorage.removeItem(ROLEKEY);
+    refreshAdmin();
+  });
+
+  $("roleProfilePick").addEventListener("change", refreshRoleEditor);
+  $("qSearch").addEventListener("input", refreshAdmin);
+  $("roleFilter").addEventListener("change", refreshAdmin);
+  $("sortMode").addEventListener("change", refreshAdmin);
+
+  // ---------- Tabs ----------
+  function showCandidate(){
+    $("viewCandidate").style.display = "";
+    $("viewAdmin").style.display = "none";
+    $("tabCandidate").classList.add("active");
+    $("tabAdmin").classList.remove("active");
+  }
+  function showAdmin(){
+    $("viewCandidate").style.display = "none";
+    $("viewAdmin").style.display = "";
+    $("tabCandidate").classList.remove("active");
+    $("tabAdmin").classList.add("active");
+    refreshAdmin();
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+  $("tabCandidate").addEventListener("click", showCandidate);
+  $("tabAdmin").addEventListener("click", showAdmin);
+
+  // ---------- Buttons ----------
+  $("prevBtn").addEventListener("click", prev);
+  $("nextBtn").addEventListener("click", next);
+  $("finishBtn").addEventListener("click", finish);
+  $("finishBtn").addEventListener("pointerup", (e)=>{ e.preventDefault(); finish(); });
+  $("finishBtn").addEventListener("touchend", (e)=>{ e.preventDefault(); finish(); }, {passive:false});
+  $("saveBtn").addEventListener("click", saveLocal);
+  $("sendBtn").addEventListener("click", sendToSheet);
+  $("resetBtn").addEventListener("click", resetAll);
+
+  // ---------- Phone input realtime cleaning ----------
+  $("phone").addEventListener("input", (e)=>{
+    const cleaned = cleanPhone(e.target.value);
+    if(e.target.value !== cleaned) e.target.value = cleaned;
+  });
+
+  // ---------- Endpoint persistence ----------
+  const savedEp = resolveEndpoint();
+  if(savedEp) $("endpoint").value = savedEp;
+
+  // init
+  render();
+</script>
+<script>
+/* SUITE_BRIDGE_V1 */
+(function(){
+  const KEY = "berani_suite_profile_v1";
+  function readLS(){
+    try{ return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }catch(_){ return {}; }
+  }
+  function readProfile(){
+    const q = new URLSearchParams(window.location.search);
+    const qs = {
+      name:(q.get("name") || "").trim(),
+      phone:(q.get("phone") || "").trim(),
+      position:(q.get("position") || "").trim(),
+      token:(q.get("token") || "").trim()
+    };
+    const ls = readLS();
+    const p = {
+      name: qs.name || ls.name || "",
+      phone: qs.phone || ls.phone || "",
+      position: qs.position || ls.position || "",
+      token: qs.token || ls.token || ""
+    };
+    if(p.name || p.phone || p.position || p.token){
+      localStorage.setItem(KEY, JSON.stringify(Object.assign({}, ls, p, {updatedAt:new Date().toISOString()})));
+    }
+    return p;
+  }
+  function lockInput(id, value){
+    const el = document.getElementById(id);
+    if(!el || !value) return;
+    el.value = value;
+    el.readOnly = true;
+    el.title = "Terisi otomatis dari Tes IQ";
+  }
+  function lockSelect(id, value){
+    const el = document.getElementById(id);
+    if(!el || !value) return;
+    el.value = value;
+    el.disabled = true;
+    el.title = "Terisi otomatis dari Tes IQ";
+  }
+  const p = readProfile();
+  if(!(p.name && p.phone && p.position)) return;
+
+  lockInput("name", p.name);
+  lockInput("phone", p.phone);
+  lockInput("role", p.position);
+  lockInput("token", p.token);
+
+  lockInput("candName", p.name);
+  lockInput("candPhone", p.phone);
+
+  const email = document.getElementById("email");
+  if(email){
+    if(!email.value) email.value = (p.phone || "candidate") + "@local.invalid";
+    email.readOnly = true;
+    email.title = "Terisi otomatis dari Tes IQ";
+  }
+
+  // Typing app fallback storage
+  try{ localStorage.setItem("bei_candidate", JSON.stringify({name:p.name, phone:p.phone})); }catch(_){ }
+
+  const hideBtnIds = ["btnNew", "newCandidateBtn"];
+  hideBtnIds.forEach(id=>{
+    const btn = document.getElementById(id);
+    if(btn) btn.style.display = "none";
+  });
+
+  const introHost = document.querySelector(".card") || document.body;
+  if(introHost && !document.getElementById("suiteBridgeNote")){
+    const note = document.createElement("div");
+    note.id = "suiteBridgeNote";
+    note.style.marginTop = "10px";
+    note.style.padding = "8px 10px";
+    note.style.borderRadius = "10px";
+    note.style.border = "1px solid rgba(31,154,99,.35)";
+    note.style.background = "rgba(31,154,99,.12)";
+    note.style.fontSize = "12px";
+    note.textContent = "Identitas kandidat ditarik otomatis dari Tes IQ.";
+    introHost.appendChild(note);
+  }
+})();
+</script>
+</body>
+</html>
+
+
+
+

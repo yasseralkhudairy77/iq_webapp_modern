@@ -1,0 +1,797 @@
+﻿<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>IQ Aptitude Test</title>
+<style>
+  :root{
+    --bg:#1a1c20; --card:#262a31; --muted:#b6bcc7; --text:#f1f3f6;
+    --line:rgba(255,255,255,.14); --accent:#cfd4dc; --danger:#ff8787; --ok:#9be5b1;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px;}
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(26,28,32,.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);}
+  .topbar-inner{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 16px;max-width:1100px;margin:0 auto;}
+  .brand{display:flex;flex-direction:column;gap:4px}
+  .brand-logo-box{display:inline-flex;align-items:center;padding:6px 10px;background:#fff;border:1px solid rgba(0,0,0,.14);border-radius:10px;width:max-content}
+  .brand img{display:block;height:46px;width:auto;max-width:min(45vw,260px);object-fit:contain}
+  .brand-sub{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.2px}
+  .pill{display:inline-flex;gap:10px;align-items:center;padding:8px 10px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(255,255,255,.04);color:var(--muted);font-size:13px;}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:14px;margin-top:14px;}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:16px;background:rgba(38,42,49,.72);backdrop-filter:blur(10px);overflow:hidden;}
+  .card h2{margin:0;font-size:16px;padding:14px 16px;border-bottom:1px solid var(--line);}
+  .card .body{padding:14px 16px;}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;}
+  input,select{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);outline:none;}
+  input::placeholder{color:rgba(147,164,199,.7)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media (max-width:520px){.row{grid-template-columns:1fr}}
+  button{appearance:none;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:rgba(255,255,255,.06);
+    color:var(--text);cursor:pointer;font-weight:650;}
+  .actions button{min-height:44px}
+  button.primary{border-color:rgba(106,228,255,.35);background:rgba(106,228,255,.14);}
+  button.danger{border-color:rgba(255,106,138,.40);background:rgba(255,106,138,.14);}
+  button:disabled{opacity:.55;cursor:not-allowed}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+  .small{font-size:12px;color:var(--muted)}
+  .hr{height:1px;background:var(--line);margin:12px 0;}
+  .qnav{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;}
+  @media (max-width:520px){.qnav{grid-template-columns:repeat(6,1fr)}}
+  .qbtn{padding:10px 0;min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-weight:800;font-size:12px;}
+  .qbtn.active{outline:2px solid rgba(106,228,255,.45);}
+  .qbtn.answered{border-color:rgba(124,255,178,.45);}
+  .qbtn.flagged{border-color:rgba(255,106,138,.55);}
+  .qtitle{font-size:15px;font-weight:900;margin:0 0 8px;}
+  .qtext{white-space:pre-wrap;line-height:1.45;color:var(--text)}
+  .choices{display:grid;gap:8px;margin-top:12px;}
+  .choice{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);background:rgba(255,255,255,.03);
+    padding:10px 12px;border-radius:12px;}
+  .choice input{width:auto;margin-top:3px;}
+  .imgbox{margin-top:12px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(0,0,0,.18)}
+  .imgbox img,.imgbox canvas{width:100%;display:block}
+  a{color:var(--accent)}
+  .badge{display:inline-flex;align-items:center;gap:10px;padding:8px 10px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(255,255,255,.03);}
+  .ok{color:var(--ok);font-weight:900}
+  .bad{color:var(--danger);font-weight:900}
+  .warning-box{
+    margin-top:12px;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid rgba(255,135,135,.45);
+    background:rgba(255,135,135,.12);
+    color:#ffd5d5;
+    font-size:13px;
+    line-height:1.45;
+  }
+  .warning-title{
+    font-weight:900;
+    letter-spacing:.2px;
+    margin-bottom:4px;
+  }
+  .global-warning{
+    margin-bottom:12px;
+  }
+  .mobile-tools{display:none}
+  @media (max-width:900px){
+    .wrap{padding:12px;}
+    .topbar-inner{padding:10px 12px;}
+    .mobile-tools{display:flex;gap:8px;margin-bottom:10px}
+  }
+  @media (max-width:700px){
+    .topbar-inner{flex-direction:column;align-items:stretch;gap:8px;}
+    .brand img{height:48px;max-width:min(70vw,250px);}
+    .pill{width:100%;justify-content:space-between;font-size:12px;}
+    .grid{gap:10px;margin-top:10px;}
+    .card h2{padding:12px 14px;}
+    .card .body{padding:12px 14px;}
+    input,select,button{font-size:16px;}
+    .qnav{grid-template-columns:repeat(5,1fr);gap:6px;}
+    .qbtn{padding:11px 0;font-size:14px;border-radius:9px;}
+    .choice{padding:12px;}
+    .actions{gap:8px;}
+    .actions button{flex:1 1 calc(50% - 8px);}
+    .question-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .question-actions button{width:100%;}
+    .question-actions .spacer{display:none;}
+    .question-actions #submitBtn{grid-column:1 / -1;}
+    .question-actions{
+      position:sticky;
+      bottom:0;
+      padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px));
+      background:linear-gradient(to top, rgba(26,28,32,.98), rgba(26,28,32,.88));
+      border-top:1px solid var(--line);
+      z-index:3;
+      margin-top:14px;
+    }
+    .qnav{grid-template-columns:repeat(5,1fr);}
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-logo-box">
+          <img src="logo-berani.png.png" alt="Berani Export Import"/>
+        </div>
+        <div class="brand-sub">Aptitude Test (IQ)</div>
+      </div>
+      <div class="pill">
+        <span id="timerLabel">Waktu 40:00</span>
+        <span id="progressLabel">0/60 terjawab</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="warning-box global-warning" id="globalExamWarning">
+      <div class="warning-title">PERINGATAN PENGAWASAN UJIAN</div>
+      Ujian ini diawasi oleh sistem kamera dan analisis kecerdasan buatan. Aktivitas perpindahan tab atau jendela
+      yang mencurigakan akan tercatat sebagai indikator pelanggaran. Jika terdeteksi indikasi kecurangan, peserta
+      akan didiskualifikasi dari proses rekrutmen.
+    </div>
+
+    <div class="grid">
+      <div class="card" id="identityCard">
+        <h2>Identitas Kandidat</h2>
+        <div class="body">
+          <div class="row">
+            <div>
+              <label>Nama</label>
+              <input id="name" placeholder="Nama lengkap" />
+            </div>
+            <div>
+              <label>No. WhatsApp</label>
+              <input id="phone" placeholder="083xxxxxxxxxx" />
+              <div class="small">Format divalidasi: mulai 08, angka saja.</div>
+            </div>
+          </div>
+          <div style="margin-top:10px">
+            <label>Posisi</label>
+            <input id="position" placeholder="Contoh: Digital Marketing" />
+          </div>
+          <div style="margin-top:10px">
+            <label>Token Kandidat</label>
+            <input id="token" placeholder="Masukkan token dari HRD" />
+            <div class="small">Token wajib untuk setiap kandidat.</div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="row">
+            <div>
+              <label>Durasi tes (menit)</label>
+              <select id="duration">
+                <option value="40" selected>40</option>
+                <option value="30">30</option>
+                <option value="45">45</option>
+                <option value="60">60</option>
+                <option value="0">Tanpa timer</option>
+              </select>
+            </div>
+            <div>
+              <label>Mode soal</label>
+              <select id="mode">
+                <option value="normal" selected>Normal</option>
+                <option value="shuffle">Acak urutan soal</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="primary" id="startBtn">Mulai Tes</button>
+            <button id="resumeBtn">Lanjutkan (Auto-save)</button>
+            <button class="danger" id="resetBtn">Reset</button>
+          </div>
+          <div class="small" style="margin-top:10px"><b>Lanjut Tes Setelah IQ:</b></div>
+          <div class="actions">
+            <button id="toKoranBtn">Tes Pauli/Kraeplin</button>
+            <button id="toTypingBtn">Typing Test</button>
+            <button id="toDiscBtn">DISC Test</button>
+            <button id="toWorkingBtn">Working Style</button>
+          </div>
+          <div class="small" style="margin-top:10px">
+            Tips: Soal bergambar akan menampilkan <b>gambar halaman</b> (render dari PDF). Anda tetap menjawab per nomor.
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="testCard" style="display:none">
+        <h2>Soal</h2>
+        <div class="body">
+          <div class="mobile-tools">
+            <button id="toggleIdentityBtn" type="button">Sembunyikan Data Kandidat</button>
+          </div>
+          <div class="qnav" id="nav"></div>
+          <div class="hr"></div>
+
+          <div id="questionArea">
+            <p class="qtitle" id="qTitle"></p>
+            <div class="qtext" id="qText"></div>
+            <div id="media"></div>
+            <div class="choices" id="choices"></div>
+
+            <div class="actions question-actions">
+              <button id="prevBtn">Sebelumnya</button>
+              <button id="flagBtn">Tandai</button>
+              <button class="primary" id="nextBtn">Berikutnya</button>
+              <span class="spacer"></span>
+              <button class="primary" id="submitBtn">Submit & Nilai</button>
+            </div>
+
+            <div class="small" id="hintArea" style="margin-top:10px"></div>
+          </div>
+
+          <div id="resultArea" style="display:none">
+            <h2 style="margin:0 0 10px">Tes Selesai</h2>
+            <div class="badge">
+              <strong>Terima kasih</strong>
+              <span class="small">|</span>
+              <span>Hasil diproses HRD</span>
+            </div>
+            <div class="small" style="margin-top:10px">Nilai detail tidak ditampilkan ke kandidat.</div>
+            <div class="hr"></div>
+            <div class="small" id="metaText">Status pengiriman hasil: menunggu...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const DEFAULT_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxW0ikEwUwnRJhc89EkFRsUlMLR7lM_SGQbtduixCEoO6U8o-GMVlyQRNWY7-J4CcTV/exec";
+const SHEET_ENDPOINT_KEY = "berani_sheet_endpoint_v1";
+const LS_KEY = "iq_test_state_v2";
+const SUITE_PROFILE_KEY = "berani_suite_profile_v1";
+let QUESTIONS = [];
+let ANSWER_KEY = {};
+
+let state = {
+  started:false,
+  startedAt:null,
+  durationMin:40,
+  remainingSec:40*60,
+  order:[],
+  currentIdx:0,
+  answers:{},
+  flagged:{},
+  identity:{name:"", phone:"", position:""},
+  finished:false,
+  result:null
+};
+
+let timerHandle=null;
+function getSheetWebAppUrl(){
+  const q = new URLSearchParams(window.location.search);
+  const fromQuery = (q.get("sheet") || "").trim();
+  const fromLocal = (localStorage.getItem(SHEET_ENDPOINT_KEY) || "").trim();
+  const resolved = fromQuery || fromLocal || DEFAULT_SHEET_WEBAPP_URL;
+  if(resolved) localStorage.setItem(SHEET_ENDPOINT_KEY, resolved);
+  return resolved;
+}
+const SHEET_WEBAPP_URL = getSheetWebAppUrl();
+
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); updateProgress(); }
+function load(){
+  const raw = localStorage.getItem(LS_KEY);
+  if(!raw) return false;
+  try{ state = Object.assign(state, JSON.parse(raw)); return true; } catch(e){ return false; }
+}
+function validPhone(p){ return /^08\d{8,13}$/.test((p||"").trim()); }
+function fmtTime(sec){
+  if(state.durationMin<=0) return "Tanpa timer";
+  const m=Math.floor(sec/60), s=sec%60;
+  return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+}
+function cleanText(s){
+  let t = String(s ?? "");
+  const map = {
+    "â€œ": "\"", "â€": "\"",
+    "â€˜": "'", "â€™": "'",
+    "â€”": "-", "â€“": "-",
+    "â€¢": "•",
+    "â‰ ": "!=",
+    "ðŸ“„": "PDF",
+    "âœ…": "OK",
+    "âš ï¸": "PERINGATAN",
+    "âŒ": "X"
+  };
+  Object.keys(map).forEach(k=>{ t = t.split(k).join(map[k]); });
+  return t;
+}
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function currentQId(){ return state.order[state.currentIdx]; }
+function suiteProfileFromInputs(){
+  return {
+    name:(document.getElementById("name")?.value || "").trim(),
+    phone:(document.getElementById("phone")?.value || "").trim(),
+    position:(document.getElementById("position")?.value || "").trim(),
+    token:(document.getElementById("token")?.value || "").trim()
+  };
+}
+function saveSuiteProfile(profile){
+  const prev = (()=>{ try{ return JSON.parse(localStorage.getItem(SUITE_PROFILE_KEY)||"{}")||{}; }catch(_){ return {}; } })();
+  const merged = Object.assign({}, prev, profile, { source:"iq", updatedAt:new Date().toISOString() });
+  localStorage.setItem(SUITE_PROFILE_KEY, JSON.stringify(merged));
+}
+function loadSuiteProfile(){
+  try{ return JSON.parse(localStorage.getItem(SUITE_PROFILE_KEY) || "{}") || {}; }catch(_){ return {}; }
+}
+function esc(v){ return encodeURIComponent((v || "").trim()); }
+function suiteQuery(){
+  const p = suiteProfileFromInputs();
+  const sheet = localStorage.getItem(SHEET_ENDPOINT_KEY) || SHEET_WEBAPP_URL || "";
+  return `name=${esc(p.name)}&phone=${esc(p.phone)}&position=${esc(p.position)}&token=${esc(p.token)}&sheet=${esc(sheet)}`;
+}
+function openLinkedTest(path){
+  const p = suiteProfileFromInputs();
+  if(!p.name || !validPhone(p.phone) || !p.position || !p.token){
+    alert("Lengkapi data kandidat di IQ dulu (nama, WA valid, posisi, token).");
+    return;
+  }
+  saveSuiteProfile(p);
+  window.open(`${path}?${suiteQuery()}`, "_blank", "noopener");
+}
+function applySuiteProfileToInputs(){
+  const params = new URLSearchParams(window.location.search);
+  const incoming = {
+    name:(params.get("name") || "").trim(),
+    phone:(params.get("phone") || "").trim(),
+    position:(params.get("position") || "").trim(),
+    token:(params.get("token") || "").trim()
+  };
+  const stored = loadSuiteProfile();
+  const p = {
+    name: incoming.name || stored.name || "",
+    phone: incoming.phone || stored.phone || "",
+    position: incoming.position || stored.position || "",
+    token: incoming.token || stored.token || ""
+  };
+  if(p.name) document.getElementById("name").value = p.name;
+  if(p.phone) document.getElementById("phone").value = p.phone;
+  if(p.position) document.getElementById("position").value = p.position;
+  if(p.token) document.getElementById("token").value = p.token;
+  if(p.name || p.phone || p.position || p.token) saveSuiteProfile(p);
+}
+function getQById(id){ return QUESTIONS.find(q=>q.id===id); }
+function answeredCount(){ return Object.keys(state.answers||{}).length; }
+
+async function validateTokenBeforeStart(){
+  const token = (document.getElementById("token")?.value || "").trim();
+  const name = (document.getElementById("name")?.value || "").trim();
+  const phone = (document.getElementById("phone")?.value || "").trim();
+
+  const json = await postToSheetWebApp({ action:"validate", token, name, phone });
+  if(json.status !== "ok") throw new Error(json.message || "Token invalid");
+}
+
+async function postToSheetWebApp(bodyObj){
+  try{
+    // Keep request "simple" to avoid CORS preflight issues with Apps Script.
+    const res = await fetch(SHEET_WEBAPP_URL, {
+      method: "POST",
+      body: JSON.stringify(bodyObj)
+    });
+    const text = await res.text();
+    try{
+      return JSON.parse(text);
+    }catch(_){
+      throw new Error("Respons web app bukan JSON valid.");
+    }
+  }catch(err){
+    if(err instanceof TypeError){
+      throw new Error("Gagal terhubung ke Web App. Cek deploy Apps Script: Execute as Me, Who has access: Anyone.");
+    }
+    throw err;
+  }
+}
+
+function updateProgress(){
+  const ans=answeredCount();
+  document.getElementById("progressLabel").textContent = `${ans}/60 terjawab`;
+  const nav=document.getElementById("nav");
+  if(!nav) return;
+  [...nav.children].forEach(btn=>{
+    const q=Number(btn.dataset.q);
+    btn.classList.toggle("answered", !!state.answers[q]);
+    btn.classList.toggle("flagged", !!state.flagged[q]);
+    btn.classList.toggle("active", q===currentQId());
+  });
+}
+
+function buildNav(){
+  const nav=document.getElementById("nav");
+  nav.innerHTML="";
+  state.order.forEach((qid, idx)=>{
+    const b=document.createElement("button");
+    b.className="qbtn";
+    b.textContent=qid;
+    b.dataset.q=qid;
+    b.onclick=()=>{ state.currentIdx=idx; renderQuestion(); save(); };
+    nav.appendChild(b);
+  });
+}
+
+async function drawCroppedToCanvas(imgUrl, bbox){
+  // bbox: {x,y,w,h} in pixels of original rendered page image
+  return new Promise((resolve)=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement("canvas");
+      canvas.width=bbox.w; canvas.height=bbox.h;
+      const ctx=canvas.getContext("2d");
+      ctx.drawImage(img, bbox.x, bbox.y, bbox.w, bbox.h, 0, 0, bbox.w, bbox.h);
+      resolve(canvas);
+    };
+    img.src=imgUrl;
+  });
+}
+
+async function renderQuestion(){
+  const qid=currentQId();
+  const q=getQById(qid);
+  if(!q){
+    document.getElementById("qTitle").textContent = `Soal #${qid}`;
+    document.getElementById("qText").textContent = "Data soal tidak terbaca. Buka aplikasi via server lokal (http://localhost:8000), bukan file://.";
+    document.getElementById("media").innerHTML = "";
+    document.getElementById("choices").innerHTML = "";
+    return;
+  }
+  document.getElementById("qTitle").textContent = `Soal #${qid}`;
+  document.getElementById("qText").textContent = cleanText(q.prompt || "");
+  const media=document.getElementById("media");
+  media.innerHTML="";
+  const hint=document.getElementById("hintArea");
+  hint.innerHTML="";
+
+  if(q.type==="image"){
+    const pagePng = `pages/page-${q.page}.png`;
+    const pagePdf = `pages/page-${q.page}.pdf`;
+    const box=document.createElement("div");
+    box.className="imgbox";
+
+    if(q.bbox){
+      const canvas = await drawCroppedToCanvas(pagePng, q.bbox);
+      box.appendChild(canvas);
+      media.appendChild(box);
+      hint.innerHTML = `PDF: <a href="soal.pdf#page=${q.page}" target="_blank" rel="noopener">Buka halaman ${q.page}</a> • Tampilan ini auto-zoom (bbox).`;
+    }else{
+      const frame=document.createElement("iframe");
+      frame.title=`Halaman ${q.page}`;
+      frame.src=pagePdf;
+      frame.style.width="100%";
+      frame.style.height="520px";
+      frame.style.border="0";
+      box.appendChild(frame);
+      media.appendChild(box);
+      hint.innerHTML = `PDF: <a href="soal.pdf#page=${q.page}" target="_blank" rel="noopener">Buka halaman ${q.page}</a> • (Opsional) nanti bisa ditambah bbox untuk auto-zoom.`;
+    }
+  }
+
+  // Choices
+  const choices=document.getElementById("choices");
+  choices.innerHTML="";
+  const optKeys=Object.keys(q.options||{});
+  optKeys.forEach(L=>{
+    const wrap=document.createElement("label");
+    wrap.className="choice";
+    const radio=document.createElement("input");
+    radio.type="radio"; radio.name="choice"; radio.value=L;
+    radio.checked = state.answers[qid]===L;
+    radio.onchange=()=>{ state.answers[qid]=L; save(); };
+    const txt=document.createElement("div");
+    const strong=document.createElement("strong");
+    strong.textContent=L;
+    const span=document.createElement("span");
+    span.className="small";
+    span.textContent=` - ${cleanText(q.options[L] || "")}`;
+    txt.appendChild(strong);
+    txt.appendChild(span);
+    wrap.appendChild(radio); wrap.appendChild(txt);
+    choices.appendChild(wrap);
+  });
+
+  document.getElementById("prevBtn").disabled = state.currentIdx===0;
+  document.getElementById("nextBtn").disabled = state.currentIdx===state.order.length-1;
+
+  updateProgress();
+}
+
+function startTimer(){
+  if(timerHandle) clearInterval(timerHandle);
+  if(state.durationMin<=0){
+    document.getElementById("timerLabel").textContent = "Waktu tanpa timer";
+    return;
+  }
+  timerHandle=setInterval(()=>{
+    if(!state.started || state.finished) return;
+    state.remainingSec=Math.max(0, state.remainingSec-1);
+    document.getElementById("timerLabel").textContent = "Waktu "+fmtTime(state.remainingSec);
+    if(state.remainingSec===0){
+      clearInterval(timerHandle);
+      submit();
+    }
+    save();
+  },1000);
+}
+
+function showTest(){
+  document.getElementById("testCard").style.display="block";
+  const prestartWarning = document.getElementById("prestartWarning");
+  if(prestartWarning) prestartWarning.style.display = "none";
+  document.getElementById("questionArea").style.display = state.finished ? "none":"block";
+  document.getElementById("resultArea").style.display = state.finished ? "block":"none";
+  buildNav();
+  renderQuestion();
+  document.getElementById("timerLabel").textContent = "Waktu "+fmtTime(state.remainingSec);
+  startTimer();
+  updateProgress();
+  syncResponsiveTestLayout();
+}
+function syncResponsiveTestLayout(){
+  const identityCard = document.getElementById("identityCard");
+  const toggleBtn = document.getElementById("toggleIdentityBtn");
+  if(!identityCard || !toggleBtn) return;
+  const isMobile = window.matchMedia("(max-width:900px)").matches;
+  if(!isMobile){
+    identityCard.style.display = "";
+    toggleBtn.style.display = "none";
+    return;
+  }
+  toggleBtn.style.display = "inline-flex";
+  if(state.started && !state.finished){
+    identityCard.style.display = "none";
+    toggleBtn.textContent = "Tampilkan Data Kandidat";
+  }else{
+    identityCard.style.display = "";
+    toggleBtn.textContent = "Sembunyikan Data Kandidat";
+  }
+}
+
+function mapIqReport(correct){
+  const c = Number(correct || 0);
+  if(c >= 55) return { scoreBand:"55-60", iqEstimate:"130+", category:"Very Superior" };
+  if(c >= 50) return { scoreBand:"50-54", iqEstimate:"120-129", category:"Superior" };
+  if(c >= 45) return { scoreBand:"45-49", iqEstimate:"110-119", category:"High Average" };
+  if(c >= 35) return { scoreBand:"35-44", iqEstimate:"90-109", category:"Average" };
+  if(c >= 25) return { scoreBand:"25-34", iqEstimate:"80-89", category:"Low Average" };
+  return { scoreBand:"<25", iqEstimate:"<80", category:"Borderline" };
+}
+
+function submit(){
+  let correct=0;
+  const detail=[];
+  for(const qid of state.order){
+    const user=(state.answers[qid]||"").toUpperCase();
+    const key=(ANSWER_KEY[qid]||"").toUpperCase();
+    const ok = user && key && user===key;
+    if(ok) correct++;
+    // Keep key in local runtime only; do not send to Sheet payload.
+    detail.push({qid, user, ok});
+  }
+  const pct = Math.round((correct/60)*1000)/10;
+  const iqMap = mapIqReport(correct);
+  const endedAt = new Date().toISOString();
+  const startedMs = Date.parse(state.startedAt || "");
+  const endedMs = Date.parse(endedAt);
+  const durationSec = (Number.isFinite(startedMs) && Number.isFinite(endedMs) && endedMs >= startedMs)
+    ? Math.round((endedMs - startedMs) / 1000)
+    : null;
+  const answered = answeredCount();
+  const unanswered = Math.max(0, 60 - answered);
+  const flaggedCount = Object.values(state.flagged || {}).filter(Boolean).length;
+
+  state.finished=true;
+  state.result={
+    correct,total:60,percent:pct,answered,unanswered,flaggedCount,durationSec,
+    iqEstimate: iqMap.iqEstimate,
+    iqCategory: iqMap.category,
+    scoreBand: iqMap.scoreBand,
+    startedAt:state.startedAt, endedAt,
+    identity:state.identity, detail
+  };
+  save();
+
+  document.getElementById("metaText").textContent = "Hasil sedang dikirim ke sistem HRD.";
+  document.getElementById("questionArea").style.display="none";
+  document.getElementById("resultArea").style.display="block";
+  postToSheet(state.result)
+    .then(()=>{ document.getElementById("metaText").textContent = "Hasil terkirim ke sistem HRD."; })
+    .catch(err=>{
+      document.getElementById("metaText").textContent = "Pengiriman hasil gagal. Hubungi HRD/pengawas.";
+      alert("Peringatan: Gagal: " + (err?.message || "unknown"));
+    });
+}
+
+function downloadJSON(){
+  const blob=new Blob([JSON.stringify(state.result,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  const safe=(state.identity.name||"kandidat").replace(/[^a-z0-9]+/gi,"_").slice(0,40);
+  a.href=URL.createObjectURL(blob);
+  a.download=`hasil_iq_${safe}.json`;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function toCsvCell(s){
+  s = String(s ?? "");
+  if(/[",\n]/.test(s)) return '"' + s.replaceAll('"','""') + '"';
+  return s;
+}
+function downloadCSV(){
+  const cols=["nama","wa","posisi","startedAt","endedAt","durationSec","answered","unanswered","flaggedCount","correct","total","percent","scoreBand","iqEstimate","iqCategory"];
+  for(let i=1;i<=60;i++) cols.push("q"+i);
+  const row=[];
+  row.push(state.identity.name, state.identity.phone, state.identity.position,
+           state.result?.startedAt||"", state.result?.endedAt||"",
+           state.result?.durationSec ?? "",
+           state.result?.answered ?? "",
+           state.result?.unanswered ?? "",
+           state.result?.flaggedCount ?? "",
+           state.result?.correct||0, 60, state.result?.percent||0,
+           state.result?.scoreBand || "",
+           state.result?.iqEstimate || "",
+           state.result?.iqCategory || "");
+  for(let i=1;i<=60;i++) row.push(state.answers[i]||"");
+  const csv = cols.map(toCsvCell).join(",") + "\n" + row.map(toCsvCell).join(",");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");
+  const safe=(state.identity.name||"kandidat").replace(/[^a-z0-9]+/gi,"_").slice(0,40);
+  a.href=URL.createObjectURL(blob);
+  a.download=`hasil_iq_${safe}.csv`;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+
+async function postToSheet(result){
+  const tokenInput = (document.getElementById("token")?.value || "").trim();
+  const token = tokenInput;
+  if(!token) throw new Error("Token wajib diisi.");
+
+  const payload = {
+    module: "iq",
+    submittedAt: new Date().toISOString(),
+    name: result.identity?.name || "",
+    phone: result.identity?.phone || "",
+    position: result.identity?.position || "",
+    token: token,
+    startedAt: result.startedAt || null,
+    endedAt: result.endedAt || null,
+    correct: result.correct,
+    total: result.total,
+    percent: result.percent,
+    scoreBand: result.scoreBand || "",
+    iqEstimate: result.iqEstimate || "",
+    iqCategory: result.iqCategory || "",
+    answered: result.answered ?? null,
+    unanswered: result.unanswered ?? null,
+    flaggedCount: result.flaggedCount ?? 0,
+    durationSec: result.durationSec ?? null,
+    raw: result
+  };
+
+  const json = await postToSheetWebApp({ action:"submit", token, payload });
+  if(json.status === "ok") alert("OK: Hasil tersimpan.");
+  else alert("Peringatan: Gagal: " + (json.message || "unknown"));
+}
+
+/** Events **/
+document.getElementById("startBtn").onclick=async ()=>{
+  const name=document.getElementById("name").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const position=document.getElementById("position").value.trim();
+  const token=document.getElementById("token").value.trim();
+  const durationMin=Number(document.getElementById("duration").value);
+  const mode=document.getElementById("mode").value;
+
+  if(!name) return alert("Nama wajib diisi.");
+  if(!validPhone(phone)) return alert("No. WhatsApp tidak valid. Contoh: 083xxxxxxxxxx");
+  if(!position) return alert("Posisi wajib diisi.");
+  if(!token) return alert("Token kandidat wajib diisi.");
+
+  state.identity={name,phone,position};
+  state.durationMin=durationMin;
+  state.remainingSec=durationMin<=0 ? 0 : durationMin*60;
+  state.started=true;
+  state.startedAt=new Date().toISOString();
+  state.finished=false;
+  state.result=null;
+  state.answers = state.answers || {};
+  state.flagged = state.flagged || {};
+
+  const base = Array.from({length:60}, (_,i)=>i+1);
+  state.order = (mode==="shuffle") ? shuffle(base) : base;
+  state.currentIdx=0;
+
+  saveSuiteProfile({name, phone, position, token});
+  save();
+  showTest();
+};
+
+document.getElementById("resumeBtn").onclick=()=>{
+  const ok=load();
+  if(!ok || !state.started) return alert("Belum ada sesi tersimpan.");
+  const prof = loadSuiteProfile();
+  document.getElementById("name").value = state.identity?.name || "";
+  document.getElementById("phone").value = state.identity?.phone || "";
+  document.getElementById("position").value = state.identity?.position || "";
+  document.getElementById("token").value = prof.token || "";
+  document.getElementById("duration").value = String(state.durationMin ?? 40);
+  saveSuiteProfile(suiteProfileFromInputs());
+  showTest();
+};
+
+document.getElementById("resetBtn").onclick=()=>{
+  if(confirm("Yakin reset semua jawaban & sesi?")){
+    localStorage.removeItem(LS_KEY);
+    location.reload();
+  }
+};
+
+document.getElementById("prevBtn").onclick=()=>{ if(state.currentIdx>0){ state.currentIdx--; renderQuestion(); save(); } };
+document.getElementById("nextBtn").onclick=()=>{ if(state.currentIdx<state.order.length-1){ state.currentIdx++; renderQuestion(); save(); } };
+document.getElementById("flagBtn").onclick=()=>{ const qid=currentQId(); state.flagged[qid]=!state.flagged[qid]; save(); };
+document.getElementById("submitBtn").onclick=()=>{ if(confirm("Submit sekarang? Jawaban akan dinilai.")) submit(); };
+const reviewBtn = document.getElementById("reviewBtn");
+if(reviewBtn){
+  reviewBtn.onclick=()=>{ state.finished=false; save(); showTest(); };
+}
+document.getElementById("toKoranBtn").onclick=()=>openLinkedTest("../koran/index.html");
+document.getElementById("toTypingBtn").onclick=()=>openLinkedTest("../typing/index.html");
+document.getElementById("toDiscBtn").onclick=()=>openLinkedTest("../disc/index.html");
+document.getElementById("toWorkingBtn").onclick=()=>openLinkedTest("../working-style/index.html");
+document.getElementById("toggleIdentityBtn").onclick=()=>{
+  const identityCard = document.getElementById("identityCard");
+  const btn = document.getElementById("toggleIdentityBtn");
+  if(!identityCard || !btn) return;
+  const hidden = identityCard.style.display === "none";
+  identityCard.style.display = hidden ? "" : "none";
+  btn.textContent = hidden ? "Sembunyikan Data Kandidat" : "Tampilkan Data Kandidat";
+};
+["name","phone","position","token"].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener("input", ()=>saveSuiteProfile(suiteProfileFromInputs()));
+});
+window.addEventListener("resize", syncResponsiveTestLayout);
+
+async function init(){
+  applySuiteProfileToInputs();
+  try{
+    const [qRes, aRes] = await Promise.all([fetch("questions.json"), fetch("answer_key.json")]);
+    if(!qRes.ok || !aRes.ok) throw new Error("Fetch JSON gagal.");
+    QUESTIONS = await qRes.json();
+    ANSWER_KEY = await aRes.json();
+  }catch(_){
+    QUESTIONS = [];
+    ANSWER_KEY = {};
+    alert("Soal gagal dimuat. Jalankan lewat server lokal (contoh: python -m http.server 8000), lalu buka http://localhost:8000");
+  }
+
+  // auto load if exists
+  if(load() && state.started){
+    document.getElementById("name").value = state.identity?.name || "";
+    document.getElementById("phone").value = state.identity?.phone || "";
+    document.getElementById("position").value = state.identity?.position || "";
+    document.getElementById("duration").value = String(state.durationMin ?? 40);
+    saveSuiteProfile(suiteProfileFromInputs());
+    showTest();
+  }else{
+    document.getElementById("timerLabel").textContent = "Waktu 40:00";
+    document.getElementById("progressLabel").textContent = "0/60 terjawab";
+    syncResponsiveTestLayout();
+  }
+}
+init();
+</script>
+</body>
+</html>
+

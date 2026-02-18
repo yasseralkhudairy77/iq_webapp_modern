@@ -1,0 +1,1138 @@
+﻿<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Typing Test - BERANI Export Import</title>
+
+  <style>
+    :root{
+      --bg:#f6f0e8; --card:#ffffff; --ink:#111; --muted:#6b6b6b;
+      --shadow: 0 10px 25px rgba(0,0,0,.08);
+      --radius:18px; --green:#2bb673; --red:#e34b4b; --dark:#1a1a1a;
+      --line:#e9dccf; --btn:#f2b07b; --btnText:#1a1a1a; --btnDisabled:#e8e1d9;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--ink);
+      background: radial-gradient(1200px 600px at 50% 0%, #fff, var(--bg));
+      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+    }
+    .app{ width:min(920px, 100%); display:grid; grid-template-columns: 320px 1fr; gap:18px; align-items:start; }
+    .panel{ background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; border:1px solid var(--line); }
+    .badge{ border-radius:14px; padding:10px 12px; border:1px solid var(--line); background:#fff7ef; }
+    .badge .title{ font-weight:1000; letter-spacing:.5px; margin:0; font-size:16px; line-height:1.1; }
+    .badge .sub{ margin:4px 0 0 0; color:#ff7a1a; font-weight:900; font-size:12px; letter-spacing:.6px; }
+
+    .btn{
+      border:none; border-radius:14px; padding:12px 14px; background:var(--btn);
+      color:var(--btnText); font-weight:900; cursor:pointer; box-shadow: 0 6px 0 rgba(0,0,0,.08);
+      transition: transform .08s ease; user-select:none;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{ background:#fff; border:1px solid var(--line); box-shadow:none; font-weight:900; }
+    .btn.ghost{ background:#f7f2ec; border:1px dashed #d9c6b3; box-shadow:none; color:#3b3b3b; font-weight:900; }
+    .btn:disabled{ background:var(--btnDisabled); border:1px solid #e0d7cd; color:#9a8f85; cursor:not-allowed; box-shadow:none; }
+
+    .statsRow{ display:grid; grid-template-columns: 1fr; gap:10px; margin:10px 0 14px; }
+    .pill{ display:flex; align-items:center; justify-content:space-between; padding:12px 12px; border-radius:14px; color:#fff; font-weight:1000; }
+    .pill.green{background:var(--green)} .pill.red{background:var(--red)} .pill.dark{background:#1f1f1f}
+    .pill span{font-size:13px; font-weight:900; opacity:.95} .pill b{font-size:18px}
+
+    .meta{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:6px 0 2px; }
+    .chip{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); padding:8px 10px; border-radius:999px; background:#fff; font-weight:900; font-size:12px; color:#333; }
+    .dot{width:10px;height:10px;border-radius:50%} .dot.orange{background:#ff8a2a} .dot.gray{background:#b9b0a8}
+
+    .idBox{ border:1px solid var(--line); background:#fff; border-radius:14px; padding:10px 12px; font-weight:900; color:#222; line-height:1.3; }
+    .idBox small{ display:block; font-weight:800; color:var(--muted); margin-bottom:4px; }
+
+    .controls{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+    .footerRow{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px; padding-top:10px; border-top:1px dashed #e2d4c6; color:#333; font-weight:900; font-size:12px; }
+
+    .mainHeader{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    .mainHeader h1{ margin:0; font-size:18px; font-weight:1000; }
+    .subline{ margin:2px 0 0; color:var(--muted); font-size:13px; font-weight:800; }
+    .modeLine{ margin:6px 0 10px; font-weight:1000; color:#2d2d2d; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .modeTag{ background:#fff7ef; border:1px solid var(--line); padding:6px 10px; border-radius:999px; font-size:12px; font-weight:1000; color:#b14b00; }
+
+    .tabs{ display:flex; gap:10px; margin-top:10px; }
+    .tabBtn{ flex:1; padding:10px 12px; border-radius:14px; border:1px solid var(--line); background:#fff; font-weight:1000; cursor:pointer; }
+    .tabBtn.active{ background:#fff7ef; border-color:#f2b07b; }
+    .view{display:none} .view.active{display:block}
+
+    .promptBox{
+      background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px;
+      line-height:1.8; font-size:16px; font-weight:900;
+      box-shadow: inset 0 0 0 2px rgba(242,176,123,.08);
+      min-height: calc(1.8em * 3);
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+    .promptBox .done{color:#9fb39a}
+    .promptBox .current{ background:#fff2e6; border-radius:6px; padding:1px 2px; }
+    .promptBox .bad{ background:#ffe1e1; border-radius:6px; padding:1px 2px; }
+
+    .promptFooter{
+      margin-top:8px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      color:var(--muted); font-weight:900; font-size:12px;
+    }
+    .miniBtn{
+      background:#fff; border:1px solid var(--line);
+      padding:8px 10px; border-radius:12px; font-weight:1000; cursor:pointer;
+    }
+    .miniBtn:disabled{opacity:.55; cursor:not-allowed}
+
+    textarea{
+      width:100%; border:1px solid var(--line); border-radius:16px; padding:14px; font-size:16px; font-weight:800;
+      outline:none; min-height:120px; resize:none; background:#fff;
+    }
+    textarea:focus{ border-color:#f2b07b; box-shadow: 0 0 0 4px rgba(242,176,123,.22); }
+
+    .hint{ margin-top:10px; font-size:12px; color:#4b4b4b; line-height:1.5; font-weight:800; }
+
+    .reportGrid{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px; margin-top:12px; }
+    @media (max-width: 640px){ .reportGrid{grid-template-columns:1fr} }
+    .kpiCard{ border:1px solid var(--line); border-radius:16px; padding:12px; background:#fff; }
+    .kpiCard .label{ font-size:12px; color:var(--muted); font-weight:1000; margin:0 0 4px; }
+    .kpiCard .value{ font-size:20px; font-weight:1100; margin:0; }
+
+    canvas{ width:100%; height:240px; border:1px solid var(--line); border-radius:16px; background:#fff; }
+
+    .modalOverlay{ position:fixed; inset:0; background: rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; padding:16px; z-index:999; }
+    .modalCard{ width:min(640px, 100%); background:#fff; border-radius:20px; padding:18px; border:1px solid var(--line); box-shadow: 0 18px 50px rgba(0,0,0,.25); }
+    .modalTitle{ margin:0 0 6px 0; font-size:18px; font-weight:1100; }
+    .modalDesc{ margin:0 0 14px 0; color:var(--muted); font-weight:800; font-size:13px; line-height:1.4; }
+    .formRow{ margin-bottom:12px; }
+    .formLabel{ display:block; font-weight:1000; font-size:12px; margin-bottom:6px; color:#222; }
+    .formInput{ width:100%; border:1px solid var(--line); border-radius:14px; padding:12px 12px; font-size:16px; font-weight:900; outline:none; }
+    .formInput:focus{ border-color:#f2b07b; box-shadow: 0 0 0 4px rgba(242,176,123,.22); }
+    .formError{ color:#d00000; font-weight:900; font-size:12px; margin-top:6px; min-height:16px; }
+    .modePick{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .pickBtn{ border-radius:14px; border:1px solid var(--line); background:#fff; padding:12px 10px; font-weight:1100; cursor:pointer; }
+    .pickBtn.active{ background:#1a1a1a; color:#fff; border-color:#1a1a1a; }
+    .modalNote{ margin-top:8px; color:#4b4b4b; font-weight:800; font-size:12px; line-height:1.45; }
+    .modalCTA{ width:100%; margin-top:6px; height:48px; border-radius:14px; font-size:16px; }
+    @media (max-width: 420px){ .modePick{ grid-template-columns:1fr; } }
+
+    @media (max-width: 860px){
+      body{ align-items:flex-start; justify-content:flex-start; padding:12px; }
+      .app{ width:100%; grid-template-columns: 1fr; gap:12px; }
+      .panel.sidebar{ position: sticky; top: 10px; z-index: 50; padding: 10px; }
+      .panel.sidebar .meta, .panel.sidebar .hint, .panel.sidebar .footerRow{ display:none; }
+      .panel.sidebar .statsRow{ grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0 10px; }
+      .panel.sidebar .pill{ padding: 10px 10px; } .panel.sidebar .pill span{ font-size: 11px; } .panel.sidebar .pill b{ font-size: 16px; }
+      textarea{ min-height: 42vh; font-size:16px; }
+      canvas{ height: 200px; }
+    }
+    @media (max-width: 420px){
+      .panel.sidebar .statsRow{ grid-template-columns: 1fr; }
+      .controls{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <div class="panel sidebar">
+      <div class="badge" style="margin-bottom:10px">
+        <p class="title">BERANI</p>
+        <p class="sub">EXPORT&nbsp;&nbsp;IMPORT</p>
+      </div>
+
+      <div class="idBox">
+        <small>Identitas Kandidat</small>
+        <div id="idName">Nama: -</div>
+        <div id="idPhone">No HP: -</div>
+      </div>
+
+      <button class="btn secondary" id="btnNew" style="margin-top:10px">Kandidat Baru</button>
+
+      <div class="statsRow">
+        <div class="pill green"><span>Benar</span><b id="okCount">0</b></div>
+        <div class="pill red"><span>Salah</span><b id="errCount">0</b></div>
+        <div class="pill dark"><span>Waktu</span><b id="timeLeft">00:00</b></div>
+      </div>
+
+      <div class="meta">
+        <span class="chip"><span class="dot orange"></span> HR-AI Rekrutmen</span>
+        <span class="chip"><span class="dot gray"></span> Typing Test</span>
+      </div>
+
+      <div class="controls">
+        <button class="btn ghost" id="btnStart" disabled>Mulai</button>
+        <button class="btn ghost" id="btnFinish" disabled>Selesai</button>
+      </div>
+
+      <div class="controls">
+        <button class="btn secondary" id="btnReport" disabled>Report</button>
+        <button class="btn secondary" id="btnCurve" disabled>Kurva Kerja</button>
+      </div>
+
+      <div class="hint">
+        <b>Aturan:</b> Latihan 1 menit -> otomatis lanjut tes 10 menit.<br/>
+        Penilaian real-time: WPM, Akurasi, jumlah benar/salah, dan kurva WPM per menit.
+      </div>
+
+      <div class="footerRow">
+        <span id="statusText">Status: standby</span>
+        <span id="itemTotal">Item total: 0</span>
+      </div>
+    </div>
+
+    <div class="panel main">
+      <div class="mainHeader">
+        <div>
+          <h1>Typing Test</h1>
+          <p class="subline">Ketik sesuai teks. Fokus ke akurasi & konsistensi.</p>
+        </div>
+      </div>
+
+      <div class="modeLine">
+        <div>
+          <span id="modeName">Mode: Standby</span>
+          <span style="display:inline-block; width:8px"></span>
+          <span class="modeTag" id="modeTag">-</span>
+        </div>
+        <div style="font-weight:1000;color:#222" id="minuteLine">Menit 0 / 10</div>
+      </div>
+
+      <div class="tabs">
+        <button class="tabBtn active" data-tab="testView">Tes</button>
+        <button class="tabBtn" data-tab="reportView">Report</button>
+        <button class="tabBtn" data-tab="curveView">Kurva Kerja</button>
+      </div>
+
+      <div class="view active" id="testView">
+        <div class="promptBox" id="promptBox"></div>
+        <div class="promptFooter">
+          <span id="chunkInfo">Bagian 1</span>
+          <button class="miniBtn" id="btnNextChunk" type="button" disabled>Berikutnya (Enter)</button>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <!-- FIX: matikan autocorrect/spellcheck -->
+        <textarea
+          id="inputBox"
+          placeholder="Mulai mengetik di sini..."
+          disabled
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+          autocorrect="off"
+          inputmode="text"
+        ></textarea>
+
+        <div class="hint" id="liveHint">Silakan isi identitas kandidat terlebih dahulu.</div>
+      </div>
+
+      <div class="view" id="reportView">
+        <div class="reportGrid">
+          <div class="kpiCard"><p class="label">WPM (kata/menit)</p><p class="value" id="rWpm">0</p></div>
+          <div class="kpiCard"><p class="label">KPM (karakter/menit)</p><p class="value" id="rCpm">0</p></div>
+          <div class="kpiCard"><p class="label">Akurasi</p><p class="value" id="rAcc">0%</p></div>
+          <div class="kpiCard"><p class="label">Total Karakter</p><p class="value" id="rChars">0</p></div>
+          <div class="kpiCard"><p class="label">Benar</p><p class="value" id="rOk">0</p></div>
+          <div class="kpiCard"><p class="label">Salah</p><p class="value" id="rErr">0</p></div>
+        </div>
+
+        <div class="hint" style="margin-top:12px">
+          <b>Catatan:</b> WPM = (karakter benar / 5) per menit. Akurasi = benar / (benar + salah).
+        </div>
+
+        <div style="height:10px"></div>
+        <button class="btn" id="btnSave" disabled>Kirim Ulang ke Sheet</button>
+        <div class="hint">Auto-kirim dilakukan saat tes selesai. Tombol ini untuk kirim ulang jika diperlukan.</div>
+      </div>
+
+      <div class="view" id="curveView">
+        <canvas id="curveCanvas" width="900" height="300"></canvas>
+        <div class="hint">Kurva WPM per menit (hanya tes 10 menit, tidak termasuk latihan).</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="candidateModal" class="modalOverlay" aria-hidden="false">
+    <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle" class="modalTitle">Data Kandidat</h2>
+      <p class="modalDesc">Isi dulu data kandidat sebelum tes dimulai (untuk report & lookup Google Sheet).</p>
+
+      <div class="formRow">
+        <label class="formLabel" for="candName">Nama Kandidat</label>
+        <input id="candName" class="formInput" type="text" placeholder="Contoh: Muhammad Naufal" autocomplete="name" />
+        <div class="formError" id="errName"></div>
+      </div>
+
+      <div class="formRow">
+        <label class="formLabel" for="candPhone">No HP (format 08xxxxxxxxxx)</label>
+        <input id="candPhone" class="formInput" type="tel" inputmode="numeric" placeholder="08xxxxxxxxxx" autocomplete="tel" />
+        <div class="formError" id="errPhone"></div>
+      </div>
+
+      <div class="formRow">
+        <label class="formLabel">Pilih Mode Tes</label>
+        <div class="modePick">
+          <button type="button" class="pickBtn active" data-mode="practice">Latihan 1 menit</button>
+          <button type="button" class="pickBtn" data-mode="test">Tes 10 menit</button>
+        </div>
+        <div class="modalNote">
+          • Latihan: untuk pemanasan / coba tombol.<br/>
+          • Tes: untuk hasil evaluasi.
+        </div>
+      </div>
+
+      <button id="btnModalStart" class="btn modalCTA">Lanjut & Mulai</button>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const DEFAULT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxW0ikEwUwnRJhc89EkFRsUlMLR7lM_SGQbtduixCEoO6U8o-GMVlyQRNWY7-J4CcTV/exec";
+  const SHEET_ENDPOINT_KEY = "berani_sheet_endpoint_v1";
+  function resolveWebAppUrl(){
+    const q = new URLSearchParams(window.location.search);
+    const fromQuery = (q.get("sheet") || "").trim();
+    const fromLocal = (localStorage.getItem(SHEET_ENDPOINT_KEY) || "").trim();
+    const url = fromQuery || fromLocal || DEFAULT_WEB_APP_URL;
+    if(url) localStorage.setItem(SHEET_ENDPOINT_KEY, url);
+    return url;
+  }
+  const WEB_APP_URL = resolveWebAppUrl();
+
+  const PRACTICE_SECONDS = 60;
+  const TEST_SECONDS = 600;
+  const WORD_UNIT = 5;
+
+  const TARGET_CHUNK_MAX_CHARS = 170;
+  const TARGET_CHUNK_MIN_CHARS = 110;
+
+  const PRACTICE_TEXT = [
+    "Fokus pada akurasi dan ritme. Ketik dengan tenang tanpa terburu-buru.",
+    "Latihan satu menit ini untuk pemanasan. Setelah itu tes utama dimulai."
+  ].join(" ");
+
+  const TEST_TEXTS = [
+    "Kerja yang rapi dimulai dari kebiasaan kecil: menamai file dengan jelas, menyimpan dokumen pada folder yang benar, dan menutup pekerjaan dengan cek ulang.",
+    "Dalam pekerjaan administrasi, ketelitian lebih penting daripada kecepatan sesaat. Pastikan angka, nama, tanggal, dan dokumen sesuai sebelum menekan tombol kirim.",
+    "Komunikasi yang baik bukan soal kalimat panjang, tetapi pesan yang jelas. Sampaikan konteks, tujuan, dan langkah yang diharapkan agar mudah ditindaklanjuti.",
+    "Saat menghadapi perubahan, tetap tenang dan fokus pada langkah berikutnya. Pecah masalah menjadi bagian kecil, selesaikan satu per satu, lalu validasi hasilnya.",
+    "Manajemen waktu bisa dimulai dari hal sederhana: tentukan prioritas harian, buat daftar tugas singkat, dan blok waktu untuk pekerjaan fokus.",
+    "Kualitas kerja ditentukan oleh konsistensi. Lebih baik stabil dan rapi daripada cepat tetapi sering salah. Jika ragu, baca ulang instruksi.",
+    "Kerja tim membutuhkan standar yang sama. Gunakan format penamaan file seragam, catatan ringkas, dan update status secara rutin.",
+    "Dalam bisnis, keputusan yang baik berangkat dari data. Catat hasil, hitung rasio, dan lihat tren agar evaluasi lebih objektif.",
+    "Saat menerima tugas baru, pastikan memahami output yang diharapkan dan kriteria kualitas agar pekerjaan terarah dan revisi berkurang.",
+    "Jika terjadi kesalahan, fokus pada perbaikan proses. Identifikasi penyebab, perbaiki alur, lalu buat langkah pencegahan.",
+    "Ketahanan kerja dibangun lewat ritme. Atur napas, jaga konsentrasi, dan konsisten pada pola kerja yang rapi.",
+    "Sikap profesional terlihat dari cara menindaklanjuti. Buat rangkuman singkat, konfirmasi poin penting, lalu jalankan tindakan yang disepakati.",
+    "Dokumentasi adalah investasi. Catatan kecil hari ini bisa menghemat banyak waktu besok.",
+    "Disiplin bukan berarti kaku, tetapi konsisten. Datang tepat waktu dan menyelesaikan tugas sesuai kesepakatan menunjukkan tanggung jawab.",
+    "Setiap pekerjaan punya risiko. Kurangi dengan cek dua kali pada bagian penting: angka, nama, alamat, jadwal, dan detail penentu keputusan."
+  ];
+
+  const state = {
+    phase: "idle",
+    timerId: null,
+    secondsLeft: 0,
+
+    okTotal: 0,
+    errTotal: 0,
+
+    currentTarget: "",
+    poolWords: [],
+
+    startAt: 0,
+    wpmByMinute: Array(10).fill(0),
+    minuteIndex: 0,
+    minuteCharOkStart: 0,
+    charOkTotal: 0,
+    chunkNo: 1
+  };
+  let nextRedirectScheduled = false;
+
+  const candidate = { name:"", phone:"", mode:"practice" };
+
+  const el = {
+    okCount: document.getElementById("okCount"),
+    errCount: document.getElementById("errCount"),
+    timeLeft: document.getElementById("timeLeft"),
+    statusText: document.getElementById("statusText"),
+    itemTotal: document.getElementById("itemTotal"),
+
+    modeName: document.getElementById("modeName"),
+    modeTag: document.getElementById("modeTag"),
+    minuteLine: document.getElementById("minuteLine"),
+
+    promptBox: document.getElementById("promptBox"),
+    chunkInfo: document.getElementById("chunkInfo"),
+    btnNextChunk: document.getElementById("btnNextChunk"),
+
+    inputBox: document.getElementById("inputBox"),
+    liveHint: document.getElementById("liveHint"),
+
+    btnNew: document.getElementById("btnNew"),
+    btnStart: document.getElementById("btnStart"),
+    btnFinish: document.getElementById("btnFinish"),
+    btnReport: document.getElementById("btnReport"),
+    btnCurve: document.getElementById("btnCurve"),
+    btnSave: document.getElementById("btnSave"),
+
+    tabs: [...document.querySelectorAll(".tabBtn")],
+    views: {
+      testView: document.getElementById("testView"),
+      reportView: document.getElementById("reportView"),
+      curveView: document.getElementById("curveView")
+    },
+
+    rWpm: document.getElementById("rWpm"),
+    rCpm: document.getElementById("rCpm"),
+    rAcc: document.getElementById("rAcc"),
+    rChars: document.getElementById("rChars"),
+    rOk: document.getElementById("rOk"),
+    rErr: document.getElementById("rErr"),
+
+    canvas: document.getElementById("curveCanvas"),
+    idName: document.getElementById("idName"),
+    idPhone: document.getElementById("idPhone"),
+
+    modal: document.getElementById("candidateModal"),
+    inpName: document.getElementById("candName"),
+    inpPhone: document.getElementById("candPhone"),
+    errName: document.getElementById("errName"),
+    errPhone: document.getElementById("errPhone"),
+    btnModalStart: document.getElementById("btnModalStart"),
+    pickBtns: [...document.querySelectorAll(".pickBtn")]
+  };
+
+  const pad2 = n => String(n).padStart(2,"0");
+  const fmtTime = s => `${pad2(Math.floor(s/60))}:${pad2(s%60)}`;
+  const clamp = (v,min,max) => Math.max(min, Math.min(max,v));
+  const randPick = arr => arr[Math.floor(Math.random()*arr.length)];
+  function buildNextTestUrl(){
+    const q = new URLSearchParams(window.location.search);
+    const keep = new URLSearchParams();
+    ["name","phone","position","token","sheet"].forEach(k=>{
+      const v = q.get(k);
+      if(v) keep.set(k, v);
+    });
+    const qs = keep.toString();
+    return `../disc/index.html${qs ? "?" + qs : ""}`;
+  }
+  function goNextTestWithDelay(reason){
+    if(nextRedirectScheduled) return;
+    nextRedirectScheduled = true;
+    el.liveHint.innerHTML = reason === "timeout"
+      ? "Waktu habis. Lanjut ke tes berikutnya..."
+      : "Tes selesai. Lanjut ke tes berikutnya...";
+    setTimeout(()=>{ window.location.href = buildNextTestUrl(); }, 1200);
+  }
+
+  function escapeHtml(str){
+    return str.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+              .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+  }
+
+  function switchTab(viewId){
+    for (const t of el.tabs) t.classList.toggle("active", t.dataset.tab === viewId);
+    for (const [id,v] of Object.entries(el.views)) v.classList.toggle("active", id === viewId);
+  }
+
+  function normalizePhone(p){
+    let x = (p||"").toString().replace(/\D/g,"");
+    if (x.startsWith("62")) x = "0" + x.slice(2);
+    return x;
+  }
+  function isValidPhone(p){ return /^08\d{8,11}$/.test(p); }
+
+  // ====== FIX inti: normalisasi char biar "terlihat sama" tidak dianggap beda ======
+  function normalizeTextForCompare(s){
+    if (s == null) return "";
+    return String(s)
+      .replace(/\r\n/g,"\n")
+      .replace(/\r/g,"\n")
+      .replace(/\u00A0/g," ")         // NBSP -> spasi biasa
+      .replace(/\u2018|\u2019/g,"'")  // smart single quotes
+      .replace(/\u201C|\u201D/g,'"')  // smart double quotes
+      .replace(/\u2026/g,"...");      // ellipsis
+  }
+
+  function setPick(mode){
+    candidate.mode = mode;
+    el.pickBtns.forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
+  }
+
+  function syncIdentityUI(){
+    el.idName.textContent = `Nama: ${candidate.name || "-"}`;
+    el.idPhone.textContent = `No HP: ${candidate.phone || "-"}`;
+  }
+
+  function openCandidateModal(){
+    el.modal.style.display = "flex";
+    el.modal.setAttribute("aria-hidden","false");
+
+    try{
+      const saved = JSON.parse(localStorage.getItem("bei_candidate") || "null");
+      if (saved && saved.name && saved.phone){
+        el.inpName.value = saved.name;
+        el.inpPhone.value = saved.phone;
+      }
+    }catch(e){}
+
+    setPick(candidate.mode || "practice");
+    el.btnStart.disabled = true;
+    el.btnFinish.disabled = true;
+    el.inputBox.disabled = true;
+    setTimeout(() => el.inpName.focus(), 80);
+  }
+
+  function closeCandidateModal(){
+    el.modal.style.display = "none";
+    el.modal.setAttribute("aria-hidden","true");
+  }
+
+  function setPhase(phase){
+    state.phase = phase;
+
+    if (phase === "idle"){
+      el.modeName.textContent = "Mode: Standby";
+      el.modeTag.textContent = "-";
+      el.statusText.textContent = "Status: standby";
+      el.minuteLine.textContent = "Menit 0 / 10";
+      el.btnReport.disabled = true;
+      el.btnCurve.disabled = true;
+      el.btnSave.disabled = true;
+      el.btnStart.disabled = !candidate.phone;
+      el.btnFinish.disabled = true;
+      el.inputBox.disabled = true;
+      el.btnNextChunk.disabled = true;
+    }
+
+    if (phase === "practice"){
+      el.modeName.textContent = "Mode: Latihan";
+      el.modeTag.textContent = "1 menit";
+      el.statusText.textContent = "Status: latihan";
+      el.btnFinish.disabled = false;
+      el.inputBox.disabled = false;
+      el.btnStart.disabled = true;
+      el.btnNextChunk.disabled = true;
+      el.inputBox.focus();
+    }
+
+    if (phase === "test"){
+      el.modeName.textContent = "Mode: Tes Utama";
+      el.modeTag.textContent = "10 menit";
+      el.statusText.textContent = "Status: mengerjakan";
+      el.btnFinish.disabled = false;
+      el.inputBox.disabled = false;
+      el.btnStart.disabled = true;
+      el.btnNextChunk.disabled = true;
+      el.inputBox.focus();
+    }
+
+    if (phase === "done"){
+      el.modeName.textContent = "Mode: Selesai";
+      el.modeTag.textContent = "hasil tersedia";
+      el.statusText.textContent = "Status: selesai";
+      el.btnReport.disabled = false;
+      el.btnCurve.disabled = false;
+      el.btnSave.disabled = false;
+      el.btnStart.disabled = false;
+      el.btnFinish.disabled = true;
+      el.inputBox.disabled = true;
+      el.btnNextChunk.disabled = true;
+    }
+  }
+
+  function resetAll(){
+    clearInterval(state.timerId);
+    state.timerId = null;
+
+    state.secondsLeft = 0;
+    state.okTotal = 0;
+    state.errTotal = 0;
+    state.currentTarget = "";
+    state.poolWords = [];
+    state.startAt = 0;
+
+    state.wpmByMinute = Array(10).fill(0);
+    state.minuteIndex = 0;
+    state.minuteCharOkStart = 0;
+    state.charOkTotal = 0;
+
+    state.chunkNo = 1;
+    el.chunkInfo.textContent = "Bagian 1";
+    el.inputBox.value = "";
+
+    el.okCount.textContent = "0";
+    el.errCount.textContent = "0";
+    el.timeLeft.textContent = "00:00";
+    el.itemTotal.textContent = "Item total: 0";
+
+    state.currentTarget = PRACTICE_TEXT;
+    renderTarget("");
+
+    el.liveHint.innerHTML = candidate.phone
+      ? "Tekan <b>Mulai</b> untuk memulai sesuai mode yang dipilih."
+      : "Silakan isi identitas kandidat terlebih dahulu.";
+
+    updateReport();
+    drawCurve();
+    setPhase("idle");
+    switchTab("testView");
+    syncIdentityUI();
+  }
+
+  function refillPoolWords(minWords = 250){
+    while (state.poolWords.length < minWords){
+      const p = randPick(TEST_TEXTS).replace(/\s+/g," ").trim();
+      state.poolWords.push(...p.split(" "), "");
+    }
+  }
+
+  function buildNextChunk(){
+    if (state.phase === "practice"){
+      state.currentTarget = PRACTICE_TEXT;
+      return;
+    }
+
+    refillPoolWords(300);
+
+    let out = "";
+    while (state.poolWords.length){
+      const w = state.poolWords.shift();
+      const next = (out ? out + " " : "") + (w || "");
+      const candidateText = next.replace(/\s+/g," ").trim();
+      if (candidateText.length > TARGET_CHUNK_MAX_CHARS) break;
+      out = candidateText;
+      if (out.length >= TARGET_CHUNK_MIN_CHARS && /[.!?]$/.test(out)) break;
+    }
+
+    if (!out) out = randPick(TEST_TEXTS);
+    state.currentTarget = out.replace(/\s+/g," ").trim();
+  }
+
+  function renderTarget(typedRaw){
+    const targetRaw = state.currentTarget;
+    const typed = normalizeTextForCompare(typedRaw);
+    const target = normalizeTextForCompare(targetRaw);
+
+    const upto = Math.min(typed.length, target.length);
+
+    // Untuk render highlight, kita pakai targetRaw (asli) agar visual tetap natural.
+    // Namun perbandingan gunakan versi normalized per indeks.
+    const targetVis = targetRaw; // tampilkan asli
+    const typedVis = typedRaw;   // tampilkan apa yang diketik
+
+    const uptoVis = Math.min(typedVis.length, targetVis.length);
+
+    let html = "";
+    for (let i=0;i<targetVis.length;i++){
+      const ch = targetVis[i];
+
+      if (i < uptoVis){
+        const tCh = normalizeTextForCompare(typedVis[i]);
+        const pCh = normalizeTextForCompare(targetVis[i]);
+        html += (tCh === pCh)
+          ? `<span class="done">${escapeHtml(ch)}</span>`
+          : `<span class="bad">${escapeHtml(ch)}</span>`;
+      } else if (i === uptoVis && (state.phase === "practice" || state.phase === "test")){
+        html += `<span class="current">${escapeHtml(ch)}</span>`;
+      } else {
+        html += escapeHtml(ch);
+      }
+    }
+
+    el.promptBox.innerHTML = html;
+
+    // tombol next aktif jika (normalized typed) panjang >= (normalized target)
+    el.btnNextChunk.disabled = !(typed.length >= target.length);
+  }
+
+  function computeRealtime(typedRaw){
+    const typed = normalizeTextForCompare(typedRaw);
+    const target = normalizeTextForCompare(state.currentTarget);
+
+    const len = typed.length;
+    const upto = Math.min(len, target.length);
+
+    let ok = 0, err = 0;
+    for (let i=0;i<upto;i++){
+      if (typed[i] === target[i]) ok++;
+      else err++;
+    }
+    if (len > target.length) err += (len - target.length);
+
+    const okGlobal = state.okTotal + ok;
+    const errGlobal = state.errTotal + err;
+
+    state.charOkTotal = okGlobal;
+
+    el.okCount.textContent = String(okGlobal);
+    el.errCount.textContent = String(errGlobal);
+    el.itemTotal.textContent = `Item total: ${okGlobal + errGlobal}`;
+
+    renderTarget(typedRaw);
+  }
+
+  function commitAndNext(){
+    const typed = normalizeTextForCompare(el.inputBox.value || "");
+    const target = normalizeTextForCompare(state.currentTarget);
+
+    const upto = Math.min(typed.length, target.length);
+    let ok = 0, err = 0;
+    for (let i=0;i<upto;i++){
+      if (typed[i] === target[i]) ok++;
+      else err++;
+    }
+    if (typed.length > target.length) err += (typed.length - target.length);
+
+    state.okTotal += ok;
+    state.errTotal += err;
+
+    el.inputBox.value = "";
+    buildNextChunk();
+    renderTarget("");
+
+    state.chunkNo += 1;
+    el.chunkInfo.textContent = `Bagian ${state.chunkNo}`;
+    el.btnNextChunk.disabled = true;
+
+    const total = state.okTotal + state.errTotal;
+    const acc = total ? Math.round((state.okTotal/total)*100) : 0;
+    el.liveHint.innerHTML = `Realtime: <b>${acc}%</b> akurasi • Benar <b>${state.okTotal}</b> • Salah <b>${state.errTotal}</b>.`;
+
+    el.inputBox.focus();
+  }
+
+  function saveToSheet(payload){
+    if (!payload.kandidatNoHP) return;
+    fetch(WEB_APP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action:"submit", module:"typing", payload })
+    }).catch(() => {});
+  }
+
+  function startPractice(){
+    clearInterval(state.timerId);
+    nextRedirectScheduled = false;
+
+    state.okTotal = 0;
+    state.errTotal = 0;
+    state.charOkTotal = 0;
+
+    state.wpmByMinute = Array(10).fill(0);
+    state.minuteIndex = 0;
+    state.minuteCharOkStart = 0;
+    state.startAt = 0;
+
+    state.chunkNo = 1;
+    el.chunkInfo.textContent = "Bagian 1";
+    el.inputBox.value = "";
+
+    state.currentTarget = PRACTICE_TEXT;
+    renderTarget("");
+
+    state.secondsLeft = PRACTICE_SECONDS;
+    el.timeLeft.textContent = fmtTime(state.secondsLeft);
+    el.liveHint.innerHTML = "Latihan dimulai. Fokus akurasi, jangan buru-buru.";
+    setPhase("practice");
+
+    tickLoop(() => startTest());
+  }
+
+  function startTest(){
+    clearInterval(state.timerId);
+    nextRedirectScheduled = false;
+
+    state.okTotal = 0;
+    state.errTotal = 0;
+    state.charOkTotal = 0;
+
+    state.wpmByMinute = Array(10).fill(0);
+    state.minuteIndex = 0;
+    state.minuteCharOkStart = 0;
+
+    state.poolWords = [];
+    refillPoolWords(400);
+
+    state.chunkNo = 1;
+    el.chunkInfo.textContent = "Bagian 1";
+    el.inputBox.value = "";
+
+    buildNextChunk();
+    renderTarget("");
+
+    state.secondsLeft = TEST_SECONDS;
+    state.startAt = Date.now();
+
+    el.timeLeft.textContent = fmtTime(state.secondsLeft);
+    el.liveHint.innerHTML = "Tes utama dimulai (10 menit). Selesai satu bagian -> tekan <b>Enter</b> untuk lanjut.";
+    setPhase("test");
+
+    tickLoop(() => finishNow(true));
+  }
+
+  function finishNow(auto=false){
+    clearInterval(state.timerId);
+    state.timerId = null;
+
+    if (state.phase === "practice"){
+      startTest();
+      return;
+    }
+
+    if (state.phase === "test"){
+      // commit partial saat finish
+      const typed = normalizeTextForCompare(el.inputBox.value || "");
+      const target = normalizeTextForCompare(state.currentTarget);
+
+      const upto = Math.min(typed.length, target.length);
+      let ok = 0, err = 0;
+      for (let i=0;i<upto;i++){
+        if (typed[i] === target[i]) ok++;
+        else err++;
+      }
+      if (typed.length > target.length) err += (typed.length - target.length);
+
+      state.okTotal += ok;
+      state.errTotal += err;
+
+      finalizeMinute(state.minuteIndex);
+      setPhase("done");
+      el.timeLeft.textContent = "00:00";
+
+      el.liveHint.innerHTML = auto
+        ? "Waktu habis. Data sedang dikirim ke Google Sheet. Silakan buka <b>Report</b> atau <b>Kurva Kerja</b>."
+        : "Tes dihentikan. Data sedang dikirim ke Google Sheet. Silakan buka <b>Report</b> atau <b>Kurva Kerja</b>.";
+
+      updateReport();
+      drawCurve();
+      saveToSheet(buildPayload());
+      goNextTestWithDelay(auto ? "timeout" : "manual");
+    }
+  }
+
+  function tickLoop(onEnd){
+    clearInterval(state.timerId);
+    state.timerId = setInterval(() => {
+      state.secondsLeft = Math.max(0, state.secondsLeft - 1);
+      el.timeLeft.textContent = fmtTime(state.secondsLeft);
+
+      if (state.phase === "test"){
+        const elapsed = TEST_SECONDS - state.secondsLeft;
+        const minute = Math.min(10, Math.max(1, Math.ceil(elapsed / 60)));
+        el.minuteLine.textContent = `Menit ${minute} / 10`;
+
+        const currentMinuteIndex = Math.floor(elapsed / 60);
+        if (currentMinuteIndex !== state.minuteIndex && currentMinuteIndex <= 9){
+          finalizeMinute(state.minuteIndex);
+          state.minuteIndex = currentMinuteIndex;
+          state.minuteCharOkStart = state.charOkTotal;
+        }
+      }
+
+      if (state.secondsLeft <= 0){
+        clearInterval(state.timerId);
+        state.timerId = null;
+        if (state.phase === "test") finalizeMinute(state.minuteIndex);
+        onEnd && onEnd();
+      }
+    }, 1000);
+  }
+
+  function finalizeMinute(idx){
+    if (idx < 0 || idx > 9) return;
+    const charsInMinute = state.charOkTotal - state.minuteCharOkStart;
+    const wpm = Math.round(charsInMinute / WORD_UNIT);
+    state.wpmByMinute[idx] = clamp(wpm, 0, 999);
+    drawCurve();
+  }
+
+  function updateReport(){
+    let minutes = 10;
+    if (state.startAt && state.phase === "done"){
+      const elapsedMs = Math.max(1, Date.now() - state.startAt);
+      minutes = Math.max(1/60, elapsedMs / 60000);
+    }
+    const ok = state.okTotal, err = state.errTotal, total = ok + err;
+    const acc = total ? (ok / total) : 0;
+    const wpm = minutes ? Math.round((ok / WORD_UNIT) / minutes) : 0;
+    const cpm = minutes ? Math.round(ok / minutes) : 0;
+
+    el.rWpm.textContent = String(wpm);
+    el.rCpm.textContent = String(cpm);
+    el.rAcc.textContent = `${Math.round(acc*100)}%`;
+    el.rChars.textContent = String(total);
+    el.rOk.textContent = String(ok);
+    el.rErr.textContent = String(err);
+  }
+
+  function drawCurve(){
+    const c = el.canvas, ctx = c.getContext("2d");
+    const w = c.width, h = c.height;
+    ctx.clearRect(0,0,w,h);
+
+    const pad = {l:50,r:18,t:18,b:38};
+    const gx0 = pad.l, gx1 = w - pad.r;
+    const gy0 = pad.t, gy1 = h - pad.b;
+
+    const data = state.wpmByMinute.slice(0,10);
+    const maxV = Math.max(10, ...data);
+
+    ctx.strokeStyle = "#ead9c9"; ctx.lineWidth = 1;
+    for (let i=0;i<=5;i++){
+      const y = gy1 - (i/5)*(gy1-gy0);
+      ctx.beginPath(); ctx.moveTo(gx0,y); ctx.lineTo(gx1,y); ctx.stroke();
+    }
+
+    ctx.strokeStyle = "#d8c3af"; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(gx0,gy0); ctx.lineTo(gx0,gy1); ctx.lineTo(gx1,gy1); ctx.stroke();
+
+    ctx.fillStyle = "#3a3a3a"; ctx.font = "1000 12px ui-sans-serif, system-ui";
+    ctx.fillText("WPM", 10, 18);
+
+    ctx.font = "900 11px ui-sans-serif, system-ui";
+    for (let i=0;i<=5;i++){
+      const v = Math.round((i/5)*maxV);
+      const y = gy1 - (i/5)*(gy1-gy0);
+      ctx.fillText(String(v), 12, y+4);
+    }
+    for (let i=0;i<10;i++){
+      const x = gx0 + (i/9)*(gx1-gx0);
+      ctx.fillText(String(i+1), x-3, h-14);
+    }
+
+    ctx.strokeStyle = "#1a1a1a"; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i=0;i<10;i++){
+      const x = gx0 + (i/9)*(gx1-gx0);
+      const y = gy1 - (data[i]/maxV)*(gy1-gy0);
+      if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = "#1a1a1a";
+    for (let i=0;i<10;i++){
+      const x = gx0 + (i/9)*(gx1-gx0);
+      const y = gy1 - (data[i]/maxV)*(gy1-gy0);
+      ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill();
+    }
+  }
+
+  function buildPayload(){
+    const q = new URLSearchParams(window.location.search);
+    let minutes = 10;
+    if (state.startAt){
+      const elapsedMs = Math.max(1, Date.now() - state.startAt);
+      minutes = Math.max(1/60, elapsedMs / 60000);
+    }
+    const ok = state.okTotal, err = state.errTotal, total = ok + err;
+    const acc = total ? (ok / total) : 0;
+    const wpm = minutes ? Math.round((ok / WORD_UNIT) / minutes) : 0;
+
+    return {
+      module: "typing",
+      position: (q.get("position") || "").trim(),
+      token: (q.get("token") || "").trim(),
+      kandidatNama: candidate.name,
+      kandidatNoHP: candidate.phone,
+      modeDipilih: candidate.mode,
+      durationMinutes: +minutes.toFixed(3),
+      total,
+      benar: ok,
+      salah: err,
+      akurasi: +(acc*100).toFixed(2),
+      wpm,
+      wpmByMinute: state.wpmByMinute.slice()
+    };
+  }
+
+  // ===== EVENTS =====
+  el.pickBtns.forEach(b => b.addEventListener("click", () => setPick(b.dataset.mode)));
+
+  el.btnModalStart.addEventListener("click", () => {
+    el.errName.textContent = ""; el.errPhone.textContent = "";
+    const name = (el.inpName.value || "").trim();
+    const phone = normalizePhone(el.inpPhone.value);
+
+    let ok = true;
+    if (!name){ el.errName.textContent = "Nama kandidat wajib diisi."; ok = false; }
+    if (!phone){ el.errPhone.textContent = "No HP wajib diisi."; ok = false; }
+    else if (!isValidPhone(phone)){ el.errPhone.textContent = "Format no HP tidak valid. Gunakan 08xxxxxxxxxx."; ok = false; }
+    if (!ok) return;
+
+    candidate.name = name;
+    candidate.phone = phone;
+
+    try{ localStorage.setItem("bei_candidate", JSON.stringify({name, phone})); }catch(e){}
+
+    closeCandidateModal();
+    syncIdentityUI();
+    resetAll();
+
+    if (candidate.mode === "practice") startPractice();
+    else startTest();
+  });
+
+  el.btnNew.addEventListener("click", () => openCandidateModal());
+
+  el.btnStart.addEventListener("click", () => {
+    if (!candidate.phone) return openCandidateModal();
+    if (state.phase === "idle" || state.phase === "done"){
+      (candidate.mode === "practice") ? startPractice() : startTest();
+    }
+  });
+
+  el.btnFinish.addEventListener("click", () => {
+    if (state.phase !== "practice" && state.phase !== "test") return;
+    if (state.secondsLeft > 0){
+      const warning = [
+        "PERINGATAN: Waktu tes masih tersisa.",
+        "Jika Anda menekan Selesai sekarang, tes akan diakhiri dan lanjut ke tes berikutnya.",
+        "Pastikan Anda benar-benar ingin menyelesaikan tes saat ini."
+      ].join("\n");
+      if(!confirm(warning)) return;
+    }
+    finishNow(false);
+  });
+
+  el.btnNextChunk.addEventListener("click", () => {
+    if (state.phase !== "test") return;
+    if (el.btnNextChunk.disabled) return;
+    commitAndNext();
+  });
+
+  el.inputBox.addEventListener("input", (e) => {
+    if (state.phase !== "practice" && state.phase !== "test") return;
+    computeRealtime(e.target.value);
+
+    if (state.phase === "test"){
+      const okGlobal = parseInt(el.okCount.textContent || "0", 10);
+      const errGlobal = parseInt(el.errCount.textContent || "0", 10);
+      const total = okGlobal + errGlobal;
+      const acc = total ? Math.round((okGlobal/total)*100) : 0;
+      el.liveHint.innerHTML = `Realtime: <b>${acc}%</b> akurasi • Benar <b>${okGlobal}</b> • Salah <b>${errGlobal}</b>.`;
+      updateReport();
+    }
+  });
+
+  el.inputBox.addEventListener("keydown", (e) => {
+    if (state.phase !== "test") return;
+    if (e.key === "Enter"){
+      e.preventDefault();
+      if (!el.btnNextChunk.disabled) commitAndNext();
+    }
+  });
+
+  el.btnReport.addEventListener("click", () => { updateReport(); switchTab("reportView"); });
+  el.btnCurve.addEventListener("click", () => { drawCurve(); switchTab("curveView"); });
+
+  el.tabs.forEach(t => t.addEventListener("click", () => {
+    const id = t.dataset.tab;
+    if ((id === "reportView" || id === "curveView") && state.phase !== "done") return;
+    if (id === "reportView") updateReport();
+    if (id === "curveView") drawCurve();
+    switchTab(id);
+  }));
+
+  el.btnSave.addEventListener("click", () => {
+    if (state.phase !== "done") return;
+    saveToSheet(buildPayload());
+    alert("Data dikirim ulang ke Google Sheet.");
+  });
+
+  // INIT
+  resetAll();
+  openCandidateModal();
+})();
+</script>
+<script>
+/* SUITE_BRIDGE_V1 */
+(function(){
+  const KEY = "berani_suite_profile_v1";
+  function readLS(){
+    try{ return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }catch(_){ return {}; }
+  }
+  function readProfile(){
+    const q = new URLSearchParams(window.location.search);
+    const qs = {
+      name:(q.get("name") || "").trim(),
+      phone:(q.get("phone") || "").trim(),
+      position:(q.get("position") || "").trim(),
+      token:(q.get("token") || "").trim()
+    };
+    const ls = readLS();
+    const p = {
+      name: qs.name || ls.name || "",
+      phone: qs.phone || ls.phone || "",
+      position: qs.position || ls.position || "",
+      token: qs.token || ls.token || ""
+    };
+    if(p.name || p.phone || p.position || p.token){
+      localStorage.setItem(KEY, JSON.stringify(Object.assign({}, ls, p, {updatedAt:new Date().toISOString()})));
+    }
+    return p;
+  }
+  function lockInput(id, value){
+    const el = document.getElementById(id);
+    if(!el || !value) return;
+    el.value = value;
+    el.readOnly = true;
+    el.title = "Terisi otomatis dari Tes IQ";
+  }
+  function lockSelect(id, value){
+    const el = document.getElementById(id);
+    if(!el || !value) return;
+    el.value = value;
+    el.disabled = true;
+    el.title = "Terisi otomatis dari Tes IQ";
+  }
+  const p = readProfile();
+  if(!(p.name && p.phone && p.position)) return;
+
+  lockInput("name", p.name);
+  lockInput("phone", p.phone);
+  lockInput("role", p.position);
+  lockInput("token", p.token);
+
+  lockInput("candName", p.name);
+  lockInput("candPhone", p.phone);
+
+  const email = document.getElementById("email");
+  if(email){
+    if(!email.value) email.value = (p.phone || "candidate") + "@local.invalid";
+    email.readOnly = true;
+    email.title = "Terisi otomatis dari Tes IQ";
+  }
+
+  // Typing app fallback storage
+  try{ localStorage.setItem("bei_candidate", JSON.stringify({name:p.name, phone:p.phone})); }catch(_){ }
+
+  const hideBtnIds = ["btnNew", "newCandidateBtn"];
+  hideBtnIds.forEach(id=>{
+    const btn = document.getElementById(id);
+    if(btn) btn.style.display = "none";
+  });
+
+  const introHost = document.querySelector(".card") || document.body;
+  if(introHost && !document.getElementById("suiteBridgeNote")){
+    const note = document.createElement("div");
+    note.id = "suiteBridgeNote";
+    note.style.marginTop = "10px";
+    note.style.padding = "8px 10px";
+    note.style.borderRadius = "10px";
+    note.style.border = "1px solid rgba(31,154,99,.35)";
+    note.style.background = "rgba(31,154,99,.12)";
+    note.style.fontSize = "12px";
+    note.textContent = "Identitas kandidat ditarik otomatis dari Tes IQ.";
+    introHost.appendChild(note);
+  }
+})();
+</script>
+</body>
+</html>
+
+

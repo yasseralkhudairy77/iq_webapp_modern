@@ -1,0 +1,1218 @@
+﻿<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>BERANI - HR-AI Rekrutmen | Tes Koran (Pauli/Kraeplin)</title>
+  <meta name="theme-color" content="#111111" />
+  <style>
+    :root{
+      --orange:#F47A20;
+      --green:#1DB56B;
+      --dark:#111111;
+      --muted:#6b6b6b;
+
+      --bgA: rgba(244,122,32,.16);
+      --bgB: rgba(29,181,107,.14);
+
+      --card:#fbf7ef;
+
+      --ok: var(--green);
+      --bad:#EF5350;
+      --chip:#232323;
+
+      --btn: var(--orange);
+      --btn2:#e16615;
+
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+
+    *{ box-sizing:border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+    body{
+      margin:0; min-height:100vh;
+      background:
+        radial-gradient(1000px 500px at 15% 20%, var(--bgA), transparent 60%),
+        radial-gradient(900px 500px at 80% 55%, var(--bgB), transparent 60%),
+        linear-gradient(135deg, rgba(17,17,17,.96), rgba(17,17,17,.90));
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding: 14px;
+      color:#111;
+    }
+
+    .wrap{ width:min(460px, 100%); }
+    .phone{
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      position: relative;
+      overflow:hidden;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 10px;
+    }
+
+    .brandCol{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-width: 210px;
+    }
+
+    .brandText{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: rgba(0,0,0,.04);
+      border: 1px solid rgba(0,0,0,.08);
+      user-select:none;
+      line-height:1;
+      width: fit-content;
+    }
+    .brandRow1{
+      font-weight: 1000;
+      letter-spacing:.3px;
+      font-size: 16px;
+      color:#111;
+    }
+    .brandRow2{
+      display:flex;
+      gap:8px;
+      align-items:baseline;
+      font-weight: 1000;
+      letter-spacing:.6px;
+      font-size: 12px;
+    }
+    .b-export{ color: var(--orange); font-weight:1000; }
+    .b-import{ color: var(--green); font-weight:1000; }
+
+    .underBrandActions{ display:flex; gap:10px; width: fit-content; }
+    .smallBtn{
+      height:34px;
+      padding:0 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,.12);
+      background: rgba(0,0,0,.04);
+      font-weight: 1000;
+      cursor:pointer;
+      touch-action: manipulation;
+      font-size: 12px;
+      color:#111;
+      white-space:nowrap;
+      transition: opacity .12s ease, transform .05s ease;
+    }
+    .smallBtn.primary{ background:#111; color:#fff; border:0; }
+    .smallBtn:active{ transform: translateY(1px); }
+    .smallBtn:disabled{ opacity:.55; cursor:not-allowed; }
+
+    .title{ font-weight:1000; font-size:16px; line-height:1.15; margin: 2px 0 0; }
+    .subtitle{
+      margin-top:6px;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      font-size:12px;
+      font-weight:1000;
+      color: var(--dark);
+      background: rgba(244,122,32,.14);
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(244,122,32,.25);
+      width: fit-content;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: linear-gradient(90deg, var(--orange), var(--green));
+      display:inline-block;
+    }
+
+    .stats{ display:flex; flex-direction:column; gap:8px; align-items:flex-end; min-width: 118px; }
+    .pill{
+      display:flex; align-items:center; justify-content:center;
+      height:30px; min-width:102px; padding:0 10px;
+      border-radius: 10px;
+      font-weight:1000; color:#fff; font-size:14px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.14);
+      font-variant-numeric: tabular-nums;
+      user-select:none;
+    }
+    .ok{ background:var(--ok); }
+    .bad{ background:var(--bad); }
+    .time{ background:var(--chip); }
+
+    .mini{
+      text-align:center;
+      color:var(--muted);
+      font-weight:900;
+      margin: 4px 0 6px;
+      font-size: 12px;
+    }
+
+    .problem{
+      display:flex; flex-direction:column; align-items:center;
+      padding: 14px 0 6px; user-select:none;
+    }
+    .big{ font-size: 78px; font-weight: 1000; line-height:1; margin: 4px 0; color:var(--dark); }
+    .plus{ font-size: 30px; font-weight:1000; color:#333; margin: 6px 0; }
+
+    .hint{
+      text-align:center; margin: 8px 0 8px;
+      color:var(--muted); font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .keypad{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top:10px;
+    }
+    button.key{
+      height: 56px; border:0; border-radius: 14px;
+      background: var(--btn); color:#fff;
+      font-size: 22px; font-weight: 1000;
+      box-shadow: 0 10px 0 rgba(0,0,0,.18);
+      cursor:pointer; transition: transform .04s ease, filter .1s ease, opacity .1s ease;
+      touch-action: manipulation;
+    }
+    button.key:active{ transform: translateY(2px); background: var(--btn2); }
+    button.key:disabled{ opacity:.55; cursor:not-allowed; }
+
+    .row2{ display:flex; gap:10px; margin-top:10px; }
+    .ghost{
+      flex:1; height:48px; border-radius: 12px;
+      border: 2px dashed rgba(0,0,0,.18);
+      background: transparent; color:#333; font-weight: 1000;
+      cursor:pointer;
+      touch-action: manipulation;
+      transition: opacity .12s ease, transform .05s ease;
+    }
+    .ghost:active{ transform: translateY(1px); }
+    .ghost:disabled{ opacity:.55; cursor:not-allowed; }
+
+    .rowTools{ display:flex; gap:10px; margin-top:10px; }
+    .toolBtn{
+      flex:1; height:42px; border-radius: 12px;
+      border:1px solid rgba(0,0,0,.12);
+      background: rgba(0,0,0,.04);
+      font-weight:1000;
+      cursor:pointer;
+      touch-action: manipulation;
+      transition: opacity .12s ease, transform .05s ease;
+    }
+    .toolBtn:active{ transform: translateY(1px); }
+    .toolBtn:disabled{ opacity:.45; cursor:not-allowed; }
+
+    .footer{
+      margin-top: 12px;
+      display:flex; justify-content:space-between; align-items:center;
+      color:#666; font-size:12px; gap:10px;
+    }
+    .badge{
+      background: rgba(0,0,0,.06);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-weight: 1000;
+      color:#333;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      user-select:none;
+    }
+
+    .overlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.62);
+      display:none; align-items:center; justify-content:center;
+      padding: 16px;
+      z-index: 50;
+    }
+    .modal{
+      width:min(560px, 96vw);
+      background:#fff; border-radius: 16px; padding: 16px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.35);
+      border: 1px solid rgba(0,0,0,.08);
+    }
+    .modal h2{ margin:0 0 6px; font-size:18px; }
+    .modal p{ margin: 8px 0; color:#333; }
+    .modal .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px; }
+    .modal .grid2 div{ background:#f5f6f8; border-radius: 12px; padding: 10px; font-weight:1000; }
+
+    textarea{
+      width:100%; height:150px; border-radius: 12px; border:1px solid rgba(0,0,0,.15);
+      padding:10px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:12px; margin-top:10px;
+    }
+    .primary{
+      width:100%; margin-top:12px;
+      height:48px; border:0; border-radius: 12px;
+      background: linear-gradient(90deg, var(--orange), var(--green));
+      color:#fff; font-weight:1000; cursor:pointer;
+      touch-action: manipulation;
+      transition: transform .05s ease, opacity .12s ease;
+    }
+    .primary:active{ transform: translateY(1px); }
+    .primary:disabled{ opacity:.55; cursor:not-allowed; }
+
+    .field{ margin-top:10px; display:flex; flex-direction:column; gap:6px; }
+    label{ font-weight: 900; color:#222; font-size: 12px; }
+    input{
+      height:44px; border-radius: 12px;
+      border: 1px solid rgba(0,0,0,.18);
+      padding: 0 12px;
+      font-weight: 900; font-size: 14px;
+      outline: none;
+    }
+    input:focus{
+      border-color: rgba(244,122,32,.55);
+      box-shadow: 0 0 0 4px rgba(244,122,32,.14);
+    }
+    .seg{ display:flex; gap:10px; margin-top:10px; }
+    .seg button{
+      flex:1; height:44px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,.12);
+      background: rgba(0,0,0,.04);
+      font-weight:1000;
+      cursor:pointer;
+      touch-action: manipulation;
+      transition: opacity .12s ease, transform .05s ease;
+    }
+    .seg button:active{ transform: translateY(1px); }
+    .seg button.active{ background:#111; color:#fff; border:0; }
+
+    .help{ margin-top:8px; font-size: 12px; color:#555; line-height:1.35; }
+    .warn{ margin-top:10px; font-size: 12px; color:#b00020; font-weight: 900; display:none; }
+
+    .panelBox{
+      background:#fff;
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid rgba(0,0,0,.10);
+    }
+    .panelBox h3{ margin: 0 0 10px; font-size: 16px; color:#111; }
+    .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom: 10px; }
+    .metric{
+      background: rgba(0,0,0,.05);
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    .metric .k{ font-size:12px; color:#555; font-weight:900; }
+    .metric .v{ font-size:18px; font-weight:1000; margin-top:4px; color:#111; }
+
+    canvas{
+      width:100%;
+      height:260px;
+      background: rgba(255,255,255,.96);
+      border-radius: 14px;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+      display:block;
+    }
+    .legend{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin: 10px 0 0;
+      font-size:12px; color:#111; font-weight:1000;
+      align-items:center;
+    }
+    .legItem{ display:flex; align-items:center; gap:8px; }
+    .legDot{ width:10px; height:10px; border-radius:999px; display:inline-block; }
+
+    .row3{ display:flex; gap:10px; margin-top: 10px; }
+    .btn{
+      flex:1; height:44px; border:0; border-radius: 12px;
+      background:#111; color:#fff; font-weight: 1000; cursor:pointer;
+      touch-action: manipulation;
+      transition: opacity .12s ease, transform .05s ease;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn.secondary{
+      background: rgba(0,0,0,.06);
+      color:#111;
+      border: 1px solid rgba(0,0,0,.12);
+    }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      background: rgba(17,17,17,.92);
+      color:#fff;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 12px;
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+      display:none;
+      z-index: 60;
+      max-width: 92vw;
+      text-align:center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="phone" id="phoneCard">
+      <div class="topbar">
+        <div class="brandCol">
+          <div class="brandText" aria-label="BERANI Export Import">
+            <div class="brandRow1">BERANI</div>
+            <div class="brandRow2">
+              <span class="b-export">EXPORT</span>
+              <span class="b-import">IMPORT</span>
+            </div>
+          </div>
+
+          <div class="underBrandActions">
+            <button class="smallBtn primary" id="newCandidateBtn">Kandidat Baru</button>
+          </div>
+
+          <div>
+            <div class="title">Tes Koran (Pauli/Kraeplin)</div>
+            <div class="subtitle"><span class="dot"></span> HR-AI Rekrutmen</div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="pill ok" id="okPill">Benar 0</div>
+          <div class="pill bad" id="badPill">Salah 0</div>
+          <div class="pill time" id="timePill">00:00</div>
+        </div>
+      </div>
+
+      <div class="mini">
+        Menit <span id="minuteNow">0</span> / <span id="minuteTotal">0</span>
+        • Sisa menit ini: <span id="segmentLeft">0</span>d
+      </div>
+
+      <div class="problem">
+        <div class="big" id="aNum">0</div>
+        <div class="plus">+</div>
+        <div class="big" id="bNum">0</div>
+      </div>
+
+      <div class="hint">
+        Jawab <b>digit terakhir</b> dari penjumlahan (misal 8+9=17 -> jawab 7).<br/>
+        Klik keypad atau tekan angka di keyboard.
+      </div>
+
+      <div class="keypad" id="keys"></div>
+
+      <div class="row2">
+        <button class="ghost" id="startBtn">Mulai</button>
+        <button class="ghost" id="stopBtn">Selesai</button>
+      </div>
+
+      <div class="rowTools">
+        <button class="toolBtn" id="openReportBtn">Report</button>
+        <button class="toolBtn" id="openKurvaBtn">Kurva Kerja</button>
+      </div>
+
+      <div class="footer">
+        <div class="badge" id="statusBadge">Status: menunggu kandidat</div>
+        <div class="badge" id="qBadge">Item total: 0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- START / Candidate Form Modal -->
+  <div class="overlay" id="startOverlay">
+    <div class="modal">
+      <h2>Data Kandidat</h2>
+      <p style="margin-top:6px;">
+        Isi dulu data kandidat sebelum tes dimulai (untuk report & pengiriman ke Google Sheet).
+      </p>
+
+      <div class="field">
+        <label for="candName">Nama Kandidat</label>
+        <input id="candName" type="text" placeholder="Contoh: Muhammad Naufal" autocomplete="name" />
+      </div>
+
+      <div class="field">
+        <label for="candPhone">No HP (format 08xxxxxxxxxx)</label>
+        <input id="candPhone" type="tel" inputmode="numeric" placeholder="08xxxxxxxxxx" autocomplete="tel" />
+      </div>
+
+      <div class="field">
+        <label>Pilih Mode Tes</label>
+        <div class="seg">
+          <button type="button" id="modePractice" class="active">Latihan 1 menit</button>
+          <button type="button" id="modeTest">Tes 20 menit</button>
+        </div>
+        <div class="help">
+          • Latihan: untuk pemanasan / coba tombol.<br/>
+          • Tes 20 menit: untuk hasil evaluasi.
+        </div>
+      </div>
+
+      <div class="warn" id="startWarn">Nama dan No HP wajib diisi dengan format yang benar.</div>
+
+      <button class="primary" id="saveCandidateBtn">Lanjut & Mulai</button>
+    </div>
+  </div>
+
+  <!-- RESULT / REPORT Modal (ringkasan teks) -->
+  <div class="overlay" id="resultOverlay">
+    <div class="modal">
+      <h2>Report - Hasil Tes</h2>
+      <p id="summaryText"></p>
+
+      <div class="grid2">
+        <div id="rTotal">Total: 0</div>
+        <div id="rAcc">Akurasi: 0%</div>
+        <div id="rOk">Benar: 0</div>
+        <div id="rBad">Salah: 0</div>
+      </div>
+
+      <textarea id="summaryBox" readonly></textarea>
+      <button class="primary" id="closeResultBtn">Tutup</button>
+    </div>
+  </div>
+
+  <!-- KURVA KERJA Modal (grafik + metrik) -->
+  <div class="overlay" id="kurvaOverlay">
+    <div class="modal">
+      <div class="panelBox">
+        <h3>Kurva Kerja - Grafik Per Menit</h3>
+
+        <div class="grid">
+          <div class="metric">
+            <div class="k">Kecepatan (rata-rata P/menit)</div>
+            <div class="v" id="mSpeed">0.0</div>
+          </div>
+          <div class="metric">
+            <div class="k">Akurasi (Benar/Total)</div>
+            <div class="v" id="mAcc">0%</div>
+          </div>
+          <div class="metric">
+            <div class="k">Stabilitas (SD P/menit)</div>
+            <div class="v" id="mSd">0.0</div>
+          </div>
+          <div class="metric">
+            <div class="k">Ketahanan (akhir - awal P)</div>
+            <div class="v" id="mEndurance">0</div>
+          </div>
+        </div>
+
+        <canvas id="chart" width="900" height="420"></canvas>
+
+        <div class="legend">
+          <div class="legItem"><span class="legDot" style="background:#111"></span>P (Total/min)</div>
+          <div class="legItem"><span class="legDot" style="background:#EF5350"></span>E (Salah/min)</div>
+          <div class="legItem"><span class="legDot" style="background:var(--green)"></span>NS (P-E/min)</div>
+        </div>
+
+        <div class="row3">
+          <button class="btn secondary" id="exportBtn">Export CSV</button>
+          <button class="btn" id="copyBtn">Copy Ringkasan</button>
+        </div>
+
+        <button class="primary" id="closeKurvaBtn">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const DEFAULT_ENDPOINT =
+      "https://script.google.com/macros/s/AKfycbxW0ikEwUwnRJhc89EkFRsUlMLR7lM_SGQbtduixCEoO6U8o-GMVlyQRNWY7-J4CcTV/exec";
+    const SHEET_ENDPOINT_KEY = "berani_sheet_endpoint_v1";
+    function resolveEndpoint(){
+      const q = new URLSearchParams(window.location.search);
+      const fromQuery = (q.get("sheet") || "").trim();
+      const fromLocal = (localStorage.getItem(SHEET_ENDPOINT_KEY) || "").trim();
+      const url = fromQuery || fromLocal || DEFAULT_ENDPOINT;
+      if(url) localStorage.setItem(SHEET_ENDPOINT_KEY, url);
+      return url;
+    }
+    const ENDPOINT = resolveEndpoint();
+    function cleanMojibakeText(s){
+      let t = String(s ?? "");
+      const map = {
+        "â€œ": "\"", "â€": "\"",
+        "â€˜": "'", "â€™": "'",
+        "â€”": "-", "â€“": "-",
+        "â€¢": "•",
+        "â†’": "->",
+        "âˆ’": "-",
+        "âœ…": "OK",
+        "âŒ": "X",
+        "âš ï¸": "PERINGATAN"
+      };
+      Object.keys(map).forEach(k=>{ t = t.split(k).join(map[k]); });
+      return t;
+    }
+    function sanitizeDomText(root){
+      const host = root || document.body;
+      const walker = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
+      let node = walker.nextNode();
+      while(node){
+        const fixed = cleanMojibakeText(node.nodeValue);
+        if(fixed !== node.nodeValue) node.nodeValue = fixed;
+        node = walker.nextNode();
+      }
+    }
+    // Run once at load to avoid performance issues in some browsers.
+    sanitizeDomText(document.body);
+
+    const MODES = {
+      practice: { label: "Latihan 1 menit", totalMinutes: 1,  segmentSeconds: 60 },
+      test:     { label: "Tes 20 menit",   totalMinutes: 20, segmentSeconds: 60 }
+    };
+
+    const BASE_CONFIG = { useMod10: true, digitMin: 1, digitMax: 9 };
+    let CONFIG = { ...BASE_CONFIG, totalMinutes: 1, segmentSeconds: 60 };
+
+    let candidate = { nama:"", nohp:"", modeKey:"practice", modeLabel: MODES.practice.label };
+
+    let running = false;
+    let finishedOnce = false;
+    let nextRedirectScheduled = false;
+    let globalSecondsLeft = 0;
+    let segmentLeft = 0;
+    let ok = 0, bad = 0, total = 0;
+    let a = 0, b = 0;
+
+    let perP = [];
+    let perE = [];
+    let perNS = [];
+    let minuteIdx = 0;
+    let timerId = null;
+
+    const okPill = document.getElementById('okPill');
+    const badPill = document.getElementById('badPill');
+    const timePill = document.getElementById('timePill');
+
+    const aNum = document.getElementById('aNum');
+    const bNum = document.getElementById('bNum');
+    const keys = document.getElementById('keys');
+
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const statusBadge = document.getElementById('statusBadge');
+    const qBadge = document.getElementById('qBadge');
+
+    const minuteNowEl = document.getElementById('minuteNow');
+    const minuteTotalEl = document.getElementById('minuteTotal');
+    const segmentLeftEl = document.getElementById('segmentLeft');
+
+    const openReportBtn = document.getElementById('openReportBtn');
+    const openKurvaBtn = document.getElementById('openKurvaBtn');
+    const newCandidateBtn = document.getElementById('newCandidateBtn');
+
+    const mSpeed = document.getElementById('mSpeed');
+    const mAcc = document.getElementById('mAcc');
+    const mSd = document.getElementById('mSd');
+    const mEndurance = document.getElementById('mEndurance');
+
+    const chart = document.getElementById('chart');
+    const ctx = chart.getContext('2d');
+
+    const exportBtn = document.getElementById('exportBtn');
+    const copyBtn = document.getElementById('copyBtn');
+
+    const startOverlay = document.getElementById('startOverlay');
+    const resultOverlay = document.getElementById('resultOverlay');
+    const kurvaOverlay = document.getElementById('kurvaOverlay');
+
+    const candName = document.getElementById('candName');
+    const candPhone = document.getElementById('candPhone');
+    const modePractice = document.getElementById('modePractice');
+    const modeTest = document.getElementById('modeTest');
+    const startWarn = document.getElementById('startWarn');
+    const saveCandidateBtn = document.getElementById('saveCandidateBtn');
+
+    const closeResultBtn = document.getElementById('closeResultBtn');
+    const summaryText = document.getElementById('summaryText');
+    const rTotal = document.getElementById('rTotal');
+    const rAcc = document.getElementById('rAcc');
+    const rOk = document.getElementById('rOk');
+    const rBad = document.getElementById('rBad');
+    const summaryBox = document.getElementById('summaryBox');
+
+    const closeKurvaBtn = document.getElementById('closeKurvaBtn');
+    const toastEl = document.getElementById('toast');
+
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.style.display = "block";
+      clearTimeout(toastEl._t);
+      toastEl._t = setTimeout(()=> toastEl.style.display="none", 1600);
+    }
+
+    function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function fmtTime(s){
+      s = Math.max(0, s);
+      const mm = String(Math.floor(s/60)).padStart(2,'0');
+      const ss = String(s%60).padStart(2,'0');
+      return `${mm}:${ss}`;
+    }
+
+    function setStatus(txt){ statusBadge.textContent = `Status: ${txt}`; }
+    function buildNextTestUrl(){
+      const q = new URLSearchParams(window.location.search);
+      const keep = new URLSearchParams();
+      ["name","phone","position","token","sheet"].forEach(k=>{
+        const v = q.get(k);
+        if(v) keep.set(k, v);
+      });
+      const qs = keep.toString();
+      return `../typing/index.html${qs ? "?" + qs : ""}`;
+    }
+    function goNextTestWithDelay(reason){
+      if(nextRedirectScheduled) return;
+      nextRedirectScheduled = true;
+      toast(reason === "timeout"
+        ? "Waktu habis. Lanjut ke tes berikutnya..."
+        : "Tes selesai. Lanjut ke tes berikutnya...");
+      setTimeout(()=>{ window.location.href = buildNextTestUrl(); }, 1200);
+    }
+
+    function normalizePhone(raw){ return String(raw || "").replace(/\D/g, ""); }
+    function validPhone(phoneDigits){ return /^08\d{8,11}$/.test(phoneDigits); }
+
+    function applyConfigFromMode(){
+      const m = MODES[candidate.modeKey] || MODES.practice;
+      CONFIG = { ...BASE_CONFIG, totalMinutes: m.totalMinutes, segmentSeconds: m.segmentSeconds };
+      minuteTotalEl.textContent = String(CONFIG.totalMinutes);
+    }
+
+    function setMode(key){
+      candidate.modeKey = key;
+      candidate.modeLabel = (MODES[key] || MODES.practice).label;
+      modePractice.classList.toggle('active', key === 'practice');
+      modeTest.classList.toggle('active', key === 'test');
+    }
+    modePractice.addEventListener('click', ()=> setMode('practice'));
+    modeTest.addEventListener('click', ()=> setMode('test'));
+
+    function nextProblem(){
+      a = randInt(CONFIG.digitMin, CONFIG.digitMax);
+      b = randInt(CONFIG.digitMin, CONFIG.digitMax);
+      aNum.textContent = a;
+      bNum.textContent = b;
+    }
+    function correctAnswer(){ return ((a + b) % 10); }
+
+    function setReportAccess(){
+      const enable = finishedOnce && !running;
+      openReportBtn.disabled = !enable;
+      openKurvaBtn.disabled = !enable;
+      exportBtn.disabled = !enable;
+      copyBtn.disabled = !enable;
+    }
+
+    function refresh(){
+      okPill.textContent = `Benar ${ok}`;
+      badPill.textContent = `Salah ${bad}`;
+      timePill.textContent = fmtTime(globalSecondsLeft);
+      qBadge.textContent = `Item total: ${total}`;
+
+      minuteNowEl.textContent = running ? String(minuteIdx + 1) : (finishedOnce ? String(Math.max(1, minuteIdx+1)) : "0");
+      segmentLeftEl.textContent = String(segmentLeft || 0);
+
+      const canAnswer = running;
+      [...keys.querySelectorAll('button.key')].forEach(b=> b.disabled = !canAnswer);
+      stopBtn.disabled = !running;
+
+      setReportAccess();
+    }
+
+    function stddev(arr){
+      const vals = arr.filter(v => typeof v === "number" && !Number.isNaN(v));
+      if (vals.length <= 1) return 0;
+      const mean = vals.reduce((a,b)=>a+b,0)/vals.length;
+      const v = vals.reduce((a,b)=>a+Math.pow(b-mean,2),0)/(vals.length-1);
+      return Math.sqrt(v);
+    }
+
+    function calcMetrics(){
+      const Psum = perP.reduce((a,b)=>a+b,0);
+      const acc = total ? Math.round((ok/total)*100) : 0;
+      const speed = CONFIG.totalMinutes ? (Psum / CONFIG.totalMinutes) : 0;
+      const sd = stddev(perP);
+
+      const n = Math.min(3, CONFIG.totalMinutes || 1);
+      const firstAvg = perP.slice(0,n).reduce((a,b)=>a+b,0)/n;
+      const lastAvg  = perP.slice((CONFIG.totalMinutes||1)-n).reduce((a,b)=>a+b,0)/n;
+      const endurance = Math.round(lastAvg - firstAvg);
+
+      mSpeed.textContent = speed.toFixed(1);
+      mAcc.textContent = `${acc}%`;
+      mSd.textContent = sd.toFixed(1);
+      mEndurance.textContent = String(endurance);
+
+      return { acc, speed, sd, endurance };
+    }
+
+    function clearCanvas(){ ctx.clearRect(0,0,chart.width,chart.height); }
+    function drawAxes(maxY){
+      const padL = 56, padR = 18, padT = 18, padB = 40;
+      const w = chart.width, h = chart.height;
+
+      ctx.strokeStyle = "rgba(0,0,0,.18)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(padL, padT);
+      ctx.lineTo(padL, h-padB);
+      ctx.lineTo(w-padR, h-padB);
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(0,0,0,.65)";
+      ctx.font = "900 12px system-ui";
+      const ticks = 5;
+      for(let i=0;i<=ticks;i++){
+        const yVal = Math.round((maxY/ticks)*i);
+        const y = (h-padB) - ((h-padT-padB) * (i/ticks));
+        ctx.strokeStyle = "rgba(0,0,0,.08)";
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w-padR, y); ctx.stroke();
+        ctx.fillText(String(yVal), 10, y+4);
+      }
+      for(let i=0;i<CONFIG.totalMinutes;i++){
+        const x = padL + ((w-padL-padR) * (i/((CONFIG.totalMinutes-1) || 1)));
+        if ((i+1) % 2 === 0 || CONFIG.totalMinutes <= 6){
+          ctx.fillText(String(i+1), x-4, h-16);
+        }
+      }
+      return {padL,padR,padT,padB,w,h};
+    }
+    function plotLine(series, color, geom, maxY){
+      const {padL,padR,padT,padB,w,h} = geom;
+      const plotW = w-padL-padR;
+      const plotH = h-padT-padB;
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      series.forEach((v,i)=>{
+        const x = padL + plotW * (i/((series.length-1) || 1));
+        const y = (h-padB) - (plotH * (v/maxY));
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+
+      ctx.fillStyle = color;
+      series.forEach((v,i)=>{
+        const x = padL + plotW * (i/((series.length-1) || 1));
+        const y = (h-padB) - (plotH * (v/maxY));
+        ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill();
+      });
+    }
+    function renderChart(){
+      const P = perP.slice();
+      const E = perE.slice();
+      const NS = perNS.slice();
+      const minNS = Math.min(...NS, 0);
+      const nsShift = NS.map(v => v - minNS);
+      const maxY = Math.max(5, ...P, ...E, ...nsShift);
+
+      clearCanvas();
+      const g = drawAxes(maxY);
+      plotLine(P,  "#111111", g, maxY);
+      plotLine(E,  "#EF5350", g, maxY);
+      plotLine(nsShift, "#1DB56B", g, maxY);
+
+      ctx.fillStyle = "rgba(0,0,0,.55)";
+      ctx.font = "900 12px system-ui";
+      ctx.fillText(`NS ditampilkan dengan shift (+${Math.abs(minNS)})`, g.padL, 14);
+    }
+
+    function buildKeys(){
+      keys.innerHTML = "";
+      const order = [1,2,3,4,5,6,7,8,9,0];
+      order.forEach((n) => {
+        const btn = document.createElement('button');
+        btn.className = 'key';
+        btn.textContent = n;
+        btn.addEventListener('click', () => answer(n));
+        keys.appendChild(btn);
+      });
+    }
+
+    function openStartForm(){
+      startWarn.style.display = "none";
+      startOverlay.style.display = "flex";
+      candName.focus();
+    }
+    function closeStartForm(){ startOverlay.style.display = "none"; }
+
+    function resetAll(){
+      running = false;
+      finishedOnce = false;
+      nextRedirectScheduled = false;
+
+      globalSecondsLeft = CONFIG.totalMinutes * 60;
+      segmentLeft = CONFIG.segmentSeconds;
+
+      ok = 0; bad = 0; total = 0;
+      minuteIdx = 0;
+
+      perP = new Array(CONFIG.totalMinutes).fill(0);
+      perE = new Array(CONFIG.totalMinutes).fill(0);
+      perNS = new Array(CONFIG.totalMinutes).fill(0);
+
+      if (timerId) clearInterval(timerId);
+      timerId = null;
+
+      setStatus('siap');
+      nextProblem();
+      calcMetrics();
+      renderChart();
+      refresh();
+    }
+
+    function start(){
+      if (!candidate.nama || !candidate.nohp){
+        openStartForm();
+        return;
+      }
+
+      // Penting: apply config dulu, baru reset lalu running
+      applyConfigFromMode();
+      resetAll();
+
+      running = true;
+      setStatus('berjalan');
+      toast(`${candidate.modeLabel} dimulai`);
+
+      timerId = setInterval(() => {
+        if (!running) return;
+
+        globalSecondsLeft -= 1;
+        segmentLeft -= 1;
+
+        if (segmentLeft <= 0){
+          perNS[minuteIdx] = perP[minuteIdx] - perE[minuteIdx];
+          if (minuteIdx < CONFIG.totalMinutes - 1){
+            minuteIdx += 1;
+            segmentLeft = CONFIG.segmentSeconds;
+          } else {
+            finish(); return;
+          }
+        }
+
+        refresh();
+        calcMetrics();
+        renderChart();
+
+        if (globalSecondsLeft <= 0) finish("timeout");
+      }, 1000);
+
+      refresh(); calcMetrics(); renderChart();
+    }
+
+    function answer(n){
+      if (!running) return;
+      total += 1;
+      perP[minuteIdx] += 1;
+
+      if (n === correctAnswer()) ok += 1;
+      else { bad += 1; perE[minuteIdx] += 1; }
+
+      perNS[minuteIdx] = perP[minuteIdx] - perE[minuteIdx];
+
+      refresh(); calcMetrics(); renderChart();
+      nextProblem();
+    }
+
+    async function sendToSheet(payload){
+      await fetch(ENDPOINT, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action:"submit", module:"pauli_kraeplin", payload })
+      });
+    }
+
+    function buildSummaryText(acc, speed, sd, endurance){
+      return `BERANI - HR-AI Rekrutmen | Tes Koran (Pauli/Kraeplin)
+Kandidat: ${candidate.nama} | NoHP: ${candidate.nohp}
+Mode: ${candidate.modeLabel} | Durasi: ${CONFIG.totalMinutes} menit | Segmen: ${CONFIG.segmentSeconds} detik
+Total item: ${total}
+Benar: ${ok} | Salah: ${bad} | Akurasi: ${acc}%
+Kecepatan rata-rata (P/menit): ${speed.toFixed(1)}
+Stabilitas (SD P/menit): ${sd.toFixed(1)}
+Ketahanan (akhir - awal P): ${endurance}
+
+Rekap per menit:
+Menit | P | E | NS
+${perP.map((_,i)=>`${String(i+1).padStart(2,'0')} | ${String(perP[i]).padStart(2,' ')} | ${String(perE[i]).padStart(2,' ')} | ${String(perNS[i]).padStart(3,' ')}`).join("\n")}
+`;
+    }
+
+    function finish(reason){
+      if (!candidate.nama || !candidate.nohp){
+        openStartForm();
+        return;
+      }
+
+      perNS[minuteIdx] = perP[minuteIdx] - perE[minuteIdx];
+      running = false;
+      if (timerId) clearInterval(timerId);
+      timerId = null;
+
+      finishedOnce = true;
+
+      setStatus('selesai');
+      const metrics = calcMetrics();
+      renderChart();
+
+      const summary = buildSummaryText(metrics.acc, metrics.speed, metrics.sd, metrics.endurance);
+      summaryBox.value = summary;
+
+      summaryText.textContent = `Durasi: ${CONFIG.totalMinutes} menit • Total: ${total} • Akurasi: ${metrics.acc}%`;
+      rTotal.textContent = `Total: ${total}`;
+      rAcc.textContent = `Akurasi: ${metrics.acc}%`;
+      rOk.textContent = `Benar: ${ok}`;
+      rBad.textContent = `Salah: ${bad}`;
+
+      refresh();
+
+      const payload = {
+        position: (new URLSearchParams(window.location.search).get("position") || "").trim(),
+        token: (new URLSearchParams(window.location.search).get("token") || "").trim(),
+        module: "pauli_kraeplin",
+        nama: candidate.nama,
+        nohp: candidate.nohp,
+        modeTes: candidate.modeLabel,
+        durasiMenit: CONFIG.totalMinutes,
+        total: total,
+        benar: ok,
+        salah: bad,
+        akurasi: metrics.acc,
+        speedAvg: Number(metrics.speed.toFixed(2)),
+        sd: Number(metrics.sd.toFixed(2)),
+        endurance: metrics.endurance,
+        perMenit: { P: perP, E: perE, NS: perNS },
+        userAgent: navigator.userAgent
+      };
+
+      sendToSheet(payload)
+        .then(()=> toast("Terkirim ke Google Sheet OK"))
+        .catch(()=> toast("Gagal kirim ke Sheet (cek internet) PERINGATAN"));
+
+      goNextTestWithDelay(reason === "timeout" ? "timeout" : "manual");
+    }
+
+    function toCSV(){
+      const rows = [["minute","P_total","E_wrong","NS_net"]];
+      for(let i=0;i<CONFIG.totalMinutes;i++){
+        rows.push([i+1, perP[i], perE[i], perNS[i]]);
+      }
+      return rows.map(r=>r.join(",")).join("\n");
+    }
+    function download(filename, text){
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([text], {type:"text/csv;charset=utf-8;"}));
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 0);
+    }
+
+    exportBtn.addEventListener('click', () => download(`tes-koran_berani_${Date.now()}.csv`, toCSV()));
+
+    copyBtn.addEventListener('click', async () => {
+      const text = summaryBox.value || "Ringkasan belum tersedia. Jalankan tes dulu.";
+      try{
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = "Tercopy OK";
+        setTimeout(()=>copyBtn.textContent="Copy Ringkasan", 900);
+      }catch(e){
+        alert("Gagal copy otomatis. Klik Selesai dulu lalu copy manual dari textbox.");
+      }
+    });
+
+    openReportBtn.addEventListener('click', () => {
+      if (openReportBtn.disabled) return;
+      resultOverlay.style.display = 'flex';
+    });
+    openKurvaBtn.addEventListener('click', () => {
+      if (openKurvaBtn.disabled) return;
+      calcMetrics();
+      renderChart();
+      kurvaOverlay.style.display = 'flex';
+    });
+
+    closeResultBtn.addEventListener('click', () => resultOverlay.style.display = 'none');
+    closeKurvaBtn.addEventListener('click', () => kurvaOverlay.style.display = 'none');
+
+    function newCandidate(){
+      if (running){
+        if (!confirm("Tes sedang berjalan. Hentikan dan ganti kandidat?")) return;
+      }
+      if (timerId) clearInterval(timerId);
+      timerId = null;
+      running = false;
+
+      candidate = { nama:"", nohp:"", modeKey:"practice", modeLabel: MODES.practice.label };
+      setMode("practice");
+
+      CONFIG = { ...BASE_CONFIG, totalMinutes: 1, segmentSeconds: 60 };
+      resetAll();
+      setStatus("menunggu kandidat");
+      toast("Silakan isi data kandidat");
+      openStartForm();
+    }
+    newCandidateBtn.addEventListener('click', newCandidate);
+
+    saveCandidateBtn.addEventListener('click', () => {
+      const nama = String(candName.value || "").trim();
+      const phoneDigits = normalizePhone(candPhone.value);
+
+      if (!nama || !validPhone(phoneDigits)){
+        startWarn.style.display = "block";
+        return;
+      }
+
+      candidate.nama = nama;
+      candidate.nohp = phoneDigits;
+      // modeKey sudah diset via tombol seg
+      candidate.modeLabel = (MODES[candidate.modeKey] || MODES.practice).label;
+
+      startWarn.style.display = "none";
+      closeStartForm();
+      start();
+    });
+
+    [candName, candPhone].forEach(el=>{
+      el.addEventListener("keydown", (e)=>{
+        if (e.key === "Enter") saveCandidateBtn.click();
+      });
+    });
+
+    startBtn.addEventListener('click', start);
+    stopBtn.addEventListener('click', () => {
+      if (!running){
+        finish("manual");
+        return;
+      }
+      if (globalSecondsLeft > 0){
+        const warning = [
+          "PERINGATAN: Waktu tes masih tersisa.",
+          "Jika Anda menekan Selesai sekarang, tes akan diakhiri dan langsung lanjut ke tes berikutnya.",
+          "Pastikan Anda benar-benar ingin mengakhiri tes ini."
+        ].join("\n");
+        if(!confirm(warning)) return;
+      }
+      finish("manual");
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (!running) return;
+      if (e.key >= '0' && e.key <= '9') answer(Number(e.key));
+    });
+
+    function init(){
+      buildKeys();
+      setMode("practice");
+      applyConfigFromMode();
+      resetAll();
+      setStatus("menunggu kandidat");
+      stopBtn.disabled = true;
+      finishedOnce = false;
+      refresh();
+      openStartForm();
+    }
+    init();
+  </script>
+<script>
+/* SUITE_BRIDGE_V1 */
+(function(){
+  const KEY = "berani_suite_profile_v1";
+  function readLS(){
+    try{ return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }catch(_){ return {}; }
+  }
+  function readProfile(){
+    const q = new URLSearchParams(window.location.search);
+    const qs = {
+      name:(q.get("name") || "").trim(),
+      phone:(q.get("phone") || "").trim(),
+      position:(q.get("position") || "").trim(),
+      token:(q.get("token") || "").trim()
+    };
+    const ls = readLS();
+    const p = {
+      name: qs.name || ls.name || "",
+      phone: qs.phone || ls.phone || "",
+      position: qs.position || ls.position || "",
+      token: qs.token || ls.token || ""
+    };
+    if(p.name || p.phone || p.position || p.token){
+      localStorage.setItem(KEY, JSON.stringify(Object.assign({}, ls, p, {updatedAt:new Date().toISOString()})));
+    }
+    return p;
+  }
+  function lockInput(id, value){
+    const el = document.getElementById(id);
+    if(!el || !value) return;
+    el.value = value;
+    el.readOnly = true;
+    el.title = "Terisi otomatis dari Tes IQ";
+  }
+  function lockSelect(id, value){
+    const el = document.getElementById(id);
+    if(!el || !value) return;
+    el.value = value;
+    el.disabled = true;
+    el.title = "Terisi otomatis dari Tes IQ";
+  }
+  const p = readProfile();
+  if(!(p.name && p.phone && p.position)) return;
+
+  lockInput("name", p.name);
+  lockInput("phone", p.phone);
+  lockInput("role", p.position);
+  lockInput("token", p.token);
+
+  lockInput("candName", p.name);
+  lockInput("candPhone", p.phone);
+
+  const email = document.getElementById("email");
+  if(email){
+    if(!email.value) email.value = (p.phone || "candidate") + "@local.invalid";
+    email.readOnly = true;
+    email.title = "Terisi otomatis dari Tes IQ";
+  }
+
+  // Typing app fallback storage
+  try{ localStorage.setItem("bei_candidate", JSON.stringify({name:p.name, phone:p.phone})); }catch(_){ }
+
+  const hideBtnIds = ["btnNew", "newCandidateBtn"];
+  hideBtnIds.forEach(id=>{
+    const btn = document.getElementById(id);
+    if(btn) btn.style.display = "none";
+  });
+
+  const introHost = document.querySelector(".card") || document.body;
+  if(introHost && !document.getElementById("suiteBridgeNote")){
+    const note = document.createElement("div");
+    note.id = "suiteBridgeNote";
+    note.style.marginTop = "10px";
+    note.style.padding = "8px 10px";
+    note.style.borderRadius = "10px";
+    note.style.border = "1px solid rgba(31,154,99,.35)";
+    note.style.background = "rgba(31,154,99,.12)";
+    note.style.fontSize = "12px";
+    note.textContent = "Identitas kandidat ditarik otomatis dari Tes IQ.";
+    introHost.appendChild(note);
+  }
+})();
+</script>
+</body>
+</html>
+

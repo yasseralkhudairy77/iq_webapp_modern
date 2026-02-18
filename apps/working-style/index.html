@@ -1,0 +1,921 @@
+﻿<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Working Style Assessment</title>
+  <style>
+    :root{
+      --bg:#0b1220; --card:#0f1b33; --muted:#9fb0d0; --text:#e8efff;
+      --acc:#6ee7ff; --acc2:#a78bfa; --danger:#ff6b6b; --ok:#36d399;
+      --line:#243659;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 800px at 20% 10%, #14244a 0%, var(--bg) 50%) fixed;
+      color:var(--text);
+    }
+    .wrap{max-width:980px; margin:0 auto; padding:18px}
+    header{
+      display:flex; gap:14px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+      padding:14px 16px; border:1px solid var(--line); background:rgba(15,27,51,.72);
+      border-radius:18px; backdrop-filter: blur(10px);
+    }
+    .brand{display:flex; gap:12px; align-items:center}
+    .logo{
+      width:42px; height:42px; border-radius:14px;
+      background: linear-gradient(135deg, var(--acc) 0%, var(--acc2) 100%);
+      box-shadow: 0 10px 30px rgba(110,231,255,.16);
+    }
+    h1{font-size:16px; margin:0}
+    .sub{font-size:12px; color:var(--muted); margin-top:2px}
+    .pill{
+      font-size:12px; color:var(--muted); border:1px solid var(--line);
+      padding:8px 10px; border-radius:999px; display:flex; gap:10px; align-items:center;
+    }
+    .grid{
+      display:grid; grid-template-columns: 1.2fr .8fr; gap:14px; margin-top:14px;
+    }
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+    .card{
+      border:1px solid var(--line); background:rgba(15,27,51,.72);
+      border-radius:18px; padding:14px; backdrop-filter: blur(10px);
+    }
+    .title{display:flex; justify-content:space-between; align-items:flex-start; gap:10px}
+    .title h2{margin:0; font-size:14px}
+    .muted{color:var(--muted); font-size:12px; line-height:1.45}
+    .row{display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px}
+    @media (max-width: 520px){ .row{grid-template-columns:1fr} }
+    label{font-size:12px; color:var(--muted)}
+    input, select{
+      width:100%; margin-top:6px; padding:10px 10px; border-radius:12px;
+      border:1px solid var(--line); background:#0b1730; color:var(--text);
+      outline:none;
+    }
+    input:focus, select:focus{border-color: rgba(110,231,255,.6); box-shadow: 0 0 0 3px rgba(110,231,255,.12)}
+    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    button{
+      border:0; padding:10px 12px; border-radius:14px; color:#031022; cursor:pointer;
+      background: linear-gradient(135deg, var(--acc) 0%, var(--acc2) 100%);
+      font-weight:700; min-height:44px;
+    }
+    button.secondary{
+      background:#0b1730; color:var(--text); border:1px solid var(--line); font-weight:600;
+    }
+    button.danger{
+      background:#2a1220; color:#ffd5d5; border:1px solid rgba(255,107,107,.35);
+    }
+    .progress{height:10px; background:#0b1730; border:1px solid var(--line); border-radius:999px; overflow:hidden; margin-top:10px}
+    .bar{height:100%; width:0%; background: linear-gradient(90deg, var(--acc), var(--acc2))}
+    .qwrap{margin-top:10px}
+    .qcard{
+      border:1px solid var(--line); background:#0b1730; border-radius:16px; padding:12px;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .qmeta{display:flex; justify-content:space-between; gap:10px; align-items:center}
+    .qnum{font-size:12px; color:var(--muted)}
+    .qtext{font-size:14px; line-height:1.35}
+    .scale{display:grid; grid-template-columns:repeat(5,minmax(52px,1fr)); gap:8px;}
+    .opt{
+      border:1px solid var(--line); background:#07142a; border-radius:14px;
+      padding:10px; text-align:center; font-size:12px; color:var(--muted); cursor:pointer;
+      user-select:none;
+    }
+    .opt.active{border-color: rgba(110,231,255,.7); color:var(--text); box-shadow: 0 0 0 3px rgba(110,231,255,.12)}
+    .hint{display:none !important}
+    .warn{color:#ffd5d5; background:rgba(255,107,107,.08); border:1px solid rgba(255,107,107,.25); padding:10px; border-radius:14px; font-size:12px; margin-top:10px}
+    .ok{color:#d6ffe9; background:rgba(54,211,153,.08); border:1px solid rgba(54,211,153,.25); padding:10px; border-radius:14px; font-size:12px; margin-top:10px}
+    .divider{height:1px; background:var(--line); margin:12px 0}
+    .kpi{display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-top:10px}
+    @media (max-width: 520px){ .kpi{grid-template-columns:1fr} }
+    .k{border:1px solid var(--line); background:#0b1730; border-radius:16px; padding:12px}
+    .k b{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
+    .k span{font-size:14px}
+    canvas{width:100%; height:260px; background:#0b1730; border:1px solid var(--line); border-radius:16px}
+    .small{font-size:11px; color:var(--muted)}
+    .hidden{display:none !important}
+    .hrd-only{display:none !important}
+    @media (max-width: 700px){
+      .wrap{padding:12px}
+      header{padding:12px}
+      .card{padding:12px}
+      .qmeta{flex-direction:column; align-items:flex-start}
+      .btns button{flex:1 1 100%}
+      .opt{padding:12px 8px}
+      .qtext{font-size:15px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>Working Style Assessment</h1>
+          <div class="sub">Skala 1-5 | Output ringkas dan siap diekspor</div>
+        </div>
+      </div>
+      <div class="pill">
+        <span id="timer">00:00</span>
+        <span>|</span>
+        <span id="status">Belum mulai</span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- LEFT -->
+      <div class="card" id="screenIntro">
+        <div class="title">
+          <h2>Data Kandidat</h2>
+          <div class="muted">Isi identitas, lalu mulai tes.</div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Nama Lengkap</label>
+            <input id="name" placeholder="Nama sesuai KTP" />
+          </div>
+          <div>
+            <label>Email</label>
+            <input id="email" placeholder="nama@email.com" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>No. WhatsApp (wajib format 08xxxxxxxxxx)</label>
+            <input id="phone" placeholder="083xxxxxxxxxx" inputmode="numeric" />
+          </div>
+          <div>
+            <label>Posisi Dilamar</label>
+            <input id="role" placeholder="Contoh: Admin, Sales, CS, DM" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Token (opsional)</label>
+            <input id="token" placeholder="Jika ada, masukkan token" />
+          </div>
+          <div>
+            <label>Tujuan</label>
+            <select id="purpose">
+              <option value="recruitment">Rekrutmen</option>
+              <option value="internal">Internal Assessment</option>
+              <option value="training">Training / Development</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="muted">
+          <b>Instruksi</b><br/>
+          Pilih seberapa sesuai pernyataan dengan gaya kerja kamu secara umum.
+          Tidak ada jawaban benar/salah. Kerjakan dengan jujur.
+        </div>
+
+        <div class="btns">
+          <button id="startBtn">Mulai Tes</button>
+        </div>
+
+        <div id="introWarn" class="warn hidden"></div>
+      </div>
+
+      <!-- RIGHT: info (HRD only, hidden for candidate) -->
+      <div class="card hidden" id="hrdPanel">
+        <div class="title">
+          <h2>Standar Penilaian HRD</h2>
+          <div class="muted">8 dimensi | 40 item</div>
+        </div>
+        <div class="muted" style="margin-top:8px">
+          Dimensi yang diukur:
+          <ul>
+            <li><b>Structure</b> (terstruktur & rapi)</li>
+            <li><b>Analytical</b> (berbasis data & logis)</li>
+            <li><b>Execution</b> (tuntas & cepat mengeksekusi)</li>
+            <li><b>Adaptability</b> (fleksibel & cepat menyesuaikan)</li>
+            <li><b>Collaboration</b> (kerja tim & komunikasi)</li>
+            <li><b>Independence</b> (mandiri & inisiatif)</li>
+            <li><b>Quality Focus</b> (teliti & standar tinggi)</li>
+            <li><b>Customer Orientation</b> (peka kebutuhan pengguna/klien)</li>
+          </ul>
+          Ada quality-check: attention check, durasi, dan pola jawaban.
+        </div>
+        <div class="ok">Panel ini khusus HRD.</div>
+      </div>
+
+      <!-- TEST SCREEN -->
+      <div class="card hidden" id="screenTest">
+        <div class="title">
+          <h2>Soal</h2>
+          <div class="muted"><span id="qPos">1</span>/<span id="qTotal">40</span></div>
+        </div>
+
+        <div class="progress"><div class="bar" id="bar"></div></div>
+        <div class="hint">Skala: 1 = Sangat Tidak Sesuai | 5 = Sangat Sesuai</div>
+
+        <div class="qwrap">
+          <div class="qcard">
+            <div class="qmeta">
+              <div class="qnum" id="qDim">Pernyataan</div>
+              <div class="qnum" id="qTime">Waktu item: 0 dtk</div>
+            </div>
+            <div class="qtext" id="qText">-</div>
+
+            <div class="scale" id="scale">
+              <!-- options injected -->
+            </div>
+
+            <div class="btns">
+              <button class="secondary" id="prevBtn">Sebelumnya</button>
+              <button class="secondary" id="nextBtn">Berikutnya</button>
+              <button id="finishBtn" class="hidden">Selesai & Lihat Hasil</button>
+            </div>
+
+            <div id="testWarn" class="warn hidden"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RESULT SCREEN (candidate-safe) -->
+      <div class="card hidden" id="screenResult">
+        <div class="title">
+          <h2>Tes Selesai</h2>
+          <div class="muted">Kandidat</div>
+        </div>
+        <div class="ok" style="margin-top:10px">
+          Terima kasih, tes sudah selesai. Hasil hanya dapat diakses oleh tim HRD.
+        </div>
+        <div class="muted" style="margin-top:10px">
+          Silakan tunggu informasi lanjutan dari HRD.
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const DEFAULT_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxW0ikEwUwnRJhc89EkFRsUlMLR7lM_SGQbtduixCEoO6U8o-GMVlyQRNWY7-J4CcTV/exec";
+  const SHEET_ENDPOINT_KEY = "berani_sheet_endpoint_v1";
+  function resolveSheetWebAppUrl(){
+    const q = new URLSearchParams(window.location.search);
+    const fromQuery = (q.get("sheet") || "").trim();
+    const fromLocal = (localStorage.getItem(SHEET_ENDPOINT_KEY) || "").trim();
+    const url = fromQuery || fromLocal || DEFAULT_SHEET_WEBAPP_URL;
+    if(url) localStorage.setItem(SHEET_ENDPOINT_KEY, url);
+    return url;
+  }
+  const SHEET_WEBAPP_URL = resolveSheetWebAppUrl();
+
+  // ====== CONFIG ======
+  const DIMENSIONS = [
+    { key:"structure", label:"Structure", desc:"Terstruktur, rapi, suka SOP & perencanaan" },
+    { key:"analytical", label:"Analytical", desc:"Berpikir logis, data-driven, problem solving" },
+    { key:"execution", label:"Execution", desc:"Gercep, tuntas, bias action" },
+    { key:"adaptability", label:"Adaptability", desc:"Fleksibel, mudah menyesuaikan perubahan" },
+    { key:"collaboration", label:"Collaboration", desc:"Komunikatif, kolaboratif, koordinasi" },
+    { key:"independence", label:"Independence", desc:"Mandiri, inisiatif, ownership" },
+    { key:"quality", label:"Quality Focus", desc:"Teliti, standar tinggi, minim error" },
+    { key:"customer", label:"Customer Orientation", desc:"Peka kebutuhan klien/pengguna, service mindset" },
+  ];
+
+  // 40 items: 5 per dimensi. Include reverse items + attention check.
+  // Likert mapping: 1-5. Reverse scored items will be inverted.
+  const ITEMS = [
+    // Structure (5)
+    { dim:"structure", text:"Saya membuat rencana kerja sebelum mulai eksekusi.", reverse:false },
+    { dim:"structure", text:"Saya nyaman bekerja dengan SOP/aturan yang jelas.", reverse:false },
+    { dim:"structure", text:"Saya sering mendokumentasikan proses agar mudah diulang.", reverse:false },
+    { dim:"structure", text:"Saya lebih suka improvisasi daripada perencanaan detail.", reverse:true },
+    { dim:"structure", text:"Saya menjaga file/berkas kerja tetap rapi dan mudah dicari.", reverse:false },
+
+    // Analytical (5)
+    { dim:"analytical", text:"Saya mencari akar masalah sebelum menentukan solusi.", reverse:false },
+    { dim:"analytical", text:"Saya biasa menggunakan data/angka untuk mengambil keputusan.", reverse:false },
+    { dim:"analytical", text:"Saya membandingkan beberapa opsi sebelum memilih.", reverse:false },
+    { dim:"analytical", text:"Saya cepat memutuskan tanpa perlu banyak informasi.", reverse:true },
+    { dim:"analytical", text:"Saya suka memecah masalah besar menjadi langkah-langkah kecil.", reverse:false },
+
+    // Execution (5)
+    { dim:"execution", text:"Saya memprioritaskan tugas penting dan mengeksekusinya segera.", reverse:false },
+    { dim:"execution", text:"Saya konsisten menyelesaikan pekerjaan sampai tuntas.", reverse:false },
+    { dim:"execution", text:"Saya nyaman bekerja dengan target dan deadline.", reverse:false },
+    { dim:"execution", text:"Saya sering menunda pekerjaan walau sudah jelas harus dikerjakan.", reverse:true },
+    { dim:"execution", text:"Saya fokus pada hasil yang bisa diukur.", reverse:false },
+
+    // Adaptability (5)
+    { dim:"adaptability", text:"Saya bisa tetap produktif saat prioritas berubah mendadak.", reverse:false },
+    { dim:"adaptability", text:"Saya cepat belajar tools/cara kerja baru.", reverse:false },
+    { dim:"adaptability", text:"Saya terbuka menerima masukan dan mengubah pendekatan.", reverse:false },
+    { dim:"adaptability", text:"Saya sulit bekerja jika tidak sesuai cara saya.", reverse:true },
+    { dim:"adaptability", text:"Saya tetap tenang saat situasi tidak pasti.", reverse:false },
+
+    // Collaboration (5)
+    { dim:"collaboration", text:"Saya mengomunikasikan progres kerja secara proaktif.", reverse:false },
+    { dim:"collaboration", text:"Saya nyaman berdiskusi untuk menyamakan ekspektasi.", reverse:false },
+    { dim:"collaboration", text:"Saya berusaha membantu tim ketika dibutuhkan.", reverse:false },
+    { dim:"collaboration", text:"Saya lebih memilih bekerja sendiri dan menghindari koordinasi.", reverse:true },
+    { dim:"collaboration", text:"Saya bisa menerima perbedaan pendapat tanpa defensif.", reverse:false },
+
+    // Independence (5)
+    { dim:"independence", text:"Saya bisa mulai kerja tanpa harus selalu diingatkan.", reverse:false },
+    { dim:"independence", text:"Saya mencari solusi sendiri sebelum meminta bantuan.", reverse:false },
+    { dim:"independence", text:"Saya merasa bertanggung jawab penuh terhadap output kerja saya.", reverse:false },
+    { dim:"independence", text:"Saya hanya bekerja jika instruksi sangat detail.", reverse:true },
+    { dim:"independence", text:"Saya proaktif mengusulkan perbaikan proses.", reverse:false },
+
+    // Quality Focus (5)
+    { dim:"quality", text:"Saya melakukan pengecekan ulang sebelum menyerahkan pekerjaan.", reverse:false },
+    { dim:"quality", text:"Saya memperhatikan detail agar hasil minim kesalahan.", reverse:false },
+    { dim:"quality", text:"Saya menulis/menyusun output agar mudah dipahami orang lain.", reverse:false },
+    { dim:"quality", text:"Bagi saya, yang penting cepat selesai meski ada error kecil.", reverse:true },
+    { dim:"quality", text:"Saya menjaga konsistensi kualitas meski volume kerja tinggi.", reverse:false },
+
+    // Customer Orientation (5) + Attention check injected here
+    { dim:"customer", text:"Saya berusaha memahami kebutuhan pengguna/klien sebelum memberi solusi.", reverse:false },
+    { dim:"customer", text:"Saya menjaga respons yang sopan dan jelas dalam komunikasi.", reverse:false },
+    { dim:"customer", text:"Saya memikirkan dampak pekerjaan saya terhadap pengalaman pengguna.", reverse:false },
+    // Attention check (HRD QC)
+    { dim:"customer", text:"(Attention Check) Untuk memastikan Anda membaca soal, pilih angka 2 (Tidak Sesuai).", reverse:false, attention:true, expected:2 },
+    { dim:"customer", text:"Saya berusaha memberikan solusi, bukan hanya menjelaskan masalah.", reverse:false },
+  ];
+
+  const SCALE_LABELS = [
+    "1<br><span class='small'>Sangat tidak sesuai</span>",
+    "2<br><span class='small'>Tidak sesuai</span>",
+    "3<br><span class='small'>Netral</span>",
+    "4<br><span class='small'>Sesuai</span>",
+    "5<br><span class='small'>Sangat sesuai</span>",
+  ];
+
+  // ====== STATE ======
+  const state = {
+    started:false,
+    startAt:null,
+    lastTick:null,
+    elapsedSec:0,
+    idx:0,
+    itemStartAt:null,
+    itemSec:0,
+    answers:Array(ITEMS.length).fill(null), // 1-5
+    perItemTime:Array(ITEMS.length).fill(0),
+    candidate:{
+      name:"", email:"", phone:"", role:"", token:"", purpose:"recruitment"
+    }
+  };
+
+  // ====== DOM ======
+  const $ = (id) => document.getElementById(id);
+
+  const screenIntro = $("screenIntro");
+  const screenTest = $("screenTest");
+  const screenResult = $("screenResult");
+
+  const introWarn = $("introWarn");
+  const testWarn = $("testWarn");
+
+  const timerEl = $("timer");
+  const statusEl = $("status");
+
+  const qPos = $("qPos");
+  const qTotal = $("qTotal");
+  const bar = $("bar");
+  const qDim = $("qDim");
+  const qText = $("qText");
+  const qTime = $("qTime");
+  const scale = $("scale");
+
+  const prevBtn = $("prevBtn");
+  const nextBtn = $("nextBtn");
+  const finishBtn = $("finishBtn");
+
+  // ====== HELPERS ======
+  const pad = (n) => String(n).padStart(2,"0");
+  const fmtTime = (sec) => `${pad(Math.floor(sec/60))}:${pad(sec%60)}`;
+  const now = () => Date.now();
+
+  function showWarn(el, msg){
+    el.textContent = msg;
+    el.classList.remove("hidden");
+  }
+  function hideWarn(el){ el.classList.add("hidden"); el.textContent=""; }
+
+  function validatePhone(phone){
+    return /^08\d{8,13}$/.test(phone.trim()); // 08 + 8-13 digits
+  }
+  function validateEmail(email){
+    if(!email.trim()) return true; // optional
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  }
+
+  // ====== TIMER ======
+  function tick(){
+    if(!state.started) return;
+    const t = now();
+    const dt = Math.max(0, Math.floor((t - state.lastTick)/1000));
+    if(dt>0){
+      state.elapsedSec += dt;
+      state.itemSec += dt;
+      state.lastTick = t;
+      timerEl.textContent = fmtTime(state.elapsedSec);
+      qTime.textContent = `Waktu item: ${state.itemSec} dtk`;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // ====== RENDER QUESTION ======
+  function render(){
+    const total = ITEMS.length;
+    const idx = state.idx;
+    const it = ITEMS[idx];
+
+    qTotal.textContent = total;
+    qPos.textContent = idx + 1;
+    bar.style.width = `${Math.round(((idx)/ (total-1)) * 100)}%`;
+
+    qDim.textContent = "Pernyataan";
+    qText.textContent = it.text;
+    qTime.textContent = `Waktu item: ${state.itemSec} dtk`;
+
+    // render scale options
+    scale.innerHTML = "";
+    for(let v=1; v<=5; v++){
+      const d = document.createElement("div");
+      d.className = "opt" + (state.answers[idx] === v ? " active" : "");
+      d.innerHTML = SCALE_LABELS[v-1];
+      d.onclick = () => {
+        state.answers[idx] = v;
+        render(); // refresh active state
+        hideWarn(testWarn);
+      };
+      scale.appendChild(d);
+    }
+
+    prevBtn.disabled = idx === 0;
+    nextBtn.classList.toggle("hidden", idx === total-1);
+    finishBtn.classList.toggle("hidden", idx !== total-1);
+
+    statusEl.textContent = `Mengerjakan | Item ${idx+1}/${total}`;
+  }
+
+  function commitItemTime(){
+    // add current itemSec into perItemTime
+    state.perItemTime[state.idx] += state.itemSec;
+    state.itemSec = 0;
+  }
+
+  function requireAnswered(){
+    if(state.answers[state.idx] == null){
+      showWarn(testWarn, "Pilih jawaban dulu ya (1-5) sebelum lanjut.");
+      return false;
+    }
+    return true;
+  }
+
+  function goto(idx){
+    commitItemTime();
+    state.idx = idx;
+    state.itemSec = 0;
+    state.itemStartAt = now();
+    render();
+  }
+
+  // ====== SCORING ======
+  function reverseScore(v){ return 6 - v; }
+
+  function computeScores(){
+    // returns avg 1-5 per dim
+    const byDim = {};
+    DIMENSIONS.forEach(d => byDim[d.key] = []);
+    ITEMS.forEach((it, i) => {
+      const ans = state.answers[i];
+      if(ans == null) return;
+      let s = ans;
+      if(it.reverse) s = reverseScore(ans);
+      byDim[it.dim].push(s);
+    });
+
+    const scores = {};
+    for(const d of DIMENSIONS){
+      const arr = byDim[d.key];
+      scores[d.key] = arr.length ? (arr.reduce((a,b)=>a+b,0)/arr.length) : null;
+    }
+    return scores;
+  }
+
+  function qcChecks(){
+    const flags = [];
+
+    // 1) attention check
+    const attIndex = ITEMS.findIndex(x => x.attention);
+    if(attIndex >= 0){
+      const expected = ITEMS[attIndex].expected;
+      if(state.answers[attIndex] !== expected){
+        flags.push("Attention check gagal");
+      }
+    }
+
+    // 2) straight-lining: too many same answers
+    const filled = state.answers.filter(v => v != null);
+    const counts = {};
+    filled.forEach(v => counts[v] = (counts[v]||0)+1);
+    const maxSame = Math.max(...Object.values(counts), 0);
+    const ratio = filled.length ? maxSame/filled.length : 0;
+    if(ratio >= 0.75) flags.push("Pola jawaban terlalu seragam (straight-lining)");
+
+    // 3) speed check: too fast
+    if(state.elapsedSec > 0){
+      const secPerItem = state.elapsedSec / ITEMS.length;
+      if(secPerItem < 3) flags.push("Durasi terlalu cepat (kemungkinan kurang membaca)");
+    }
+
+    return flags;
+  }
+
+  function topDims(scores){
+    const arr = Object.entries(scores)
+      .filter(([,v]) => typeof v === "number")
+      .sort((a,b)=>b[1]-a[1]);
+    return {
+      top: arr.slice(0,3),
+      low: arr.slice(-2)
+    };
+  }
+
+  function interpret(scores){
+    // simple bands
+    const band = (v) => v>=4.2 ? "Sangat kuat" : v>=3.6 ? "Kuat" : v>=3.0 ? "Sedang" : v>=2.4 ? "Perlu dukungan" : "Lemah";
+    const t = topDims(scores);
+
+    const toLabel = (key) => (DIMENSIONS.find(d=>d.key===key)?.label || key);
+    const toDesc = (key) => (DIMENSIONS.find(d=>d.key===key)?.desc || "");
+
+    let html = `<ul>`;
+    html += `<li><b>Kekuatan utama:</b> ${t.top.map(([k,v]) => `${toLabel(k)} (${v.toFixed(2)} | ${band(v)})`).join(", ")}.</li>`;
+    html += `<li><b>Area pengembangan:</b> ${t.low.map(([k,v]) => `${toLabel(k)} (${v.toFixed(2)} | ${band(v)})`).join(", ")}.</li>`;
+    html += `</ul>`;
+
+    html += `<div class="divider"></div>`;
+    html += `<b>Catatan perilaku (ringkas):</b><br/>`;
+    html += `<ul>`;
+    for(const [k,v] of t.top){
+      html += `<li><b>${toLabel(k)}:</b> ${toDesc(k)}.</li>`;
+    }
+    for(const [k,v] of t.low){
+      html += `<li><b>${toLabel(k)}:</b> Perlu dukungan/monitoring pada aspek: ${toDesc(k).toLowerCase()}.</li>`;
+    }
+    html += `</ul>`;
+    return html;
+  }
+
+  // ====== RADAR CHART (canvas) ======
+  function drawRadar(scores){
+    const c = $("radar");
+    const ctx = c.getContext("2d");
+    const W = c.width, H = c.height;
+    ctx.clearRect(0,0,W,H);
+
+    // background
+    ctx.fillStyle = "#0b1730";
+    ctx.fillRect(0,0,W,H);
+
+    const cx = W/2, cy = H/2;
+    const radius = Math.min(W,H) * 0.33;
+    const axes = DIMENSIONS.length;
+    const angles = DIMENSIONS.map((_,i)=> (-Math.PI/2) + (i * 2*Math.PI/axes));
+
+    // grid rings (1..5)
+    ctx.strokeStyle = "rgba(159,176,208,.25)";
+    ctx.lineWidth = 1;
+    for(let r=1; r<=5; r++){
+      const rr = radius * (r/5);
+      ctx.beginPath();
+      angles.forEach((a, i) => {
+        const x = cx + rr*Math.cos(a);
+        const y = cy + rr*Math.sin(a);
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      });
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    // axes
+    ctx.strokeStyle = "rgba(159,176,208,.18)";
+    angles.forEach(a => {
+      ctx.beginPath();
+      ctx.moveTo(cx,cy);
+      ctx.lineTo(cx + radius*Math.cos(a), cy + radius*Math.sin(a));
+      ctx.stroke();
+    });
+
+    // labels
+    ctx.fillStyle = "rgba(232,239,255,.9)";
+    ctx.font = "18px system-ui, -apple-system, Segoe UI";
+    DIMENSIONS.forEach((d,i) => {
+      const a = angles[i];
+      const x = cx + (radius + 48)*Math.cos(a);
+      const y = cy + (radius + 48)*Math.sin(a);
+      ctx.textAlign = x<cx ? "right" : "left";
+      ctx.textBaseline = "middle";
+      ctx.fillText(d.label, x, y);
+    });
+
+    // polygon
+    const pts = DIMENSIONS.map((d,i) => {
+      const v = scores[d.key] ?? 0;
+      const rr = radius * (v/5);
+      return [cx + rr*Math.cos(angles[i]), cy + rr*Math.sin(angles[i])];
+    });
+
+    ctx.globalAlpha = 0.9;
+    ctx.fillStyle = "rgba(110,231,255,.22)";
+    ctx.strokeStyle = "rgba(167,139,250,.85)";
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+    pts.forEach((p,i)=>{ if(i===0) ctx.moveTo(p[0],p[1]); else ctx.lineTo(p[0],p[1]); });
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // title
+    ctx.fillStyle = "rgba(232,239,255,.9)";
+    ctx.font = "22px system-ui, -apple-system, Segoe UI";
+    ctx.textAlign="center";
+    ctx.fillText("Profil Working Style (1-5)", cx, 34);
+  }
+
+  // ====== EXPORT ======
+  function buildResultPayload(){
+    const scores = computeScores();
+    const qc = qcChecks();
+
+    return {
+      module: "working_style",
+      type:"working_style_assessment",
+      version:"1.0",
+      submitted_at: new Date().toISOString(),
+      candidate: {...state.candidate},
+      duration_sec: state.elapsedSec,
+      per_item_time_sec: state.perItemTime,
+      answers: state.answers.map((v,i)=>({
+        item_no: i+1,
+        dimension: ITEMS[i].dim,
+        reverse: !!ITEMS[i].reverse,
+        attention: !!ITEMS[i].attention,
+        response: v
+      })),
+      scores_avg_1_to_5: scores,
+      qc_flags: qc
+    };
+  }
+  async function sendToSheet(payload){
+    try{
+      await fetch(SHEET_WEBAPP_URL, {
+        method:"POST",
+        mode:"no-cors",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ action:"submit", module:"working_style", payload })
+      });
+      return true;
+    }catch(_){
+      return false;
+    }
+  }
+
+  function download(filename, content, mime){
+    const blob = new Blob([content], {type:mime});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 500);
+  }
+
+  function toCSV(payload){
+    // Flat: candidate + scores
+    const s = payload.scores_avg_1_to_5;
+    const cols = [
+      "submitted_at","name","email","phone","role","token","purpose","duration_sec",
+      ...DIMENSIONS.map(d=>`score_${d.key}`),
+      "qc_flags"
+    ];
+    const row = [
+      payload.submitted_at,
+      payload.candidate.name,
+      payload.candidate.email,
+      payload.candidate.phone,
+      payload.candidate.role,
+      payload.candidate.token,
+      payload.candidate.purpose,
+      payload.duration_sec,
+      ...DIMENSIONS.map(d => (s[d.key] ?? "")),
+      (payload.qc_flags || []).join(" | ")
+    ].map(v => `"${String(v ?? "").replaceAll('"','""')}"`);
+
+    return cols.join(",") + "\n" + row.join(",");
+  }
+
+  // ====== FLOW ======
+  function start(){
+    hideWarn(introWarn);
+
+    state.candidate.name = $("name").value.trim();
+    state.candidate.email = $("email").value.trim();
+    state.candidate.phone = $("phone").value.trim();
+    state.candidate.role = $("role").value.trim();
+    state.candidate.token = $("token").value.trim();
+    state.candidate.purpose = $("purpose").value;
+
+    if(!state.candidate.name) return showWarn(introWarn, "Nama wajib diisi.");
+    if(!validateEmail(state.candidate.email)) return showWarn(introWarn, "Format email tidak valid.");
+    if(!validatePhone(state.candidate.phone)) return showWarn(introWarn, "No. WhatsApp wajib format 08xxxxxxxxxx (tanpa spasi/tanda).");
+    if(!state.candidate.role) return showWarn(introWarn, "Posisi dilamar wajib diisi.");
+
+    // init test
+    state.started = true;
+    state.startAt = now();
+    state.lastTick = now();
+    state.elapsedSec = 0;
+    state.idx = 0;
+    state.itemSec = 0;
+    state.itemStartAt = now();
+
+    // show test
+    screenIntro.classList.add("hidden");
+    screenTest.classList.remove("hidden");
+    screenResult.classList.add("hidden");
+    statusEl.textContent = "Mengerjakan | Item 1/" + ITEMS.length;
+    timerEl.textContent = "00:00";
+
+    render();
+    requestAnimationFrame(tick);
+  }
+
+  function finish(){
+    // validation: all answered
+    const missing = state.answers.findIndex(v => v==null);
+    if(missing >= 0){
+      showWarn(testWarn, `Masih ada soal belum dijawab. Loncat ke item ${missing+1}.`);
+      goto(missing);
+      return;
+    }
+
+    commitItemTime();
+
+    // compute payload for HRD/reporting (hidden from candidate)
+    const payload = buildResultPayload();
+
+    // persist summary for HRD on this device
+    try{
+      const key = "ws_hrd_reports_v1";
+      const oldList = JSON.parse(localStorage.getItem(key) || "[]");
+      oldList.unshift(payload);
+      localStorage.setItem(key, JSON.stringify(oldList.slice(0, 200)));
+    }catch(_){}
+
+    // show candidate-safe completion screen
+    screenTest.classList.add("hidden");
+    screenResult.classList.remove("hidden");
+    statusEl.textContent = "Selesai | Menunggu HRD";
+
+    // keep payload for HRD integration hooks
+    window.__WS_PAYLOAD__ = payload;
+    sendToSheet(payload);
+  }
+
+  function resetAll(){
+    Object.assign(state, {
+      started:false, startAt:null, lastTick:null, elapsedSec:0,
+      idx:0, itemStartAt:null, itemSec:0,
+      answers:Array(ITEMS.length).fill(null),
+      perItemTime:Array(ITEMS.length).fill(0),
+      candidate:{ name:"", email:"", phone:"", role:"", token:"", purpose:"recruitment" }
+    });
+    $("name").value=""; $("email").value=""; $("phone").value=""; $("role").value=""; $("token").value="";
+    $("purpose").value="recruitment";
+    timerEl.textContent="00:00";
+    statusEl.textContent="Belum mulai";
+
+    screenIntro.classList.remove("hidden");
+    screenTest.classList.add("hidden");
+    screenResult.classList.add("hidden");
+    hideWarn(introWarn); hideWarn(testWarn);
+  }
+
+  // ====== EVENTS ======
+  $("startBtn").onclick = start;
+
+  prevBtn.onclick = () => {
+    hideWarn(testWarn);
+    if(state.idx > 0) goto(state.idx - 1);
+  };
+
+  nextBtn.onclick = () => {
+    hideWarn(testWarn);
+    if(!requireAnswered()) return;
+    if(state.idx < ITEMS.length - 1) goto(state.idx + 1);
+  };
+
+  finishBtn.onclick = () => {
+    hideWarn(testWarn);
+    if(!requireAnswered()) return;
+    finish();
+  };
+
+  // initial
+  qTotal.textContent = ITEMS.length;
+})();
+</script>
+<script>
+/* SUITE_BRIDGE_V1 */
+(function(){
+  const KEY = "berani_suite_profile_v1";
+  function readLS(){
+    try{ return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }catch(_){ return {}; }
+  }
+  function readProfile(){
+    const q = new URLSearchParams(window.location.search);
+    const qs = {
+      name:(q.get("name") || "").trim(),
+      phone:(q.get("phone") || "").trim(),
+      position:(q.get("position") || "").trim(),
+      token:(q.get("token") || "").trim()
+    };
+    const ls = readLS();
+    const p = {
+      name: qs.name || ls.name || "",
+      phone: qs.phone || ls.phone || "",
+      position: qs.position || ls.position || "",
+      token: qs.token || ls.token || ""
+    };
+    if(p.name || p.phone || p.position || p.token){
+      localStorage.setItem(KEY, JSON.stringify(Object.assign({}, ls, p, {updatedAt:new Date().toISOString()})));
+    }
+    return p;
+  }
+  function lockInput(id, value){
+    const el = document.getElementById(id);
+    if(!el || !value) return;
+    el.value = value;
+    el.readOnly = true;
+    el.title = "Terisi otomatis dari Tes IQ";
+  }
+  function lockSelect(id, value){
+    const el = document.getElementById(id);
+    if(!el || !value) return;
+    el.value = value;
+    el.disabled = true;
+    el.title = "Terisi otomatis dari Tes IQ";
+  }
+  const p = readProfile();
+  if(!(p.name && p.phone && p.position)) return;
+
+  lockInput("name", p.name);
+  lockInput("phone", p.phone);
+  lockInput("role", p.position);
+  lockInput("token", p.token);
+
+  lockInput("candName", p.name);
+  lockInput("candPhone", p.phone);
+
+  const email = document.getElementById("email");
+  if(email){
+    if(!email.value) email.value = (p.phone || "candidate") + "@local.invalid";
+    email.readOnly = true;
+    email.title = "Terisi otomatis dari Tes IQ";
+  }
+
+  // Typing app fallback storage
+  try{ localStorage.setItem("bei_candidate", JSON.stringify({name:p.name, phone:p.phone})); }catch(_){ }
+
+  const hideBtnIds = ["btnNew", "newCandidateBtn"];
+  hideBtnIds.forEach(id=>{
+    const btn = document.getElementById(id);
+    if(btn) btn.style.display = "none";
+  });
+
+  const introHost = document.querySelector(".card") || document.body;
+  if(introHost && !document.getElementById("suiteBridgeNote")){
+    const note = document.createElement("div");
+    note.id = "suiteBridgeNote";
+    note.style.marginTop = "10px";
+    note.style.padding = "8px 10px";
+    note.style.borderRadius = "10px";
+    note.style.border = "1px solid rgba(31,154,99,.35)";
+    note.style.background = "rgba(31,154,99,.12)";
+    note.style.fontSize = "12px";
+    note.textContent = "Identitas kandidat ditarik otomatis dari Tes IQ.";
+    introHost.appendChild(note);
+  }
+})();
+</script>
+</body>
+</html>
+
