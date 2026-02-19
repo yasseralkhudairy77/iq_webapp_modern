@@ -741,7 +741,7 @@
     el.liveHint.innerHTML = "Latihan dimulai. Fokus akurasi, jangan buru-buru.";
     setPhase("practice");
 
-    tickLoop(() => startTest());
+    tickLoop(() => promptStartMainTest());
   }
 
   function startTest(){
@@ -776,12 +776,17 @@
     tickLoop(() => finishNow(true));
   }
 
+  function promptStartMainTest(){
+    alert("Latihan 1 menit selesai.\nAnda wajib melanjutkan Tes 10 menit sekarang.\nKlik OK untuk memulai tes utama.");
+    startTest();
+  }
+
   function finishNow(auto=false){
     clearInterval(state.timerId);
     state.timerId = null;
 
     if (state.phase === "practice"){
-      startTest();
+      promptStartMainTest();
       return;
     }
 

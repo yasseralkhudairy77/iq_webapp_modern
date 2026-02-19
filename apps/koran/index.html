@@ -982,6 +982,13 @@ ${perP.map((_,i)=>`${String(i+1).padStart(2,'0')} | ${String(perP[i]).padStart(2
 
       refresh();
 
+      if (candidate.modeKey === "practice") {
+        alert("Latihan 1 menit selesai.\nAnda wajib melanjutkan Tes 20 menit sekarang.\nKlik OK untuk memulai tes utama.");
+        setMode("test");
+        start();
+        return;
+      }
+
       const payload = {
         position: (new URLSearchParams(window.location.search).get("position") || "").trim(),
         token: (new URLSearchParams(window.location.search).get("token") || "").trim(),
@@ -1001,13 +1008,9 @@ ${perP.map((_,i)=>`${String(i+1).padStart(2,'0')} | ${String(perP[i]).padStart(2
         userAgent: navigator.userAgent
       };
 
-      if (candidate.modeKey === "test") {
-        sendToSheet(payload)
-          .then(()=> toast("Terkirim ke Google Sheet OK"))
-          .catch(()=> toast("Gagal kirim ke Sheet (cek internet) PERINGATAN"));
-      } else {
-        toast("Mode latihan tidak dikirim ke Google Sheet");
-      }
+      sendToSheet(payload)
+        .then(()=> toast("Terkirim ke Google Sheet OK"))
+        .catch(()=> toast("Gagal kirim ke Sheet (cek internet) PERINGATAN"));
 
       goNextTestWithDelay(reason === "timeout" ? "timeout" : "manual");
     }
