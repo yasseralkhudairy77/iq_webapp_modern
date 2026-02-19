@@ -1001,9 +1001,13 @@ ${perP.map((_,i)=>`${String(i+1).padStart(2,'0')} | ${String(perP[i]).padStart(2
         userAgent: navigator.userAgent
       };
 
-      sendToSheet(payload)
-        .then(()=> toast("Terkirim ke Google Sheet OK"))
-        .catch(()=> toast("Gagal kirim ke Sheet (cek internet) PERINGATAN"));
+      if (candidate.modeKey === "test") {
+        sendToSheet(payload)
+          .then(()=> toast("Terkirim ke Google Sheet OK"))
+          .catch(()=> toast("Gagal kirim ke Sheet (cek internet) PERINGATAN"));
+      } else {
+        toast("Mode latihan tidak dikirim ke Google Sheet");
+      }
 
       goNextTestWithDelay(reason === "timeout" ? "timeout" : "manual");
     }

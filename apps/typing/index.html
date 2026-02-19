@@ -707,6 +707,7 @@
 
   function saveToSheet(payload){
     if (!payload.kandidatNoHP) return;
+    if (payload.isPractice === true) return;
     fetch(WEB_APP_URL, {
       method: "POST",
       mode: "no-cors",
@@ -939,7 +940,9 @@
       token: (q.get("token") || "").trim(),
       kandidatNama: candidate.name,
       kandidatNoHP: candidate.phone,
-      modeDipilih: candidate.mode,
+      modeDipilih: "test",
+      modeTes: "Tes 10 menit",
+      isPractice: false,
       durationMinutes: +minutes.toFixed(3),
       total,
       benar: ok,
