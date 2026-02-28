@@ -669,8 +669,10 @@ function submit(){
   document.getElementById("questionArea").style.display="none";
   document.getElementById("resultArea").style.display="block";
   postToSheet(state.result)
-    .then(()=>{
-      document.getElementById("metaText").textContent = "Hasil terkirim ke sistem HRD.";
+    .then((res)=>{
+      document.getElementById("metaText").textContent = res?.skipped
+        ? "Mode dev aktif: hasil tidak dikirim ke sistem HRD."
+        : "Hasil terkirim ke sistem HRD.";
       goNextTestWithDelay(3000);
     })
     .catch(err=>{
@@ -720,8 +722,13 @@ function downloadCSV(){
 
 async function postToSheet(result){
   const tokenInput = (document.getElementById("token")?.value || "").trim();
+  const isDevSkip = shouldSkipTokenValidationForDev();
   const token = tokenInput;
-  if(!token) throw new Error("Token wajib diisi.");
+  if(!token && !isDevSkip) throw new Error("Token wajib diisi.");
+  if(isDevSkip){
+    // Dev mode: run end-to-end flow without sending to production sheet.
+    return { status:"ok", skipped:true };
+  }
 
   const payload = {
     module: "iq",
@@ -748,6 +755,7 @@ async function postToSheet(result){
   const json = await postToSheetWebApp({ action:"submit", module:"iq", token, payload });
   if(json.status === "ok") alert("OK: Hasil tersimpan.");
   else alert("Peringatan: Gagal: " + (json.message || "unknown"));
+  return json;
 }
 
 /** Events **/
