@@ -1003,7 +1003,17 @@
   });
   if (el.btnModalFill && isDevModeEnabled()){
     el.btnModalFill.style.display = "";
-    el.btnModalFill.addEventListener("click", fillTestingProfile);
+    el.btnModalFill.addEventListener("click", () => {
+      if (state.phase === "practice" || state.phase === "test"){
+        const ok = confirm("Sesi sedang berjalan. Overwrite data uji dan reset sesi sekarang?");
+        if(!ok) return;
+        resetAll();
+        openCandidateModal();
+      }else{
+        openCandidateModal();
+      }
+      fillTestingProfile();
+    });
   }
 
   el.btnNew.addEventListener("click", () => openCandidateModal());

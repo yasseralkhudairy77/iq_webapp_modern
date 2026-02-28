@@ -1149,6 +1149,18 @@ ${perP.map((_,i)=>`${String(i+1).padStart(2,'0')} | ${String(perP[i]).padStart(2
     if(testFillBtn && isDevModeEnabled()){
       testFillBtn.style.display = "";
       testFillBtn.addEventListener("click", ()=>{
+        if(running){
+          const ok = confirm("Sesi sedang berjalan. Overwrite data uji dan reset sesi sekarang?");
+          if(!ok) return;
+          if(timerId) clearInterval(timerId);
+          timerId = null;
+          running = false;
+          finishedOnce = false;
+          resetAll();
+          openStartForm();
+        }else if(startOverlay.style.display !== "flex"){
+          openStartForm();
+        }
         fillTestingProfile();
         toast("Autofill mode uji aktif.");
       });

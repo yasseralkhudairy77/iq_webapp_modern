@@ -811,6 +811,21 @@ const testFillBtn = document.getElementById("testFillBtn");
 if(testFillBtn && isDevModeEnabled()){
   testFillBtn.style.display = "";
   testFillBtn.onclick=()=>{
+    if(state.started && !state.finished){
+      const ok = confirm("Sesi sedang berjalan. Overwrite data uji dan reset sesi sekarang?");
+      if(!ok) return;
+      if(timerHandle) clearInterval(timerHandle);
+      localStorage.removeItem(LS_KEY);
+      const existingToken = (document.getElementById("token")?.value || "").trim();
+      saveSuiteProfile({
+        name:"TEST KANDIDAT",
+        phone:"08325615352",
+        position:"SALES",
+        token: existingToken
+      });
+      location.reload();
+      return;
+    }
     fillTestingProfile();
     alert("Autofill mode uji aktif. Token tetap harus valid untuk mulai tes.");
   };

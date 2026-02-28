@@ -875,6 +875,11 @@
   if(testFillBtn && isDevModeEnabled()){
     testFillBtn.style.display = "";
     testFillBtn.onclick = ()=>{
+      if(state.started){
+        const ok = confirm("Sesi sedang berjalan. Overwrite data uji dan reset sesi sekarang?");
+        if(!ok) return;
+        resetAll();
+      }
       fillTestingProfile();
       alert("Autofill mode uji aktif.");
     };

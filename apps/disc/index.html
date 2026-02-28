@@ -1246,7 +1246,14 @@
   const testFillBtn = $("testFillBtn");
   if(testFillBtn && isDevModeEnabled()){
     testFillBtn.style.display = "";
-    testFillBtn.addEventListener("click", fillTestingProfile);
+    testFillBtn.addEventListener("click", ()=>{
+      if(startedAt && !finished){
+        const ok = confirm("Sesi sedang berjalan. Overwrite data uji dan reset sesi sekarang?");
+        if(!ok) return;
+        resetAll();
+      }
+      fillTestingProfile();
+    });
   }
 
   // ---------- Phone input realtime cleaning ----------
