@@ -1016,14 +1016,11 @@ ${perP.map((_,i)=>`${String(i+1).padStart(2,'0')} | ${String(perP[i]).padStart(2
       const payload = {
         position: (new URLSearchParams(window.location.search).get("position") || "").trim(),
         token: resolveSuiteToken(),
-        module: SHEET_MODULE_PAULI,
+        module: "pauli_kraeplin",
         nama: candidate.nama,
         nohp: candidate.nohp,
-        // Send both legacy and normalized keys to keep backend mapping stable.
         modeTes: candidate.modeLabel,
-        mode: candidate.modeLabel,
         durasiMenit: CONFIG.totalMinutes,
-        durationMin: CONFIG.totalMinutes,
         total: total,
         benar: ok,
         salah: bad,
