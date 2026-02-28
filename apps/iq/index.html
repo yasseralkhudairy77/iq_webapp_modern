@@ -292,6 +292,10 @@ function isDevModeEnabled(){
   const isLocal = host === "localhost" || host === "127.0.0.1";
   return isLocal || q.get("dev") === "1";
 }
+function shouldSkipTokenValidationForDev(){
+  const q = new URLSearchParams(window.location.search);
+  return isDevModeEnabled() && q.get("dev") === "1";
+}
 function fillTestingProfile(){
   const testProfile = {
     name: "TEST KANDIDAT",
@@ -417,6 +421,9 @@ function normalizeToken(v){
 }
 
 async function validateTokenBeforeStart(){
+  if(shouldSkipTokenValidationForDev()){
+    return { status:"ok", skipped:true };
+  }
   const token = normalizeToken((document.getElementById("token")?.value || ""));
   const name = (document.getElementById("name")?.value || "").trim();
   const phone = (document.getElementById("phone")?.value || "").trim();
@@ -755,7 +762,7 @@ document.getElementById("startBtn").onclick=async ()=>{
   if(!name) return alert("Nama wajib diisi.");
   if(!validPhone(phone)) return alert("No. WhatsApp tidak valid. Contoh: 083xxxxxxxxxx");
   if(!position) return alert("Posisi wajib diisi.");
-  if(!token) return alert("Token kandidat wajib diisi.");
+  if(!token && !shouldSkipTokenValidationForDev()) return alert("Token kandidat wajib diisi.");
   try{
     await validateTokenBeforeStart();
   }catch(err){
@@ -827,7 +834,7 @@ if(testFillBtn && isDevModeEnabled()){
       return;
     }
     fillTestingProfile();
-    alert("Autofill mode uji aktif. Token tetap harus valid untuk mulai tes.");
+    alert("Autofill mode uji aktif. Jika URL memakai ?dev=1, validasi token dilewati untuk testing.");
   };
 }
 
