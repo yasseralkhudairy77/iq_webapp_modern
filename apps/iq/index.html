@@ -274,10 +274,12 @@ let state = {
 
 let timerHandle=null;
 function getSheetWebAppUrl(){
-  // Security hardening: pin endpoint to the official Apps Script URL.
-  // Ignore query/localStorage overrides to prevent bypass via stale/wrong endpoints.
-  localStorage.setItem(SHEET_ENDPOINT_KEY, DEFAULT_SHEET_WEBAPP_URL);
-  return DEFAULT_SHEET_WEBAPP_URL;
+  const q = new URLSearchParams(window.location.search);
+  const fromQuery = (q.get("endpoint") || "").trim();
+  const fromLocal = (localStorage.getItem(SHEET_ENDPOINT_KEY) || "").trim();
+  const url = fromQuery || fromLocal || DEFAULT_SHEET_WEBAPP_URL;
+  if(url) localStorage.setItem(SHEET_ENDPOINT_KEY, url);
+  return url;
 }
 const SHEET_WEBAPP_URL = getSheetWebAppUrl();
 
