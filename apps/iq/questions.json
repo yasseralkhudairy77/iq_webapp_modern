@@ -410,10 +410,10 @@
     "page": 4,
     "prompt": "Mari memiliki beberapa kue. Setelah makan 1 kue, Mary memberikan ½ dari sisanya untuk adiknya. Setelah makan 1 kue lagi, Mary memberikan ½ dari sisanya untuk adiknya. Mary sekarang hanya memiliki 5 kue. Berapakah jumlah awal kue yang dimiliki Mary?",
     "options": {
-      "A": "(a)",
-      "B": "22 c.23 d.45",
-      "C": "(c)",
-      "D": "(d)",
+      "A": "11",
+      "B": "22",
+      "C": "23",
+      "D": "45",
       "E": "46"
     },
     "type": "text"
