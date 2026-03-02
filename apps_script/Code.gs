@@ -132,7 +132,7 @@ function submitIQ_(ss, token, p) {
     scoreBand: iqMeta.scoreBand || safeStr_(p.scoreBand),
     answered: toNum_(p.answered),
     unanswered: toNum_(p.unanswered),
-    flagged: toNum_(p.flagged || p.flaggedCount),
+    flagged: toNum_(pickDefined_(p.flagged, p.flaggedCount)),
   });
 
   return { status: "ok", module: "iq", token: token };
@@ -141,24 +141,36 @@ function submitIQ_(ss, token, p) {
 function submitPauli_(ss, token, p) {
   const ws = getSheet_(ss, CONFIG.SHEET.PAULI);
 
-  const totalAttempt = toNum_(p.total);
-  const correct = toNum_(p.benar || p.correct);
-  const wrong = toNum_(p.salah || p.wrong);
-  const acc = toNum_(p.akurasi || p.accuracyPct);
-  const speed = toNum_(p.speedAvg || p.speedPerMin);
-  const durationSec = toNum_(p.durationSec) || (toNum_(p.durasiMenit) ? toNum_(p.durasiMenit) * 60 : "");
-  const consistencyPct = p.consistencyPct !== undefined && p.consistencyPct !== null
+  const totalAttempt = toNum_(pickDefined_(p.total, p.totalAttempt));
+  const correct = toNum_(pickDefined_(p.benar, p.correct));
+  const wrong = toNum_(pickDefined_(p.salah, p.wrong));
+  const acc = toNum_(pickDefined_(p.akurasi, p.accuracyPct));
+  const speed = toNum_(pickDefined_(p.speedAvg, p.speedPerMin));
+  const durationSecDirect = toNum_(p.durationSec);
+  const durasiMenit = toNum_(p.durasiMenit);
+  const durationSec = durationSecDirect !== "" ? durationSecDirect : (durasiMenit !== "" ? durasiMenit * 60 : "");
+  const consistencyPct = (p.consistencyPct !== undefined && p.consistencyPct !== null)
     ? toNum_(p.consistencyPct)
     : estimateConsistencyPctFromSd_(toNum_(p.sd));
-  const pauliScore = p.pauliScore !== undefined && p.pauliScore !== null
+  const pauliScore = (p.pauliScore !== undefined && p.pauliScore !== null)
     ? toNum_(p.pauliScore)
     : calcPauliScore_(acc, speed, consistencyPct);
   const pauliCategory = safeStr_(p.pauliCategory) || scoreCategory_(pauliScore);
 
+  const endedAtRaw = p.endedAt || p.submittedAt || new Date().toISOString();
+  const endedAtVal = parseDateOrRaw_(endedAtRaw);
+  let startedAtVal = parseDateOrRaw_(p.startedAt);
+  if (!startedAtVal && durationSec !== "") {
+    const endDate = new Date(endedAtRaw);
+    if (!isNaN(endDate.getTime())) {
+      startedAtVal = new Date(endDate.getTime() - Number(durationSec) * 1000);
+    }
+  }
+
   appendByHeaders_(ws, {
     token: token,
-    startedAt: parseDateOrRaw_(p.startedAt || p.submittedAt),
-    endedAt: parseDateOrRaw_(p.endedAt || new Date().toISOString()),
+    startedAt: startedAtVal,
+    endedAt: endedAtVal,
     durationSec: durationSec,
     totalAttempt: totalAttempt,
     correct: correct,
@@ -176,18 +188,30 @@ function submitPauli_(ss, token, p) {
 function submitTyping_(ss, token, p) {
   const ws = getSheet_(ss, CONFIG.SHEET.TYPING);
 
-  const durationSec = toNum_(p.durationSec) || (toNum_(p.durationMinutes) ? toNum_(p.durationMinutes) * 60 : "");
-  const wordsTyped = toNum_(p.total || p.wordsTyped);
-  const errors = toNum_(p.salah || p.errors);
-  const grossWPM = toNum_(p.grossWPM || p.wpm);
-  const netWPM = p.netWPM !== undefined && p.netWPM !== null ? toNum_(p.netWPM) : grossWPM;
-  const accuracyPct = toNum_(p.akurasi || p.accuracyPct);
+  const durationSecDirect = toNum_(p.durationSec);
+  const durationMinutes = toNum_(p.durationMinutes);
+  const durationSec = durationSecDirect !== "" ? durationSecDirect : (durationMinutes !== "" ? durationMinutes * 60 : "");
+  const wordsTyped = toNum_(pickDefined_(p.total, p.wordsTyped));
+  const errors = toNum_(pickDefined_(p.salah, p.errors));
+  const grossWPM = toNum_(pickDefined_(p.grossWPM, p.wpm));
+  const netWPM = (p.netWPM !== undefined && p.netWPM !== null) ? toNum_(p.netWPM) : grossWPM;
+  const accuracyPct = toNum_(pickDefined_(p.akurasi, p.accuracyPct));
   const typingCategory = safeStr_(p.typingCategory) || typingCategory_(netWPM, accuracyPct);
+
+  const endedAtRaw = p.endedAt || p.submittedAt || new Date().toISOString();
+  const endedAtVal = parseDateOrRaw_(endedAtRaw);
+  let startedAtVal = parseDateOrRaw_(p.startedAt);
+  if (!startedAtVal && durationSec !== "") {
+    const endDate = new Date(endedAtRaw);
+    if (!isNaN(endDate.getTime())) {
+      startedAtVal = new Date(endDate.getTime() - Number(durationSec) * 1000);
+    }
+  }
 
   appendByHeaders_(ws, {
     token: token,
-    startedAt: parseDateOrRaw_(p.startedAt || p.submittedAt),
-    endedAt: parseDateOrRaw_(p.endedAt || new Date().toISOString()),
+    startedAt: startedAtVal,
+    endedAt: endedAtVal,
     durationSec: durationSec,
     wordsTyped: wordsTyped,
     errors: errors,
@@ -449,6 +473,58 @@ function topLabel_(obj) {
     }
   });
   return bestKey;
+}
+
+function pickDefined_() {
+  for (var i = 0; i < arguments.length; i++) {
+    if (arguments[i] !== undefined && arguments[i] !== null) return arguments[i];
+  }
+  return "";
+}
+
+// Jalankan manual dari editor untuk mengisi iqEstimate/iqCategory/scoreBand data lama yang kosong.
+function backfillIqMeta() {
+  const ss = openSpreadsheet_();
+  const ws = getSheet_(ss, CONFIG.SHEET.IQ);
+
+  const headers = readHeaders_(ws);
+  const idx = {};
+  headers.forEach(function (h, i) { idx[h] = i; });
+
+  const required = ["correct", "iqEstimate", "iqCategory", "scoreBand"];
+  required.forEach(function (h) {
+    if (idx[h] === undefined) throw new Error("Header wajib tidak ditemukan di sheet IQ: " + h);
+  });
+
+  const lastRow = ws.getLastRow();
+  if (lastRow < 2) return;
+
+  const values = ws.getRange(2, 1, lastRow - 1, headers.length).getValues();
+  let changed = 0;
+
+  for (var r = 0; r < values.length; r++) {
+    const row = values[r];
+    const correct = toNum_(row[idx.correct]);
+    if (correct === "") continue;
+
+    const meta = deriveIqMeta_(correct);
+
+    const emptyEstimate = safeStr_(row[idx.iqEstimate]).trim() === "";
+    const emptyCategory = safeStr_(row[idx.iqCategory]).trim() === "";
+    const emptyBand = safeStr_(row[idx.scoreBand]).trim() === "";
+
+    if (emptyEstimate) row[idx.iqEstimate] = meta.iqEstimate;
+    if (emptyCategory) row[idx.iqCategory] = meta.iqCategory;
+    if (emptyBand) row[idx.scoreBand] = meta.scoreBand;
+
+    if (emptyEstimate || emptyCategory || emptyBand) changed++;
+  }
+
+  if (changed > 0) {
+    ws.getRange(2, 1, values.length, headers.length).setValues(values);
+  }
+
+  Logger.log("Backfill selesai. Baris terupdate: " + changed);
 }
 
 function round1_(n) {
