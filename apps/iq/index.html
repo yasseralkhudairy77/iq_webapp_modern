@@ -262,6 +262,7 @@ let state = {
   startedAt:null,
   durationMin:40,
   remainingSec:40*60,
+  deadlineMs:null,
   order:[],
   currentIdx:0,
   answers:{},
@@ -593,24 +594,41 @@ async function renderQuestion(){
   updateProgress();
 }
 
+function ensureDeadlineMs(){
+  if(state.durationMin<=0){
+    state.deadlineMs = null;
+    return;
+  }
+  const now = Date.now();
+  if(!Number.isFinite(Number(state.deadlineMs)) || Number(state.deadlineMs) <= now){
+    state.deadlineMs = now + (Number(state.remainingSec || 0) * 1000);
+  }
+}
+
 function startTimer(){
   if(timerHandle) clearInterval(timerHandle);
   if(state.durationMin<=0){
     document.getElementById("timerLabel").textContent = "Waktu tanpa timer";
     return;
   }
+  ensureDeadlineMs();
   timerHandle=setInterval(()=>{
-    if(!state.started || state.finished) return;
-    state.remainingSec=Math.max(0, state.remainingSec-1);
-    document.getElementById("timerLabel").textContent = "Waktu "+fmtTime(state.remainingSec);
-    if(state.remainingSec===0){
-      clearInterval(timerHandle);
-      submit();
+    try{
+      if(!state.started || state.finished) return;
+      const now = Date.now();
+      const left = Math.max(0, Math.ceil((Number(state.deadlineMs || 0) - now) / 1000));
+      state.remainingSec = left;
+      document.getElementById("timerLabel").textContent = "Waktu " + fmtTime(state.remainingSec);
+      if(state.remainingSec===0){
+        clearInterval(timerHandle);
+        submit();
+      }
+      save();
+    }catch(err){
+      console.error("Timer tick error:", err);
     }
-    save();
   },1000);
 }
-
 function showTest(){
   document.getElementById("testCard").style.display="block";
   const prestartWarning = document.getElementById("prestartWarning");
@@ -804,6 +822,7 @@ document.getElementById("startBtn").onclick=async ()=>{
   state.identity={name,phone,position};
   state.durationMin=durationMin;
   state.remainingSec=durationMin<=0 ? 0 : durationMin*60;
+  state.deadlineMs = durationMin<=0 ? null : (Date.now() + state.remainingSec*1000);
   state.started=true;
   state.startedAt=new Date().toISOString();
   state.finished=false;
@@ -835,6 +854,7 @@ document.getElementById("resumeBtn").onclick=async ()=>{
   document.getElementById("position").value = state.identity?.position || "";
   document.getElementById("token").value = prof.token || "";
   document.getElementById("duration").value = String(state.durationMin ?? 40);
+  ensureDeadlineMs();
   saveSuiteProfile(suiteProfileFromInputs());
   showTest();
 };
@@ -946,6 +966,8 @@ init();
 </script>
 </body>
 </html>
+
+
 
 
 
